@@ -1,0 +1,226 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500");
+
+body {
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    background-color: #efefef;
+}
+
+a {
+    color: #787272;
+}
+
+/* Tùy chỉnh modal */
+.modal-content {
+    border-radius: 8px;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* CSS cho nút "Xem thêm" */
+.btn-detail {
+    padding: 4px 8px; /* Giảm padding để làm cho nút nhỏ hơn */
+    font-size: 12px; /* Kích thước chữ nhỏ hơn */
+    color: #007bff; /* Màu chữ xanh */
+    border: 1px solid #007bff; /* Đường viền màu xanh */
+    background-color: #fff; /* Nền trắng */
+    border-radius: 4px; /* Bo tròn góc nhẹ */
+    text-decoration: none; /* Không gạch chân */
+    display: inline-block; /* Để nút nhỏ hơn và căn chỉnh tốt hơn */
+    cursor: pointer; /* Con trỏ chuột dạng tay */
+}
+
+.btn-detail:hover {
+    background-color: #f8f9fa; /* Nền sáng hơn khi di chuột qua */
+}
+a:hover {
+    text-decoration: none;
+}
+#additionalImagesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.image-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    object-position: center center;
+}
+.topnav .navbar-brand {
+    width: 15rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.topnav {
+    padding-left: 0;
+    padding: 10px 0px;
+    z-index: 1039;
+}
+
+#sidebar-toggle {
+    outline: none;
+    border: 0;
+    background-color: transparent;
+}
+
+.plus-icon {
+    font-size: 25px;
+    color: #8f8f8f;
+}
+.btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.nav-right {
+    flex: 1;
+    justify-content: space-between;
+    display: flex;
+}
+
+#sidebar {
+    background-color: #c2fecf; /* Màu xanh nhạt */
+}
+
+#wp-content {
+    flex: auto;
+     height: calc(100vh - 58px); 
+    min-height: 100vh;
+    padding-top: 3.625rem;
+    padding-left: 5rem;
+}
+
+#content {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#content .card-header {
+    text-transform: uppercase;
+}
+
+.nav-fixed .topnav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+ul#sidebar-menu * {
+    list-style: none;
+    padding-left: 0;
+}
+
+#sidebar-menu {
+    padding: 20px 15px;
+}
+
+.nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    position: relative;
+}
+
+.nav-link.active > a,
+.nav-link:hover > li > a {
+    color: #0061f2;
+}
+
+.nav-link > li > a > i {
+    color: #787272;
+    font-size: 18px;
+}
+
+.nav-link .arrow {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
+#sidebar-menu .sub-menu {
+    padding-left: 22px;
+    border-left: 1px dashed #b8b8b8;
+    margin-left: 6px;
+    display: none;
+}
+
+#sidebar-menu .sub-menu li a {
+    display: block;
+    padding: 5px 0px;
+}
+
+#page-body {
+    background-color: #b0edc8;
+}
+
+.form-search {
+    width: 300px;
+}
+
+.table tr td {
+    vertical-align: middle;
+}
+
+.table-checkall input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.analytic a {
+    position: relative;
+    padding-right: 5px;
+    margin-right: 5px;
+}
+
+.analytic a:not(:last-child):after {
+    position: absolute;
+    content: "|";
+    top: -1px;
+    right: -5px;
+    color: #8c8c8c;
+}
