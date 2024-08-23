@@ -71,14 +71,14 @@ $SoDienThoai = trim($row['SoDienThoai']);
         document.getElementById("errorSoDienThoai").innerText = "";
 
         // Kiểm tra tên người nhận
-        if (!namePattern.test(name)) {
-            document.getElementById("errorNguoiNhan").innerText = "Tên phải có từ 2 đến 50 ký tự và không chứa ký tự đặc biệt.";
+        if (!name) {
+            document.getElementById("errorNguoiNhan").innerText = "Tên người nhận không được để trống.";
             isValid = false;
         }
 
         // Kiểm tra địa chỉ
-        if (address.length < 5 || address.length > 100) {
-            document.getElementById("errorDiaChi").innerText = "Địa chỉ phải có từ 5 đến 100 ký tự.";
+        if (!address) {
+            document.getElementById("errorDiaChi").innerText = "Địa chỉ không được để trống.";
             isValid = false;
         }
 
