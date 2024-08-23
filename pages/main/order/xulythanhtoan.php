@@ -31,7 +31,7 @@
 			while ($row = mysqli_fetch_assoc($query_cart)) {
 				$id_sanpham = $row['ID_SanPham'];
 				$soluong = $row['SoLuong'];
-				$sql_sanpham = "SELECT * FROM sanpham WHERE ID_SanPham = $id_sanpham";s
+				$sql_sanpham = "SELECT * FROM sanpham WHERE ID_SanPham = $id_sanpham";
 				$query_sanpham = mysqli_query($mysqli, $sql_sanpham);
 				$row_sanpham = mysqli_fetch_assoc($query_sanpham);
 				$giaMua = $row_sanpham['GiaBan'];
