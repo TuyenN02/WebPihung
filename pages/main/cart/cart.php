@@ -1,5 +1,4 @@
 <?php
-
 $id_cus = $_SESSION['ID_ThanhVien'];
 $sql_cart = "SELECT sanpham.ID_SanPham, chitietgiohang.SoLuong, sanpham.Img, sanpham.TenSanPham, sanpham.GiaBan, sanpham.SoLuong AS StockQuantity
 FROM giohang
@@ -11,14 +10,7 @@ $query_cart = mysqli_query($mysqli, $sql_cart);
 <div class="container min-height-100">
     <h1 class="text-center">Giỏ hàng</h1>
     <div>
-        <?php
-        if (isset($_SESSION['update_cart_errors']) && !empty($_SESSION['update_cart_errors'])) {
-            echo '<div class="alert alert-danger">Vui lòng kiểm tra lỗi và nhập lại:</div>';
-        }
-        ?>
-        <?php
-        if (isset($_SESSION['ID_ThanhVien'])) {
-        ?>
+        <?php if (isset($_SESSION['ID_ThanhVien'])): ?>
         <form method="POST" action="pages/main/cart/update_cart.php">
             <?php
             if (mysqli_num_rows($query_cart) > 0) {
@@ -28,60 +20,50 @@ $query_cart = mysqli_query($mysqli, $sql_cart);
                 ?>
             <table class="bg-white table-bordered w-100" cellpadding="5px">           
                 <thead>
-                <tr class="text-center">
-                    <th scope="col">STT</th>
-                    <th scope="col">Tên sản phẩm</th>
-                    <th scope="col">Hình ảnh</th>
-                    <th scope="col">Số lượng</th>
-                    <th scope="col">Giá bán</th>
-                    <th scope="col">Tùy chọn</th>
-                </tr>
+                    <tr class="text-center">
+                        <th scope="col">STT</th>
+                        <th scope="col">Tên sản phẩm</th>
+                        <th scope="col">Hình ảnh</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Giá bán</th>
+                        <th scope="col">Tùy chọn</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <?php while($row = mysqli_fetch_array($query_cart)) {
+                    <?php 
+                    while($row = mysqli_fetch_array($query_cart)) {
                         $i++;
                         $product_id = $row['ID_SanPham'];
-                        $current_quantity = isset($_SESSION['soluong'][$product_id]) ? $_SESSION['soluong'][$product_id] : $row['SoLuong'];
+                        $current_quantity = $row['SoLuong'];
+                        $stock_quantity = $row['StockQuantity'];
+                        $product_total = $current_quantity * $row['GiaBan'];
+                        $allMoney += $product_total;
+                        $allAmount += $current_quantity;
                     ?>
                     <tr class="text-center">
                         <td><?= $i ?></td>
                         <td><?= $row['TenSanPham'] ?></td>
-                        <td><img class="product-img" style="width: 260px" src="./assets/image/product/<?= $row['Img'] ?>"></td>
+                        <td><img class="product-img" style="width: 100px" src="./assets/image/product/<?= $row['Img'] ?>"></td>
                         <td>
-                            <input type="number" name="soluong[<?= $product_id ?>]" value="<?= $current_quantity ?>" min="1" class="text-center" style="width: 60px;">
-                            <?php
-                            // Hiển thị lỗi nếu có
-                            if (isset($_SESSION['update_cart_errors'][$product_id])): ?>
-                                <div class="text-danger"><?= $_SESSION['update_cart_errors'][$product_id] ?></div>
-                            <?php endif; ?>
+                            <input type="number" name="soluong[<?= $product_id ?>]" value="<?= $current_quantity ?>" min="1" class="text-center quantity-input" data-price="<?= $row['GiaBan'] ?>" style="width: 60px;" onchange="checkQuantity(this, <?= $stock_quantity ?>)" oninput="showConfirmationDialog(this)">
                         </td>
                         <td><?= number_format($row['GiaBan']) ?> VND</td>
                         <td>
                             <a class="mr-2 ml-2" href="pages/main/cart/delete.php?id_delete=<?= $product_id ?>">Xóa</a>
                         </td>
                     </tr>
-                    <?php
-                    $Money = (float)$current_quantity * (float)$row['GiaBan'];
-                    $allMoney += $Money;
-                    $allAmount += (float)$current_quantity;
-                    }
-                    ?>
+                    <?php } ?>
                 </tbody>
                 <tr>
-                    <th colspan="3">Tổng tiền: <?= number_format($allMoney,0,',','.') ?> VND</th>
-                    <th colspan="2">Tổng số lượng: <?= $allAmount ?></th>
+                    <th colspan="3">Tổng tiền: <span id="totalMoney"><?= number_format($allMoney, 0, ',', '.') ?> VND</span></th>
+                    <th colspan="2">Tổng số lượng: <span id="totalQuantity"><?= $allAmount ?></span></th>
                     <td>
                         <a class="btn btn-danger btn-small" href="pages/main/cart/delete.php?deleteAll">Xóa hết</a>
                     </td>              
                 </tr>
                 <tr>
                     <td class="w-100" colspan="6">
-                        <input type="submit" class="btn btn-warning btn-small w-100" name='update_cart' value="Cập nhật giỏ hàng">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="w-100" colspan="6">
-                        <input type="submit" class="btn btn-success btn-small w-100" name='place_order' value="Đặt hàng">
+                        <input type="submit" class="btn btn-success btn-small w-100" name='update_cart' value="Đặt hàng">
                     </td>
                 </tr>
             </table>
@@ -96,13 +78,9 @@ $query_cart = mysqli_query($mysqli, $sql_cart);
             ?>
         </form>
         <a class="btn btn-primary btn-small w-100 mt-3" href="index.php?navigate=showProducts">Tiếp tục mua sắm</a>
-        <?php
-        } else {
-        ?>
+        <?php else: ?>
         <h4 class="text-center">Vui lòng đăng nhập để xem giỏ hàng!</h4>
-        <?php
-        }
-        ?>
+        <?php endif; ?>
     </div>  
 </div>
 
@@ -121,3 +99,55 @@ $query_cart = mysqli_query($mysqli, $sql_cart);
         height: auto;
     }
 </style>
+
+<script>
+function checkQuantity(input, maxQuantity) {
+    const currentQuantity = parseInt(input.value, 10);
+    if (currentQuantity > maxQuantity) {
+        alert('Số lượng bạn nhập vượt quá số lượng tối đa.');
+        input.value = maxQuantity; // Reset to the maximum allowed quantity after the alert
+    }
+
+    updateTotals(); // Update totals after checking quantity
+}
+
+function showConfirmationDialog(input) {
+    const maxQuantity = parseInt(input.max, 10);
+    const currentQuantity = parseInt(input.value, 10);
+    if (currentQuantity > maxQuantity) {
+        setTimeout(() => {
+            if (confirm('Số lượng bạn nhập vượt quá số lượng tối đa. Bạn có muốn tiếp tục không?')) {
+                input.value = maxQuantity; // Reset to the maximum allowed quantity if user confirms
+            }
+        }, 0);
+    }
+
+    updateTotals(); // Update totals after showing the dialog
+}
+
+function updateTotals() {
+    let totalMoney = 0;
+    let totalQuantity = 0;
+
+    // Get all quantity inputs
+    const inputs = document.querySelectorAll('.quantity-input');
+
+    inputs.forEach(input => {
+        const quantity = parseInt(input.value, 10);
+        const price = parseFloat(input.dataset.price);
+        totalQuantity += quantity;
+        totalMoney += quantity * price;
+    });
+
+    // Update the totals
+    document.getElementById('totalMoney').innerText = formatNumber(totalMoney) + ' VND';
+    document.getElementById('totalQuantity').innerText = totalQuantity;
+}
+
+function formatNumber(num) {
+    return num.toLocaleString('en-US', { minimumFractionDigits: 0 });
+}
+
+// Update totals on page load
+document.addEventListener('DOMContentLoaded', updateTotals);
+</script>

@@ -37,13 +37,21 @@
 				$giaMua = $row_sanpham['GiaBan'];
 				$sql_insert_order_detail = "INSERT INTO chitietdonhang (ID_DonHang, ID_SanPham, SoLuong, CodeOrder, GiaMua) VALUES ('$id_order', '$id_sanpham', '$soluong', '$CodeOrder', '$giaMua')";
 				$insert_detail_result = mysqli_query($mysqli, $sql_insert_order_detail);
+				$sql_update_product = "UPDATE sanpham 
+				SET SoLuong = SoLuong - $soluong 
+				WHERE ID_SanPham = $id_sanpham";
+				$insert_detail_result1 = mysqli_query($mysqli, $sql_update_product);
+				
+
+
 			}
 			// Không xóa sản phẩm trong giỏ hàng
 			// $id_delete_cart = $_SESSION['ID_GioHang'];
 			// $sql_delete_all_products = "DELETE FROM chitietgiohang WHERE ID_GioHang = $id_delete_cart";
 			// $delete_result = mysqli_query($mysqli, $sql_delete_all_products);
 			// unset($_SESSION['allMoney']);
-			
+			$sql_delete_cart_details1 = "DELETE FROM chitietgiohang WHERE ID_GioHang = $ID_GioHang";
+				$insert_detail_result = mysqli_query($mysqli, $sql_delete_cart_details1);
 			$success = true;
 		} else {
 			$_SESSION['error'] = "Đã xảy ra lỗi khi thêm đơn hàng vào cơ sở dữ liệu.";
