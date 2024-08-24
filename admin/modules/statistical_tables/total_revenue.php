@@ -20,7 +20,7 @@ if ($orderDate) {
     $startDate = $mysqli->real_escape_string($startDate);
     $endDate = $mysqli->real_escape_string($endDate);
     // Thống kê theo khoảng thời gian
-    $query .= " AND ThoiGianLap BETWEEN '$startDate' AND '$endDate'";
+    $query .= " AND DATE(ThoiGianLap) BETWEEN '$startDate' AND '$endDate'";
 }
 
 // Thực hiện câu truy vấn

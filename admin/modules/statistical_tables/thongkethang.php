@@ -6,10 +6,11 @@ include('../../config/connection.php');
 
 // Get monthly data
 $query = "
-    SELECT DATE_FORMAT(ThoiGianLap, '%Y-%m-%d') AS date2, SUM(GiaTien) AS sales2
+    SELECT DATE_FORMAT(ThoiGianLap, '%Y-%m') AS date2, SUM(GiaTien) AS sales2
     FROM donhang
     WHERE ThoiGianLap >= NOW() - INTERVAL 1 MONTH
-    GROUP BY DATE_FORMAT(ThoiGianLap, '%Y-%m-%d')
+    AND XuLy = 5
+    GROUP BY DATE_FORMAT(ThoiGianLap, '%Y-%m')
 ";
 
 $result = $mysqli->query($query);

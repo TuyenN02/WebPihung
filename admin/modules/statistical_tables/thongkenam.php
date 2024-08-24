@@ -8,6 +8,7 @@ $query = "
     SELECT DATE_FORMAT(ThoiGianLap, '%Y') AS date1, SUM(GiaTien) AS sales1
     FROM donhang
     WHERE ThoiGianLap >= NOW() - INTERVAL 1 YEAR
+    AND XuLy = 5
     GROUP BY DATE_FORMAT(ThoiGianLap, '%Y')
 ";
 

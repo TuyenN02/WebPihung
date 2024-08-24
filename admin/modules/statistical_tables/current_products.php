@@ -13,7 +13,7 @@ if ($startDate && $endDate) {
     $query = "SELECT SUM(c.soluong) as currentProducts 
               FROM chitietdonhang c
               JOIN donhang d ON c.ID_DonHang = d.ID_DonHang
-              WHERE d.ThoiGianLap BETWEEN ? AND ?";
+              WHERE DATE(d.ThoiGianLap) BETWEEN ? AND ?";
     $stmt = $mysqli->prepare($query);
     $stmt->bind_param('ss', $startDate, $endDate);
 } else {
