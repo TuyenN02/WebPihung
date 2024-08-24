@@ -11,7 +11,7 @@
             background-color: #4CAF50; /* Nền của thanh điều hướng */
         }
         .logo {
-            height: 70px; /* Chiều cao của logo */
+            height: 70px; 
         }
         .logos {
             height: 20px;
