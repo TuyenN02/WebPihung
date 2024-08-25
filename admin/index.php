@@ -144,11 +144,7 @@ body {
         </div>
         Quản lý danh mục
     </a>
-    <i class="arrow fas fa-angle-right"></i>
-    <ul class="sub-menu">
-        <li><a href="?cat=add-cat">Thêm mới</a></li>
-        <li><a href="?cat=list-cat">Danh sách</a></li>
-    </ul>
+  
 </li>
                         <li class="nav-link">
     <a href="?info=info">
@@ -166,11 +162,7 @@ body {
         </div>
         Quản lý bài viết
     </a>
-    <i class="arrow fas fa-angle-right"></i>
-    <ul class="sub-menu">
-        <li><a href="?posts=add-post">Thêm mới</a></li>
-        <li><a href="?posts=list-posts">Danh sách</a></li>
-    </ul>
+   
 </li>
     <li class="nav-link">
     <a href="?policy=list-policy">
@@ -179,15 +171,7 @@ body {
         </div>
         Quản lý chính sách
     </a>
-    <i class="arrow fas fa-angle-right"></i>
-    <ul class="sub-menu">
-        <li>
-            <a href="?policy=add-policy">Thêm mới</a>
-        </li>
-        <li>
-            <a href="?policy=list-policy">Danh sách</a>
-        </li>
-    </ul>
+   
 </li>
 
                         <li class="nav-link">
