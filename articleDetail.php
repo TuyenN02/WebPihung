@@ -116,7 +116,8 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         </div>
         
         <!-- Nút "Quay lại" -->
-        <a href="../pihung/articleDetail.php" class="back-button">Quay lại</a>
+        <a href="articles.php" class="back-button">Quay lại</a>
+
     </div>
 
     <?php include("./pages/footer.php"); ?>
