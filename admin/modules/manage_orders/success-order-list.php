@@ -47,7 +47,7 @@ if ($status === 'success') {
 <div id="content" class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="m-0">Danh sách đơn hàng</h5>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Danh sách đơn hàng</h5>
             <div class="form-search d-flex align-items-center">
                 <form action="" method="POST" class="d-flex">
                     <input type="text" class="form-control form-search" placeholder="Nhập từ khóa..." name="tukhoa" value="<?php echo htmlspecialchars($tukhoa); ?>">
@@ -190,6 +190,13 @@ if ($status === 'success') {
 
 .form-control.form-search {
     margin-right: 1px; /* Điều chỉnh khoảng cách giữa các phần tử bên trong form */
+}
+
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 100px;
 }
 
 .card-header {
