@@ -61,52 +61,54 @@ $result = mysqli_query($mysqli, "SELECT DiaChi, gio_lam_viec, gio_nghi, SDT, Ema
 $current_info = mysqli_fetch_assoc($result);
 ?>
 
-<div class="container mt-3">
-    <h2>Quản lý thông tin</h2>
-    <form action="" method="POST">
-        <?php if (isset($success_message)): ?>
-            <div class="alert alert-success"><?php echo $success_message; ?></div>
-        <?php endif; ?>
-        
-        <?php if (isset($errors['update'])): ?>
-            <div class="alert alert-danger"><?php echo $errors['update']; ?></div>
-        <?php endif; ?>
+<div class="container mt-5">
+    <div class="bg-white p-4 rounded shadow-sm"> <!-- Thêm lớp để nền trắng và có khoảng cách nội dung -->
+    <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 35px;">Quản lý thông tin</h5>
+        <form action="" method="POST">
+            <?php if (isset($success_message)): ?>
+                <div class="alert alert-success"><?php echo $success_message; ?></div>
+            <?php endif; ?>
+            
+            <?php if (isset($errors['update'])): ?>
+                <div class="alert alert-danger"><?php echo $errors['update']; ?></div>
+            <?php endif; ?>
 
-        <div class="form-group">
-            <label for="phone">Số điện thoại:</label>
-            <input type="text" class="form-control" id="phone" name="phone" value="<?php echo htmlspecialchars($current_info['SDT']); ?>" required>
-            <?php if (isset($errors['phone'])): ?>
-                <div class="text-danger"><?php echo $errors['phone']; ?></div>
-            <?php endif; ?>
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($current_info['Email']); ?>" required>
-            <?php if (isset($errors['email'])): ?>
-                <div class="text-danger"><?php echo $errors['email']; ?></div>
-            <?php endif; ?>
-        </div>
-        <div class="form-group">
-            <label for="address">Địa chỉ:</label>
-            <input type="text" class="form-control" id="address" name="address" value="<?php echo htmlspecialchars($current_info['DiaChi']); ?>" required>
-            <?php if (isset($errors['address'])): ?>
-                <div class="text-danger"><?php echo $errors['address']; ?></div>
-            <?php endif; ?>
-        </div>
-        <div class="form-group">
-            <label for="work_hours">Giờ làm việc:</label>
-            <input type="time" class="form-control" id="work_hours" name="work_hours" value="<?php echo htmlspecialchars($current_info['gio_lam_viec']); ?>" required>
-            <?php if (isset($errors['work_hours'])): ?>
-                <div class="text-danger"><?php echo $errors['work_hours']; ?></div>
-            <?php endif; ?>
-        </div>
-        <div class="form-group">
-            <label for="break_hours">Giờ nghỉ:</label>
-            <input type="time" class="form-control" id="break_hours" name="break_hours" value="<?php echo htmlspecialchars($current_info['gio_nghi']); ?>" required>
-            <?php if (isset($errors['break_hours'])): ?>
-                <div class="text-danger"><?php echo $errors['break_hours']; ?></div>
-            <?php endif; ?>
-        </div>
-        <button type="submit" class="btn btn-primary">Cập nhật</button>
-    </form>
+            <div class="form-group mb-3">
+                <label for="phone">Số điện thoại:</label>
+                <input type="text" class="form-control" id="phone" name="phone" value="<?php echo htmlspecialchars($current_info['SDT']); ?>" required>
+                <?php if (isset($errors['phone'])): ?>
+                    <div class="text-danger"><?php echo $errors['phone']; ?></div>
+                <?php endif; ?>
+            </div>
+            <div class="form-group mb-3">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($current_info['Email']); ?>" required>
+                <?php if (isset($errors['email'])): ?>
+                    <div class="text-danger"><?php echo $errors['email']; ?></div>
+                <?php endif; ?>
+            </div>
+            <div class="form-group mb-3">
+                <label for="address">Địa chỉ:</label>
+                <input type="text" class="form-control" id="address" name="address" value="<?php echo htmlspecialchars($current_info['DiaChi']); ?>" required>
+                <?php if (isset($errors['address'])): ?>
+                    <div class="text-danger"><?php echo $errors['address']; ?></div>
+                <?php endif; ?>
+            </div>
+            <div class="form-group mb-3">
+                <label for="work_hours">Giờ làm việc:</label>
+                <input type="time" class="form-control" id="work_hours" name="work_hours" value="<?php echo htmlspecialchars($current_info['gio_lam_viec']); ?>" required>
+                <?php if (isset($errors['work_hours'])): ?>
+                    <div class="text-danger"><?php echo $errors['work_hours']; ?></div>
+                <?php endif; ?>
+            </div>
+            <div class="form-group mb-3">
+                <label for="break_hours">Giờ nghỉ:</label>
+                <input type="time" class="form-control" id="break_hours" name="break_hours" value="<?php echo htmlspecialchars($current_info['gio_nghi']); ?>" required>
+                <?php if (isset($errors['break_hours'])): ?>
+                    <div class="text-danger"><?php echo $errors['break_hours']; ?></div>
+                <?php endif; ?>
+            </div>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+        </form>
+    </div>
 </div>
