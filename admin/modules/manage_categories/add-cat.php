@@ -46,3 +46,11 @@
         </div>
     </div>
 </div>
+<style>
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 80px;
+}
+</style>
