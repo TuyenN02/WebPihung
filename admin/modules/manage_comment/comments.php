@@ -27,7 +27,7 @@ $num_rows = mysqli_num_rows($query_comment);
 <div id="content" class="container-fluid">
     <div class="card">
         <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
-            <h5 class="m-0">Danh sách bình luận</h5>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Danh sách sản phẩm</h5>
             <form action="" method="GET" class="form-inline">
                 <input type="hidden" name="comment" value="comments">
                 <input 
