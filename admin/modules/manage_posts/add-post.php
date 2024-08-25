@@ -10,8 +10,11 @@ $data = isset($_SESSION['data']) ? $_SESSION['data'] : [];
 
 <div id="content" class="container-fluid">
     <div class="card">
-        <div class="card-header font-weight-bold">
-            Thêm bài viết
+    <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
+        <button class="btn btn-primary">
+        <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?posts=list-posts">Quay lại</a>
+        </button>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Thêm bài viết</h5>
         </div>
         <div class="card-body">
             <form method="POST" action="modules/manage_posts/add.php" enctype="multipart/form-data">
@@ -80,3 +83,12 @@ unset($_SESSION['data']);
         }
     }
 </script>
+
+<style>
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 80px;
+}
+</style>

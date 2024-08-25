@@ -42,19 +42,21 @@ $total_records = mysqli_num_rows($query_NCC);
 <?php endif; ?>
 
 <script>
-    // Tự động ẩn thông báo sau 3 giây
+    // Tự động ẩn thông báo sau 2 giây
     setTimeout(function() {
         var successMessage = document.getElementById('success-message');
         if (successMessage) {
             successMessage.style.display = 'none';
         }
-    }, 3000);
+    }, 2000); // Đổi thành 2000ms = 2 giây
 </script>
-
 <div id="content" class="container-fluid">
     <div class="card">
         <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
-            <h5 class="m-0">Danh sách bài viết</h5>
+        <button class="btn btn-primary">
+        <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?posts=add-post">Thêm mới</a>
+        </button>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Danh sách bài viết</h5>
             <div class="form-search form-inline">
                 <form action="" method="POST" class="d-flex">
                     <input type="text" class="form-control form-search" placeholder="Nhập từ khóa..." name="tukhoa" value="<?php echo htmlspecialchars($tukhoa); ?>">
@@ -64,9 +66,6 @@ $total_records = mysqli_num_rows($query_NCC);
         </div>
         
         <div class="card-body">
-            <?php if ($total_records == 0): ?>
-                <p class="text-center">Không tìm thấy bài viết nào.</p>
-            <?php else: ?>
                 <table class="table table-striped table-checkall">
                     <thead>
                         <tr>
@@ -105,6 +104,9 @@ $total_records = mysqli_num_rows($query_NCC);
                         <?php } ?>
                     </tbody>
                 </table>
+                <?php if ($total_records == 0): ?>
+                <p class="text-center">Không tìm thấy bài viết nào.</p>
+          
             <?php endif; ?>
         </div>
     </div>
@@ -117,3 +119,12 @@ $total_records = mysqli_num_rows($query_NCC);
         }
     }
 </script>
+
+<style>
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 100px;
+}
+</style>

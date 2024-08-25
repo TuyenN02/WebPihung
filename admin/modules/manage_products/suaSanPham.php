@@ -1,4 +1,6 @@
 <?php
+
+
 // Lấy ID sản phẩm từ query string và chuẩn bị câu lệnh SQL
 $ID_SanPham = (int)$_GET['id'];
 $sql = $mysqli->prepare("SELECT * FROM sanpham WHERE ID_SanPham = ?");
@@ -22,64 +24,75 @@ $query_Images = $sql_Images->get_result();
 // Hiển thị thông báo lỗi và thành công từ session
 $errors = isset($_SESSION['errors']) ? $_SESSION['errors'] : [];
 $success = isset($_SESSION['success']) ? $_SESSION['success'] : '';
-unset($_SESSION['errors']);
-unset($_SESSION['success']);
+
+
 ?>
 
 <div id="content" class="container-fluid">
     <div class="card">
-        <div class="card-header font-weight-bold">Sửa sản phẩm</div>
+    <div class="card-header font-weight-bold d-flex align-items-center">
+    <button class="btn btn-primary" style="margin-right: 10px;">
+        <a style="color: white; text-decoration: none; border-radius: 5px;" href="?product=list-product">Quay lại</a>
+    </button>
+    <h5 class="m-0" style="text-align:center; font-size: 28px; flex-grow: 1;">Thêm sản phẩm</h5>
+</div>
         <div class="card-body">
             <form action="modules/manage_products/sua.php?id=<?= $ID_SanPham ?>" method="POST" enctype="multipart/form-data">
+               
                 <div class="form-group">
                     <label for="name">Tên sản phẩm</label>
-                    <input class="form-control" type="text" name="TenSanPham" value="<?= htmlspecialchars($product['TenSanPham'], ENT_QUOTES); ?>" />
+                    <input class="form-control <?= isset($errors['TenSanPham']) ? 'is-invalid' : ''; ?>" type="text" name="TenSanPham" value="<?= htmlspecialchars($form_data['TenSanPham'] ?? $product['TenSanPham'], ENT_QUOTES); ?>" />
                     <?php if (isset($errors['TenSanPham'])): ?>
-                        <div class="text-danger"><?= $errors['TenSanPham']; ?></div>
+                        <div class="invalid-feedback"><?= $errors['TenSanPham']; ?></div>
                     <?php endif; ?>
                 </div>
+
                 <div class="form-group">
                     <label for="description">Mô tả</label>
-                    <textarea class="form-control" name="MoTa"><?= htmlspecialchars($product['MoTa'], ENT_QUOTES); ?></textarea>
+                    <textarea class="form-control <?= isset($errors['MoTa']) ? 'is-invalid' : ''; ?>" name="MoTa"><?= htmlspecialchars($form_data['MoTa'] ?? $product['MoTa'], ENT_QUOTES); ?></textarea>
                     <?php if (isset($errors['MoTa'])): ?>
-                        <div class="text-danger"><?= $errors['MoTa']; ?></div>
+                        <div class="invalid-feedback"><?= $errors['MoTa']; ?></div>
                     <?php endif; ?>
                 </div>
+
                 <div class="form-group">
                     <label for="quantity">Số lượng</label>
-                    <input class="form-control" type="number" name="SoLuong" value="<?= htmlspecialchars($product['SoLuong'], ENT_QUOTES); ?>" />
+                    <input class="form-control <?= isset($errors['SoLuong']) ? 'is-invalid' : ''; ?>" type="number" name="SoLuong" value="<?= htmlspecialchars($form_data['SoLuong'] ?? $product['SoLuong'], ENT_QUOTES); ?>" />
                     <?php if (isset($errors['SoLuong'])): ?>
-                        <div class="text-danger"><?= $errors['SoLuong']; ?></div>
+                        <div class="invalid-feedback"><?= $errors['SoLuong']; ?></div>
                     <?php endif; ?>
                 </div>
+
                 <div class="form-group">
                     <label for="price">Giá bán</label>
-                    <input class="form-control" type="number" step="0.01" name="GiaBan" value="<?= htmlspecialchars($product['GiaBan'], ENT_QUOTES); ?>" />
+                    <input class="form-control <?= isset($errors['GiaBan']) ? 'is-invalid' : ''; ?>" type="number" step="0.01" name="GiaBan" value="<?= htmlspecialchars($form_data['GiaBan'] ?? $product['GiaBan'], ENT_QUOTES); ?>" />
                     <?php if (isset($errors['GiaBan'])): ?>
-                        <div class="text-danger"><?= $errors['GiaBan']; ?></div>
+                        <div class="invalid-feedback"><?= $errors['GiaBan']; ?></div>
                     <?php endif; ?>
                 </div>
+
                 <div class="form-group">
                     <label for="category">Danh mục</label>
                     <select class="form-control" name="danhmuc">
                         <?php while ($row_DanhMuc = $query_DanhMuc->fetch_assoc()) { ?>
-                        <option value="<?= $row_DanhMuc['ID_DanhMuc']; ?>" <?= ($product['ID_DanhMuc'] == $row_DanhMuc['ID_DanhMuc']) ? 'selected' : ''; ?>>
+                        <option value="<?= $row_DanhMuc['ID_DanhMuc']; ?>" <?= ($form_data['danhmuc'] ?? $product['ID_DanhMuc']) == $row_DanhMuc['ID_DanhMuc'] ? 'selected' : ''; ?>>
                             <?= htmlspecialchars($row_DanhMuc['TenDanhMuc'], ENT_QUOTES); ?>
                         </option>
                         <?php } ?>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="supplier">Nhà cung cấp</label>
                     <select class="form-control" name="nhacungcap">
                         <?php while ($row_NCC = $query_NCC->fetch_assoc()) { ?>
-                        <option value="<?= $row_NCC['ID_NCC']; ?>" <?= ($product['ID_NhaCungCap'] == $row_NCC['ID_NCC']) ? 'selected' : ''; ?>>
+                        <option value="<?= $row_NCC['ID_NCC']; ?>" <?= ($form_data['nhacungcap'] ?? $product['ID_NhaCungCap']) == $row_NCC['ID_NCC'] ? 'selected' : ''; ?>>
                             <?= htmlspecialchars($row_NCC['TenNCC'], ENT_QUOTES); ?>
                         </option>
                         <?php } ?>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="formFile">Hình ảnh chính:</label>
                     <?php if (!empty($product['Img'])): ?>
@@ -92,7 +105,7 @@ unset($_SESSION['success']);
                 </div>
 
                 <div class="form-group">
-                    <label for="additionalImages">Ảnh khác:</label>
+                    <label for="additionalImages">Hình ảnh mô tả:</label>
                     <div id="additionalImagesContainer" style="display: flex; flex-wrap: wrap; gap: 10px;">
                         <?php while ($imgRow = $query_Images->fetch_assoc()) { ?>
                             <div class="image-item" style="display: flex; flex-direction: column; align-items: center;">
@@ -115,8 +128,8 @@ unset($_SESSION['success']);
     </div>
 </div>
 
+<!-- Xóa thông báo lỗi và dữ liệu sau khi hiển thị -->
 <?php
-// Xóa thông báo lỗi và dữ liệu sau khi hiển thị
 unset($_SESSION['errors']);
 unset($_SESSION['data']);
 ?>
@@ -183,25 +196,34 @@ unset($_SESSION['data']);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        $('.remove-image').on('click', function () {
-            var imageToRemove = $(this).data('image');
-            Swal.fire({
-                title: 'Xác nhận xóa ảnh',
-                text: 'Bạn có chắc muốn xóa ảnh này không?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Có',
-                cancelButtonText: 'Không'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $(this).closest('.image-item').remove();
-                    $('<input>').attr({
-                        type: 'hidden',
-                        name: 'images_to_remove[]',
-                        value: imageToRemove
-                    }).appendTo('form');
-                }
-            });
+    $('.remove-image').on('click', function () {
+        var imageToRemove = $(this).data('image');
+        Swal.fire({
+            title: 'Xác nhận xóa ảnh',
+            text: 'Bạn có chắc muốn xóa ảnh này không?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Có',
+            cancelButtonText: 'Không'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(this).closest('.image-item').remove();
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'images_to_remove[]',
+                    value: imageToRemove
+                }).appendTo('form');
+                
+                // Hiển thị thông báo thành công
+                Swal.fire({
+                    title: 'Thành công!',
+                    text: 'Ảnh đã được xóa.',
+                    icon: 'success',
+                    confirmButtonText: 'Đóng'
+                });
+            }
         });
     });
+});
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

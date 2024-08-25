@@ -27,9 +27,12 @@ $image_desc_display = !empty($image_desc_previews) ? 'block' : 'none';
 
 <div id="content" class="container-fluid">
     <div class="card">
-        <div class="card-header font-weight-bold">
-            Thêm sản phẩm
-        </div>
+    <div class="card-header font-weight-bold d-flex align-items-center">
+    <button class="btn btn-primary" style="margin-right: 10px;">
+        <a style="color: white; text-decoration: none; border-radius: 5px;" href="?product=list-product">Quay lại</a>
+    </button>
+    <h5 class="m-0" style="text-align:center; font-size: 28px; flex-grow: 1;">Thêm sản phẩm</h5>
+</div>
         <div class="card-body">
             <?php if (isset($_SESSION['success'])): ?>
                 <div class="alert alert-success" role="alert">
@@ -92,7 +95,7 @@ $image_desc_display = !empty($image_desc_previews) ? 'block' : 'none';
                     <img id="preview" src="<?php echo $image_preview; ?>" style="max-width: 200px; margin-top: 10px; display: <?php echo $image_display; ?>;">
                 </div>
                 <div class="form-group">
-                            <label>Ảnh khác:</label>
+                            <label>Hình ảnh mô tả:</label>
                             <input required class="form-control" type="file" name="ImgDesc[]" accept=".jpg,.png" multiple onchange="validateImagesDesc()">
                             <div id="preview-desc" style="margin-top: 10px;">
                                 <?php foreach ($image_desc_previews as $image): ?>
@@ -200,3 +203,11 @@ $image_desc_display = !empty($image_desc_previews) ? 'block' : 'none';
         }
     }
 </script>
+<style>
+ #wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 40px;
+                        }
+</style>

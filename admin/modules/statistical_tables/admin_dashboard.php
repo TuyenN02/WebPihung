@@ -28,12 +28,13 @@
     <style>
         /* Styling for the entire page */
         body { 
-            font-family: Arial, sans-serif; 
-            background-color: #75dd80; 
-            margin: 0; 
-            padding: 0; 
-            color: #333; /* Default text color */
-        }
+
+    background-color: #75dd80; 
+    margin: 0; 
+    padding: 0; 
+    color: #333; /* Default text color */
+    }
+
         
         .container-fluid { 
             width: 90%; 
@@ -526,5 +527,5 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/thongke.js"></script>
+
 </html>

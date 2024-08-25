@@ -36,8 +36,11 @@ unset($_SESSION['data']);
 
 <div id="content" class="container-fluid">
     <div class="card">
-        <div class="card-header font-weight-bold">
-            Sửa thông tin nhà cung cấp
+    <div class="card-header font-weight-bold">
+        <button class="btn btn-primary">
+        <a style="color: white; text-decoration: none; padding: 10px 5px; border-radius: 5px;" href="?ncc=list-ncc">Quay lại</a>
+        </button>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Sửa nhà cung cấp</h5>
         </div>
         <div class="card-body">
             <form method="POST" action="modules/manage_suppliers/sua.php?id_NCC=<?php echo $ID_NCC; ?>" enctype="multipart/form-data">
@@ -126,3 +129,25 @@ unset($_SESSION['data']);
     xhr.send();
 }
 </script>
+<style>
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 60px;
+}
+.card-header .btn {
+    margin-right: auto; /* Đẩy nút sang bên trái */
+}
+
+.card-header h5 {
+    margin: 0;
+    flex-grow: 1; /* Giúp tiêu đề tự động chiếm không gian còn lại */
+    text-align: center; /* Căn giữa tiêu đề */
+}
+</style>

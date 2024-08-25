@@ -58,7 +58,7 @@ if (isset($_SESSION['success_message'])): ?>
         <button class="btn btn-primary">
         <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?ncc=add-ncc">Thêm mới</a>
         </button>
-        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 35px;">Danh sách nhà cung cấp</h5>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Danh sách nhà cung cấp</h5>
             <div class="form-search form-inline">
                 <form action="" method="POST" class="d-flex">
                     <!-- Giữ lại từ khóa tìm kiếm đã nhập trong ô tìm kiếm -->

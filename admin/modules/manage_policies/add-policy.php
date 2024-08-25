@@ -15,8 +15,11 @@ unset($_SESSION['success']);
 
 <div id="content" class="container-fluid">
     <div class="card">
-        <div class="card-header font-weight-bold">
-            Thêm chính sách
+    <div class="card-header font-weight-bold d-flex align-items-center justify-content-between">
+    <button class="btn btn-primary" style="margin: 0;">
+        <a style="color: white; text-decoration: none; border-radius: 5px;" href="?policy=list-policy">Quay lại</a>
+    </button>
+    <h5 class="m-0" style="text-align: center; font-size: 28px; flex-grow: 1;">Thêm chính sách</h5>
         </div>
         <div class="card-body">
             <?php if ($successMessage): ?>
@@ -66,3 +69,11 @@ unset($_SESSION['success']);
         </div>
     </div>
 </div>
+<style>
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 100px;
+}
+</style>

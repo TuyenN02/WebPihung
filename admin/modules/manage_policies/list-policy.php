@@ -41,7 +41,10 @@ $query_Policy = mysqli_query($mysqli, $sql_Policy);
 <div id="content" class="container-fluid">
     <div class="card">
         <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
-            <h5 class="m-0">Danh sách chính sách</h5>
+            <button class="btn btn-primary">
+                <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?policy=add-policy">Thêm mới</a>
+            </button>
+            <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Danh sách chính sách</h5>
             <div class="form-search">
                 <form action="" method="POST" class="d-flex">
                     <input type="text" class="form-control" placeholder="Nhập từ khóa..." name="tukhoa" value="<?php echo htmlspecialchars($tukhoa); ?>">
@@ -56,17 +59,18 @@ $query_Policy = mysqli_query($mysqli, $sql_Policy);
                 </div>
             <?php endif; ?>
 
-            <?php if (mysqli_num_rows($query_Policy) > 0): ?>
-                <table class="table table-striped table-checkall">
-                    <thead>
-                        <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Tiêu đề</th>
-                            <th scope="col">Nội dung</th>
-                            <th scope="col">Sửa/Xóa</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <!-- Tiêu đề bảng -->
+            <table class="table table-striped table-checkall">
+                <thead>
+                    <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">Tiêu đề</th>
+                        <th scope="col">Nội dung</th>
+                        <th scope="col">Sửa/Xóa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (mysqli_num_rows($query_Policy) > 0): ?>
                         <?php 
                         $i = $begin;
                         while ($row_Policy = mysqli_fetch_array($query_Policy)) {
@@ -88,34 +92,33 @@ $query_Policy = mysqli_query($mysqli, $sql_Policy);
                             </td>
                         </tr>
                         <?php } ?>
-                    </tbody>
-                </table>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="4" class="text-center">Không tìm thấy chính sách nào</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
 
-                <!-- Phân trang -->
-                <?php
-                if (!empty($tukhoa)) {
-                    $sql_trang = "SELECT COUNT(*) AS total FROM chinhsach WHERE TieuDe LIKE '%$tukhoa%'";
-                } else {
-                    $sql_trang = "SELECT COUNT(*) AS total FROM chinhsach";
-                }
-                $result_trang = mysqli_query($mysqli, $sql_trang);
-                $row_trang = mysqli_fetch_array($result_trang);
-                $row_count = $row_trang['total'];
-                $trang = ceil($row_count / 8);
-                ?>
-                <ul class="d-flex justify-content-center list-unstyled mt-3">
-                    <?php for ($i = 1; $i <= $trang; $i++): ?>
-                        <li class="p-2 m-1 bg-white <?php echo ($i == $page) ? 'active' : ''; ?>" style="cursor:pointer;">
-                            <a class="text-dark" href="index.php?policy=list-policy&trang=<?php echo $i ?>&tukhoa=<?php echo urlencode($tukhoa) ?>"><?php echo $i ?></a>
-                        </li>
-                    <?php endfor; ?>
-                </ul>
-
-            <?php else: ?>
-                <div class="text-center" style="background-color: white; color: black;">
-                    Không tìm thấy chính sách nào
-                </div>
-            <?php endif; ?>
+            <!-- Phân trang -->
+            <?php
+            if (!empty($tukhoa)) {
+                $sql_trang = "SELECT COUNT(*) AS total FROM chinhsach WHERE TieuDe LIKE '%$tukhoa%'";
+            } else {
+                $sql_trang = "SELECT COUNT(*) AS total FROM chinhsach";
+            }
+            $result_trang = mysqli_query($mysqli, $sql_trang);
+            $row_trang = mysqli_fetch_array($result_trang);
+            $row_count = $row_trang['total'];
+            $trang = ceil($row_count / 8);
+            ?>
+            <ul class="d-flex justify-content-center list-unstyled mt-3">
+                <?php for ($i = 1; $i <= $trang; $i++): ?>
+                    <li class="p-2 m-1 bg-white <?php echo ($i == $page) ? 'active' : ''; ?>" style="cursor:pointer;">
+                        <a class="text-dark" href="index.php?policy=list-policy&trang=<?php echo $i ?>&tukhoa=<?php echo urlencode($tukhoa) ?>"><?php echo $i ?></a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
         </div>
     </div>
 </div>
@@ -148,3 +151,11 @@ $query_Policy = mysqli_query($mysqli, $sql_Policy);
         }
     });
 </script>
+<style>
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 100px;
+}
+</style>

@@ -24,9 +24,12 @@ if (isset($_GET['id_baiviet'])) {
 ?>
 <div id="content" class="container-fluid">
     <div class="card">
-        <div class="card-header font-weight-bold">
-            Sửa thông tin bài viết
-        </div>
+    <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
+    <button class="btn btn-primary">
+        <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?posts=list-posts">Quay lại</a>
+    </button>
+    <h5 class="m-0" style="flex-grow: 1; text-align: center; font-size: 30px; margin-left: -20px;">Sửa bài viết</h5>
+</div>
         <div class="card-body">
             <form method="POST" action="modules/manage_posts/sua.php?id_baiviet=<?php echo $ID_baiviet; ?>" enctype="multipart/form-data">
                 <div class="form-group">
@@ -91,3 +94,11 @@ unset($_SESSION['data']);
         }
     }
 </script>
+<style>
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 60px;
+}
+</style>

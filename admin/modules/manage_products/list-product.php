@@ -57,25 +57,16 @@ unset($_SESSION['success']);
             }, 2000); // 2000ms = 2 giây
         </script>
     <?php } ?>
-    <div id="content" class="container-fluid">
-    <?php if ($success_message) { ?>
-        <div class="alert alert-success" id="success-message">
-            <?php echo htmlspecialchars($success_message, ENT_QUOTES); ?>
-        </div>
-        <script>
-            setTimeout(function() {
-                var successMessage = document.getElementById('success-message');
-                if (successMessage) {
-                    successMessage.style.display = 'none';
-                }
-            }, 2000); // 2000ms = 2 giây
-        </script>
-    <?php } ?>
+   
+   
     <div id="content" class="container-fluid">
     <!-- Thêm liên kết đến trang "Add Product" -->
     <div class="card">
         <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
-            <h5 class="m-0">Danh sách sản phẩm</h5>
+        <button class="btn btn-primary">
+        <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?product=add-product">Thêm mới</a>
+        </button>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Danh sách sản phẩm</h5>
             <div class="d-flex">
                 
                 <div class="form-search form-inline ml-2">
@@ -98,7 +89,12 @@ unset($_SESSION['success']);
                         padding: 8px; /* Adjust padding to make columns closer */
                         border: 2px solid #dee2e6; /* Add border for clarity */
                     }
-
+                  #wp-content {
+                            margin-left: 250px;
+                            flex: 1;
+                            padding: 10px;
+                            margin-top: 40px;
+                        }
                     .table tbody td {
                         font-size: 14px; /* Font size for table cells */
                         overflow: hidden; /* Hide overflow text */
@@ -143,9 +139,7 @@ unset($_SESSION['success']);
                 </style>
 
                 <div class="tableInfo">
-                    <?php if (mysqli_num_rows($query_product) == 0): ?>
-                        <p class="text-center">Không tìm thấy sản phẩm nào.</p>
-                    <?php else: ?>
+                    
                         <table class="table">
                             <thead>
                                 <tr>
@@ -160,6 +154,7 @@ unset($_SESSION['success']);
                                     <th scope="col">Sửa/Xóa</th>
                                 </tr>
                             </thead>
+                      
                             <tbody>
                                 <?php
                                 $i = $begin + 1; // Bắt đầu từ giá trị $begin + 1 cho STT
@@ -167,29 +162,32 @@ unset($_SESSION['success']);
                                     $description = htmlspecialchars($row['MoTa']);
                                     $short_description = (strlen($description) > 20) ? substr($description, 0, 20) . '...' : $description;
                                 ?>
-                                   <tr>
-    <td><?php echo $i++; ?></td>
-  
-    <td><?php echo htmlspecialchars($row['TenSanPham']); ?></td>
-   
-    <td><?php echo htmlspecialchars($row['TenDanhMuc']); ?></td>
-    <td><?php echo htmlspecialchars($row['TenNCC']); ?></td>
-    <td><?php echo $row['SoLuong']; ?></td>
-    <td><img style="width: 180px; height: 180px; object-fit: cover; object-position: center center;" src="../assets/image/product/<?php echo htmlspecialchars($row['Img']); ?>"/></td>
-    <td><?php echo number_format($row['GiaBan'], 0, ',', '.'); ?></td>
-    <td>
-    <a href="javascript:void(0);" class="btn-detail" onclick="showProductDetail(<?php echo $row['ID_SanPham']; ?>)">Xem thêm</a>
-</td>
-    <td>
-        <div class="btn-container">
-            <a href="javascript:void(0);" class="btn btn-danger btn-custom" onclick="confirmDelete(<?php echo $row['ID_SanPham']; ?>)">Xóa</a>
-            <a href="?product=suaSanPham&id=<?php echo $row['ID_SanPham']; ?>" class="btn btn-warning btn-custom">Sửa</a>
-        </div>
-    </td>
-</tr>
-                                <?php } ?>
-                            </tbody>
+                                                        <tr>
+                            <td><?php echo $i++; ?></td>
+                        
+                            <td><?php echo htmlspecialchars($row['TenSanPham']); ?></td>
+                        
+                            <td><?php echo htmlspecialchars($row['TenDanhMuc']); ?></td>
+                            <td><?php echo htmlspecialchars($row['TenNCC']); ?></td>
+                            <td><?php echo $row['SoLuong']; ?></td>
+                            <td><img style="width: 180px; height: 180px; object-fit: cover; object-position: center center;" src="../assets/image/product/<?php echo htmlspecialchars($row['Img']); ?>"/></td>
+                            <td><?php echo number_format($row['GiaBan'], 0, ',', '.'); ?></td>
+                            <td>
+                            <a href="javascript:void(0);" class="btn-detail" onclick="showProductDetail(<?php echo $row['ID_SanPham']; ?>)">Xem thêm</a>
+                                    </td>
+                                        <td>
+                    <div class="btn-container">
+                        <a href="javascript:void(0);" class="btn btn-danger btn-custom" onclick="confirmDelete(<?php echo $row['ID_SanPham']; ?>)">Xóa</a>
+                        <a href="?product=suaSanPham&id=<?php echo $row['ID_SanPham']; ?>" class="btn btn-warning btn-custom">Sửa</a>
+                    </div>
+                </td>
+            </tr>
+                 <?php } ?>
+                 </tbody>
                         </table>
+                        <?php if (mysqli_num_rows($query_product) == 0): ?>
+                        <p class="text-center">Không tìm thấy sản phẩm nào.</p>
+                    
                     <?php endif; ?>
                 </div>
                 <!-- Phân trang -->

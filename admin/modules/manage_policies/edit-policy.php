@@ -10,8 +10,11 @@ if (isset($_GET['id'])) {
 
 <div class="container">
     <div class="card">
-        <div class="card-header">
-            <h5>Chỉnh sửa chính sách</h5>
+    <div class="card-header font-weight-bold d-flex align-items-center justify-content-between">
+    <button class="btn btn-primary" style="margin: 0;">
+        <a style="color: white; text-decoration: none; border-radius: 5px;" href="?policy=list-policy">Quay lại</a>
+    </button>
+    <h5 class="m-0" style="text-align: center; font-size: 28px; flex-grow: 1;">Sửa chính sách</h5>
         </div>
         <div class="card-body">
             <form action="modules/manage_policies/sua.php" method="POST">
@@ -40,3 +43,11 @@ if (isset($_GET['id'])) {
         </div>
     </div>
 </div>
+<style>
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 100px;
+}
+</style>
