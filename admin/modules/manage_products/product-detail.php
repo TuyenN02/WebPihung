@@ -1,6 +1,7 @@
 <?php
 include("../../config/connection.php"); // Kết nối đến cơ sở dữ liệu
 
+
 if (isset($_GET['id'])) {
     $id_sanpham = intval($_GET['id']); // Lấy ID sản phẩm từ URL và chuyển thành số nguyên để bảo mật
 

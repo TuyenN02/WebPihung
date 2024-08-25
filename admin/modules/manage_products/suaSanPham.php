@@ -1,6 +1,4 @@
 <?php
-
-
 // Lấy ID sản phẩm từ query string và chuẩn bị câu lệnh SQL
 $ID_SanPham = (int)$_GET['id'];
 $sql = $mysqli->prepare("SELECT * FROM sanpham WHERE ID_SanPham = ?");
@@ -24,21 +22,16 @@ $query_Images = $sql_Images->get_result();
 // Hiển thị thông báo lỗi và thành công từ session
 $errors = isset($_SESSION['errors']) ? $_SESSION['errors'] : [];
 $success = isset($_SESSION['success']) ? $_SESSION['success'] : '';
-
-
 ?>
 
 <div id="content" class="container-fluid">
     <div class="card">
-    <div class="card-header font-weight-bold d-flex align-items-center">
-    <button class="btn btn-primary" style="margin-right: 10px;">
-        <a style="color: white; text-decoration: none; border-radius: 5px;" href="?product=list-product">Quay lại</a>
-    </button>
-    <h5 class="m-0" style="text-align:center; font-size: 28px; flex-grow: 1;">Thêm sản phẩm</h5>
-</div>
+        <button class="btn btn-primary">
+            <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?product=list-product">Quay lại</a>
+        </button>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Sửa sản phẩm</h5>
         <div class="card-body">
             <form action="modules/manage_products/sua.php?id=<?= $ID_SanPham ?>" method="POST" enctype="multipart/form-data">
-               
                 <div class="form-group">
                     <label for="name">Tên sản phẩm</label>
                     <input class="form-control <?= isset($errors['TenSanPham']) ? 'is-invalid' : ''; ?>" type="text" name="TenSanPham" value="<?= htmlspecialchars($form_data['TenSanPham'] ?? $product['TenSanPham'], ENT_QUOTES); ?>" />
@@ -103,7 +96,6 @@ $success = isset($_SESSION['success']) ? $_SESSION['success'] : '';
                     <?php endif; ?>
                     <input class="form-control" type="file" name="image" accept="image/*" onchange="previewImage()">
                 </div>
-
                 <div class="form-group">
                     <label for="additionalImages">Hình ảnh mô tả:</label>
                     <div id="additionalImagesContainer" style="display: flex; flex-wrap: wrap; gap: 10px;">
@@ -161,69 +153,92 @@ unset($_SESSION['data']);
         var fileInput = document.querySelector('input[name="additional_images[]"]');
         var files = fileInput.files;
         var container = document.getElementById('additionalImagesContainer');
+        container.innerHTML = ''; // Xóa các hình ảnh hiện có
 
-        Array.from(files).forEach(function(file) {
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
             var reader = new FileReader();
-            reader.onloadend = function () {
-                var div = document.createElement('div');
-                div.className = 'image-item';
-                div.style.display = 'flex';
-                div.style.flexDirection = 'column';
-                div.style.alignItems = 'center';
-                div.style.gap = '5px';
+
+            reader.onloadend = function (e) {
                 var img = document.createElement('img');
                 img.style.width = '100px';
-                img.style.height = '100px';
+                  img.style.height = '100px';
                 img.style.objectFit = 'cover';
-                img.style.objectPosition = 'center center';
-                img.src = reader.result;
+                 img.style.objectPosition = 'center center';
+                img.src = e.target.result;
+
                 var button = document.createElement('button');
                 button.type = 'button';
-                button.className = 'btn btn-danger btn-sm';
+                button.className = 'btn btn-danger btn-sm remove-image';
                 button.textContent = 'Xóa';
-                button.onclick = function() {
-                    container.removeChild(div);
-                };
-                div.appendChild(img);
-                div.appendChild(button);
-                container.appendChild(div);
-            };
+                button.addEventListener('click', function () {
+                    img.parentElement.remove();
+                });
 
-            if (file) {
-                reader.readAsDataURL(file);
-            }
-        });
+                        var div = document.createElement('div');
+                        div.className = 'image-item';
+                        div.style.display = 'flex';
+                          div.style.flexDirection = 'column';
+                        div.style.alignItems = 'center';
+                         div.appendChild(img);
+                        div.appendChild(button);
+                        container.appendChild(div);
+                    };
+
+            reader.readAsDataURL(file);
+        }
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-    $('.remove-image').on('click', function () {
-        var imageToRemove = $(this).data('image');
-        Swal.fire({
-            title: 'Xác nhận xóa ảnh',
-            text: 'Bạn có chắc muốn xóa ảnh này không?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Có',
-            cancelButtonText: 'Không'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $(this).closest('.image-item').remove();
-                $('<input>').attr({
-                    type: 'hidden',
-                    name: 'images_to_remove[]',
-                    value: imageToRemove
-                }).appendTo('form');
-                
-                // Hiển thị thông báo thành công
-                Swal.fire({
-                    title: 'Thành công!',
-                    text: 'Ảnh đã được xóa.',
-                    icon: 'success',
-                    confirmButtonText: 'Đóng'
-                });
-            }
+    
+</script>
+<script>
+    $(document).ready(function () {
+        $('.remove-image').on('click', function () {
+            var imageName = $(this).data('image');
+            var imageItem = $(this).closest('.image-item');
+
+            Swal.fire({
+                title: 'Bạn có chắc chắn muốn xóa ảnh này?',
+                text: "Bạn sẽ không thể khôi phục ảnh này!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Có',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'modules/manage_products/delete_image.php',
+                        type: 'POST',
+                        data: { image: imageName },
+                        success: function (response) {
+                            var data = JSON.parse(response);
+                            if (data.success) {
+                                imageItem.remove(); // Xóa ảnh khỏi DOM
+                                Swal.fire(
+                                    'Xóa thành công!',
+                                    data.message,
+                                    'success'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Lỗi!',
+                                    data.message,
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function () {
+                            Swal.fire(
+                                'Lỗi!',
+                                'Không thể thực hiện yêu cầu xóa.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
         });
     });
-});
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
