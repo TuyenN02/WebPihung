@@ -61,7 +61,7 @@ $uploadedImage = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image'
                 </div>
                 <div class="form-group">
                     <label for="Img">Hình ảnh:</label>
-                    <input class="form-control <?php echo $ImgError ? 'is-invalid' : ''; ?>" type="file" name="Img" id="Img" accept=".jpg,.png" onchange="validateImage()">
+                    <input required  class="form-control <?php echo $ImgError ? 'is-invalid' : ''; ?>" type="file" name="Img" id="Img" accept=".jpg,.png" onchange="validateImage()">
                     <?php if ($ImgError): ?>
                         <div class="invalid-feedback">
                             <?php echo $ImgError; ?>
