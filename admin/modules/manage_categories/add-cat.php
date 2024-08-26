@@ -2,9 +2,12 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header font-weight-bold">
-                    Thêm danh mục
-                </div>
+            <div class="card-header font-weight-bold d-flex align-items-center justify-content-between">
+    <button class="btn btn-primary" style="margin: 0;">
+        <a style="color: white; text-decoration: none; border-radius: 5px;" href="?cat=list-cat">Quay lại</a>
+    </button>
+    <h5 class="m-0" style="text-align: center; font-size: 28px; flex-grow: 1;">Thêm danh mục</h5>
+</div>
                 <div class="card-body">
                     <!-- Hiển thị thông báo lỗi hoặc thành công từ session -->
                     <?php if (isset($_SESSION['errors'])): ?>
@@ -46,3 +49,11 @@
         </div>
     </div>
 </div>
+<style>
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 80px;
+}
+</style>

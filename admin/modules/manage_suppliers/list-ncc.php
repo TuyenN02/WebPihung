@@ -7,7 +7,6 @@ if (isset($_SESSION['success'])) {
     unset($_SESSION['success']); // Xóa thông báo sau khi đã hiển thị
 }
 
-
 // Xử lý phân trang
 if (isset($_GET['trang'])) {
     $page = $_GET['trang'];
@@ -19,11 +18,12 @@ $begin = ($page == '' || $page == 1) ? 0 : ($page * 8) - 8;
 // Khởi tạo biến từ khóa tìm kiếm
 $tukhoa = '';
 
-// Truy vấn nhà cung cấp
+// Truy vấn nhà cung cấp với collation để tìm kiếm bao gồm cả dấu
 $sql_NCC = "SELECT * FROM nhacungcap ORDER BY ID_NCC DESC LIMIT $begin, 8";
 if (isset($_POST['tukhoa'])) {
     $tukhoa = mysqli_real_escape_string($mysqli, trim($_POST['tukhoa']));
-    $sql_NCC = "SELECT * FROM nhacungcap WHERE TenNCC LIKE '%$tukhoa%' ORDER BY ID_NCC DESC LIMIT $begin, 8";
+    // Sử dụng COLLATE để tìm kiếm bao gồm cả dấu
+    $sql_NCC = "SELECT * FROM nhacungcap WHERE TenNCC COLLATE utf8mb4_bin LIKE '%$tukhoa%' ORDER BY ID_NCC DESC LIMIT $begin, 8";
 }
 $query_NCC = mysqli_query($mysqli, $sql_NCC);
 
@@ -49,13 +49,16 @@ if (isset($_SESSION['success_message'])): ?>
         if (successMessage) {
             successMessage.style.display = 'none';
         }
-    }, 3000); // 5000 ms = 5 giây
+    }, 5000); // 5000 ms = 5 giây
 </script>
 
 <div id="content" class="container-fluid">
     <div class="card">
         <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
-            <h5 class="m-0">Danh sách nhà cung cấp</h5>
+        <button class="btn btn-primary">
+        <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?ncc=add-ncc">Thêm mới</a>
+        </button>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Danh sách nhà cung cấp</h5>
             <div class="form-search form-inline">
                 <form action="" method="POST" class="d-flex">
                     <!-- Giữ lại từ khóa tìm kiếm đã nhập trong ô tìm kiếm -->
@@ -66,9 +69,7 @@ if (isset($_SESSION['success_message'])): ?>
         </div>
         
         <div class="card-body">
-            <?php if ($total_records == 0): ?>
-                <p class="text-center">Không tìm thấy nhà cung cấp nào.</p>
-            <?php else: ?>
+            <?php if ($total_records > 0): ?>
                 <table class="table table-striped table-checkall">
                     <thead>
                         <tr>
@@ -100,6 +101,24 @@ if (isset($_SESSION['success_message'])): ?>
                         <?php } ?>
                     </tbody>
                 </table>
+            <?php else: ?>
+                <!-- Vẫn hiển thị tiêu đề bảng khi không có kết quả -->
+                <table class="table table-striped table-checkall">
+                    <thead>
+                        <tr>
+                            <th scope="col">STT</th>
+                            <th scope="col">Tên nhà cung cấp</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">SĐT</th>
+                            <th scope="col">Địa chỉ</th>
+                            <th scope="col">Sửa/Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Các hàng sẽ không hiển thị, nhưng tiêu đề bảng vẫn được giữ lại -->
+                    </tbody>
+                </table>
+                <p class="text-center">Không tìm thấy nhà cung cấp nào.</p>
             <?php endif; ?>
         </div>
     </div>
@@ -112,3 +131,59 @@ if (isset($_SESSION['success_message'])): ?>
         }
     }
 </script>
+<style>
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 100px;
+}
+#success-message {
+    position: fixed; /* Đặt thông báo ở vị trí cố định so với cửa sổ trình duyệt */
+    bottom: 50px; /* Khoảng cách từ cạnh dưới của cửa sổ trình duyệt */
+    right: 10px; /* Khoảng cách từ cạnh phải của cửa sổ trình duyệt */
+    z-index: 9999; /* Đảm bảo thông báo nằm trên các phần tử khác */
+    padding: 15px; /* Khoảng cách bên trong thông báo */
+    background-color: #d4edda; /* Màu nền xanh nhạt */
+    color: #bf0000; /* Màu chữ xanh đậm */
+    border: 1px solid #ffaaaa; /* Đường viền xanh nhạt */
+    border-radius: 4px; /* Bo tròn các góc */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tạo bóng cho thông báo */
+    font-size: 16px; /* Kích thước chữ */
+    display: none; /* Ẩn thông báo theo mặc định */
+}
+/* Định dạng bảng */
+.table {
+    border-collapse: collapse; /* Đảm bảo các ô không bị gộp lại */
+    width: 100%; /* Đặt chiều rộng bảng bằng 100% */
+}
+
+.table thead th {
+    background-color: #f8f9fa; /* Màu nền cho tiêu đề bảng */
+    border: 1px solid #dee2e6; /* Đường viền xung quanh tiêu đề */
+    text-align: center; /* Căn giữa nội dung tiêu đề */
+    padding: 8px; /* Khoảng cách bên trong các tiêu đề */
+}
+
+.table tbody td {
+    border: 1px solid #dee2e6; /* Đường viền xung quanh các ô dữ liệu */
+    padding: 8px; /* Khoảng cách bên trong các ô dữ liệu */
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #ffff; /* Màu nền cho các hàng chẵn */
+}
+
+.table tbody tr:hover {
+    background-color: #e9ecef; /* Màu nền khi hover qua hàng */
+}
+
+.table th, .table td {
+    text-align: left; /* Căn trái nội dung của các ô dữ liệu */
+}
+
+.table .btn {
+    padding: 5px 10px; /* Điều chỉnh kích thước nút */
+    font-size: 12px; /* Kích thước chữ trong nút */
+}
+</style>

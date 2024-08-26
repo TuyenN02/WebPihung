@@ -44,13 +44,13 @@ if ($status === 'success') {
 <div id="content" class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="m-0">Danh sách đơn hàng</h5>
-            <div class="form-search d-flex align-items-center" style = 'width: 405px;'>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Danh sách đơn hàng</h5>
+            <div class="form-search d-flex align-items-center">
                 <form action="" method="POST" class="d-flex">
                     <input type="text" class="form-control form-search" placeholder="Nhập từ khóa..." name="tukhoa" value="<?php echo htmlspecialchars($tukhoa); ?>">
                     <select name="trangthai" class="form-control ml-2">
                         <option value="">Tất cả trạng thái</option>
-                        <option value="0" <?php if ($trangThai == '0') echo 'selected'; ?>>Chưa xác nhận</option>
+                        <option value="0" <?php if ($trangThai == '1') echo 'selected'; ?>>Chưa xác nhận</option>
                         <option value="1" <?php if ($trangThai == '1') echo 'selected'; ?>>Đã xác nhận</option>
                         <option value="2" <?php if ($trangThai == '2') echo 'selected'; ?>>Đã hủy</option>
                         <option value="3" <?php if ($trangThai == '3') echo 'selected'; ?>>Chờ lấy hàng</option>
@@ -188,11 +188,31 @@ if ($status === 'success') {
         margin-right: 1px; /* Điều chỉnh khoảng cách giữa các phần tử bên trong form */
     }
 
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 100px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/* Cập nhật CSS để điều chỉnh độ rộng của cột trạng thái */
+.table th:nth-child(6),
+.table td:nth-child(6) {
+    width: 150px; /* Thay đổi giá trị này theo nhu cầu của bạn */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Thêm dấu ... nếu nội dung vượt quá chiều rộng */
+    white-space: nowrap; /* Ngăn không cho dòng mới xuất hiện trong cột */
+}
+table {
+    font-size: 14px;
+    width: 100%;
+    border-collapse: collapse;
+}
 
     /* Cập nhật kích thước của input và select */
     input[type="text"].form-control.form-search {

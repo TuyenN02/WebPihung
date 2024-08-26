@@ -8,7 +8,6 @@ if (!isset($_SESSION['admin'])) {
 
 <!DOCTYPE html>
 <html lang="vi">
-    
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,47 +33,78 @@ if (!isset($_SESSION['admin'])) {
         <link rel="stylesheet" href="css/style.css" />
         <title>Admintrator</title>
         <style>
-     
-    /* Giảm khoảng cách bên trái của nội dung */
-    #page-body {
-        display: flex;
-        margin-top: 10px; /* Loại bỏ khoảng cách trên nếu cần */
-    }
+            /* style.css */
 
-    #sidebar {
-        flex: 0 0 310px; /* Độ rộng của sidebar */
-        height: 200%;
-        background-color: #4CAF50; /* Màu nền xanh lá cây */
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ cho sidebar */
-        padding: 20px; /* Padding xung quanh nội dung */
-        margin-top: 20px; /* Loại bỏ khoảng cách trên nếu cần */
-    }
-    .topnav {
-        display: flex;
-        justify-content: space-between; /* Căn chỉnh các phần tử với khoảng cách đều */
-        align-items: center; /* Căn giữa các phần tử theo chiều dọc */
-        padding: 10px 20px; /* Padding cho thanh điều hướng */
-    }
+/* Đảm bảo rằng thanh sidebar và nội dung nằm trên cùng một hàng và có cùng chiều cao */
+#page-body {
+    display: flex;
+    flex: 1;
+}
 
-    #wp-content {
-        flex: 100px; /* Chiếm hết không gian còn lại */
-        padding: 1px; /* Padding xung quanh nội dung */
-        margin-left: 1px; /* Giảm khoảng cách bên trái nếu cần */
-        margin-top: 40px; /* Giảm khoảng cách trên nếu cần */
-    }
-    .logout-btn {
-        margin-left: auto; /* Đẩy nút ra phía cuối cùng hàng */
-        height: 35px;
-    }
+body {
+    background-color: #a0e5a0; 
+}
 
-    </style>
+#warpper {
+    background-color: #a0e5a0;
+}
+
+#page-body {
+    background-color: #aeefce;
+}
+
+#sidebar {
+    width: 250px; /* Điều chỉnh chiều rộng của sidebar */
+    height: 100vh; /* Đảm bảo thanh sidebar dài bằng chiều cao của viewport */
+    position: fixed; /* Cố định vị trí của sidebar */
+    margin-top: 50px;
+    left: 0;
+    overflow-y: auto; /* Thêm thanh cuộn dọc nếu nội dung quá dài */
+    
+}
+
+#wp-content {
+    margin-left: 250px; /* Đẩy nội dung sang phải bằng chiều rộng của sidebar */
+    flex: 1;
+    padding: 5px; /* Thêm khoảng cách xung quanh nội dung */
+}
+
+/* Khoảng cách giữa các mục trong sidebar */
+#sidebar-menu li {
+    margin-bottom: 20px; /* Thay đổi giá trị để điều chỉnh khoảng cách */
+}
+
+.sub-menu li {
+    margin-bottom: 5px; /* Thay đổi giá trị để điều chỉnh khoảng cách */
+}
+
+.topnav {
+    display: flex;
+    justify-content: space-between; /* Đẩy các phần tử ra hai bên */
+    align-items: center; /* Căn giữa các phần tử theo chiều dọc */
+    padding: 10px 20px; /* Giảm khoảng cách xung quanh thanh điều hướng */
+    margin: 0; /* Loại bỏ margin để thanh điều hướng nằm sát mép trên */
+    color:#7cc97c;
+}
+
+.topnav .navbar-brand {
+    margin-right: 20px; /* Thay đổi giá trị để điều chỉnh khoảng cách */
+}
+
+.topnav .btn-danger {
+    margin-left: 20px; /* Thay đổi giá trị để điều chỉnh khoảng cách */
+}      </style>
+
     </head>
     <body>
         <div id="warpper" class="nav-fixed">
-        <nav class="topnav shadow navbar-light bg-white d-flex">
-                <div class="navbar-brand"><a href="index.php">QUẢN LÝ</a></div>
-                <!-- Thêm nút đăng xuất với lớp "logout-btn" -->
-                <a class="btn btn-danger logout-btn" href="logout.php">Đăng xuất</a>
+            <nav class="topnav shadow navbar-light bg-white d-flex">
+            <div class="navbar-brand">
+    <a href="index.php" style="color: #228B22;">Shop cây cảnh PI HƯNG - Admin</a>
+</div>
+               
+            <a class="btn btn-danger mr-2" href="logout.php">Đăng xuất</a>
+            </div>
             </nav>
             <div id="page-body" class="d-flex">
                 <div id="sidebar" class="bg-white">
@@ -82,7 +112,7 @@ if (!isset($_SESSION['admin'])) {
                     <li class="nav-link">
                             <a href="index.php">
                                 <div class="nav-link-icon d-inline-flex">
-                                    <i class="fas fa-chart-bar"></i>
+                                    <i class="fas fa-chart-line"></i>
                                 </div>
                                 Thống kê
                             </a>
@@ -90,54 +120,36 @@ if (!isset($_SESSION['admin'])) {
                         <li class="nav-link">
                             <a href="?ncc=list-ncc">
                                 <div class="nav-link-icon d-inline-flex">
-                                    <i class="far fa-folder"></i>
+                                    <i class="fas fa-city"></i>
                                 </div>
                                 Quản lý nhà cung cấp
                             </a>
-                            <i class="arrow fas fa-angle-right"></i>
-                            <ul class="sub-menu">
-                                <li><a href="?ncc=add-ncc">Thêm mới</a></li>
-                                <li>
-                                    <a href="?ncc=list-ncc">Danh sách</a>
-                                </li>
-                            </ul>
+                          
                         </li>
 
                         <li class="nav-link">
                             <a href="?product=list-product">
                                 <div class="nav-link-icon d-inline-flex">
-                                    <i class="far fa-folder"></i>
+                                    <i class="fas fa-archive"></i>
                                 </div>
                                 Quản lý sản phẩm
                             </a>
-                            <i class="arrow fas fa-angle-right"></i>
-                            <ul class="sub-menu">
-                                <li>
-                                    <a href="?product=add-product">Thêm mới</a>
-                                </li>
-                                <li>
-                                    <a href="?product=list-product">Danh sách</a>
-                                </li>
+                         
                             
-                            </ul>
                         </li>
                         <li class="nav-link">
     <a href="?cat=list-cat">
         <div class="nav-link-icon d-inline-flex">
-            <i class="far fa-folder"></i>
+            <i class="fas fa-tags"></i>
         </div>
         Quản lý danh mục
     </a>
-    <i class="arrow fas fa-angle-right"></i>
-    <ul class="sub-menu">
-        <li><a href="?cat=add-cat">Thêm mới</a></li>
-        <li><a href="?cat=list-cat">Danh sách</a></li>
-    </ul>
+  
 </li>
                         <li class="nav-link">
     <a href="?info=info">
         <div class="nav-link-icon d-inline-flex">
-            <i class="far fa-folder"></i>
+            <i class="	far fa-address-book"></i>
         </div>
         Quản lý thông tin
     </a>
@@ -146,47 +158,35 @@ if (!isset($_SESSION['admin'])) {
 <li class="nav-link">
     <a href="?posts=list-posts">
         <div class="nav-link-icon d-inline-flex">
-            <i class="far fa-folder"></i>
+            <i class="far fa-newspaper"></i>
         </div>
         Quản lý bài viết
     </a>
-    <i class="arrow fas fa-angle-right"></i>
-    <ul class="sub-menu">
-        <li><a href="?posts=add-post">Thêm mới</a></li>
-        <li><a href="?posts=list-posts">Danh sách</a></li>
-    </ul>
+   
 </li>
     <li class="nav-link">
     <a href="?policy=list-policy">
         <div class="nav-link-icon d-inline-flex">
-            <i class="far fa-folder"></i>
+            <i class="fas fa-book"></i>
         </div>
         Quản lý chính sách
     </a>
-    <i class="arrow fas fa-angle-right"></i>
-    <ul class="sub-menu">
-        <li>
-            <a href="?policy=add-policy">Thêm mới</a>
-        </li>
-        <li>
-            <a href="?policy=list-policy">Danh sách</a>
-        </li>
-    </ul>
+   
 </li>
 
                         <li class="nav-link">
                             <a href="index.php?order=success-order-list">
                                 <div class="nav-link-icon d-inline-flex">
-                                    <i class="far fa-folder"></i>
+                                    <i class="fa fa-shopping-cart"></i>
                                 </div>
                                Quản lý đơn hàng
                             </a>
-                           
-                        </li>
+               
+</li>
                         <li class="nav-link">
                             <a href="?user=list-user">
                                 <div class="nav-link-icon d-inline-flex">
-                                    <i class="far fa-folder"></i>
+                                    <i class="fas fa-users"></i>
                                 </div>
                                 Quản lý tài khoản
                             </a>
@@ -264,5 +264,5 @@ if (!isset($_SESSION['admin'])) {
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/thongke.js"></script>
+
 </html>

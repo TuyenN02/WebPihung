@@ -13,9 +13,12 @@ $uploadedImage = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image'
 
 <div id="content" class="container-fluid">
     <div class="card">
-        <div class="card-header font-weight-bold">
-            Thêm nhà cung cấp
-        </div>
+    <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
+    <button class="btn btn-primary">
+        <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?ncc=list-ncc">Quay lại</a>
+    </button>
+    <h5 class="m-0" style="flex-grow: 1; text-align: center; font-size: 28px;">Thêm nhà cung cấp</h5>
+</div>
         <div class="card-body">
             <form method="POST" action="modules/manage_suppliers/add.php" enctype="multipart/form-data">
                 <div class="form-group">
@@ -61,7 +64,7 @@ $uploadedImage = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image'
                 </div>
                 <div class="form-group">
                     <label for="Img">Hình ảnh:</label>
-                    <input class="form-control <?php echo $ImgError ? 'is-invalid' : ''; ?>" type="file" name="Img" id="Img" accept=".jpg,.png" onchange="validateImage()">
+                    <input required  class="form-control <?php echo $ImgError ? 'is-invalid' : ''; ?>" type="file" name="Img" id="Img" accept=".jpg,.png" onchange="validateImage()">
                     <?php if ($ImgError): ?>
                         <div class="invalid-feedback">
                             <?php echo $ImgError; ?>
@@ -112,3 +115,11 @@ if (empty($TenNCCError) && empty($phoneError) && empty($emailError) && empty($Di
         }
     }
 </script>
+<style>
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 60px;
+}
+</style>

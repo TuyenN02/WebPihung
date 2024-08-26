@@ -24,7 +24,10 @@ $isEmpty = mysqli_num_rows($query_category_product) == 0;
         <div class="col-12">
             <div class="card">
                 <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
-                    <h5 class="m-0">Danh sách danh mục</h5>
+                <button class="btn btn-primary">
+        <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?cat=add-cat">Thêm mới</a>
+        </button>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Danh sách danh mục</h5>
                     <div class="form-search form-inline">
                         <form action="" method="POST" class="d-flex">
                             <input type="text" class="form-control form-search" placeholder="Nhập từ khóa..." name="tukhoa" value="<?php echo isset($tukhoa) ? htmlspecialchars($tukhoa) : ''; ?>">
@@ -41,10 +44,6 @@ $isEmpty = mysqli_num_rows($query_category_product) == 0;
                             <?php unset($_SESSION['success']); ?>
                         </div>
                     <?php endif; ?>
-
-                    <?php if ($isEmpty): ?>
-                        <p class="text-center">Không tìm thấy danh mục nào!</p>
-                    <?php else: ?>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -73,6 +72,10 @@ $isEmpty = mysqli_num_rows($query_category_product) == 0;
                                 <?php } ?>     
                             </tbody>
                         </table>
+                        
+                    <?php if ($isEmpty): ?>
+                        <p class="text-center">Không tìm thấy danh mục nào!</p>
+             
                     <?php endif; ?>
                 </div>
             </div>
@@ -108,3 +111,12 @@ $isEmpty = mysqli_num_rows($query_category_product) == 0;
     // Gọi hàm khi trang tải
     document.addEventListener('DOMContentLoaded', hideAlerts);
 </script>
+<style>
+
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 100px;
+}
+</style>

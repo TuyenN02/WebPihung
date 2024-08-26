@@ -16,11 +16,12 @@ if (isset($_POST['update'])) {
     $ID_DanhMuc = (int)$_POST['danhmuc'];
     $ID_NCC = (int)$_POST['nhacungcap'];
 
+    // Xử lý ảnh chính
     $imageName = $_FILES['image']['name'];
     $imageTemp = $_FILES['image']['tmp_name'];
     $targetDir = "../../../assets/image/product/";
+    $newImageName = '';
 
-    // Xử lý ảnh chính
     if (!empty($imageName)) {
         $allowed_extensions = ['jpg', 'jpeg', 'png'];
         $file_extension = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
@@ -37,7 +38,11 @@ if (isset($_POST['update'])) {
     } else {
         // Nếu không có hình ảnh mới, giữ hình ảnh cũ
         $result = $mysqli->query("SELECT Img FROM sanpham WHERE ID_SanPham=$ID_SanPham");
-        $newImageName = $result ? $result->fetch_assoc()['Img'] : null;
+        if ($result && $result->num_rows > 0) {
+            $newImageName = $result->fetch_assoc()['Img'];
+        } else {
+            $errors['Img'] = 'Không tìm thấy hình ảnh của sản phẩm.';
+        }
     }
 
     // Xử lý ảnh phụ

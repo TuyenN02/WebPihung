@@ -27,11 +27,20 @@ if (isset($_GET['id_NCC'])) {
     }
 }
 ?>
+<?php
+// Xóa thông báo lỗi và dữ liệu sau khi hiển thị
+unset($_SESSION['errors']);
+unset($_SESSION['data']);
+
+?>
 
 <div id="content" class="container-fluid">
     <div class="card">
-        <div class="card-header font-weight-bold">
-            Sửa thông tin nhà cung cấp
+    <div class="card-header font-weight-bold">
+        <button class="btn btn-primary">
+        <a style="color: white; text-decoration: none; padding: 10px 5px; border-radius: 5px;" href="?ncc=list-ncc">Quay lại</a>
+        </button>
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Sửa nhà cung cấp</h5>
         </div>
         <div class="card-body">
             <form method="POST" action="modules/manage_suppliers/sua.php?id_NCC=<?php echo $ID_NCC; ?>" enctype="multipart/form-data">
@@ -68,15 +77,20 @@ if (isset($_GET['id_NCC'])) {
                     <?php endif; ?>
                 </div>
                 <div class="form-group">
-                    <label for="DiaChi">Địa chỉ:</label>
-                    <input required class="form-control" type="text" name="DiaChi" value="<?php echo $data['DiaChi']; ?>">
-                </div>
+    <label for="DiaChi">Địa chỉ:</label>
+    <input required class="form-control <?php echo isset($_SESSION['errors']['DiaChi']) ? 'is-invalid' : ''; ?>" type="text" name="DiaChi" value="<?php echo $data['DiaChi']; ?>">
+    <?php if (isset($_SESSION['errors']['DiaChi'])): ?>
+        <div class="invalid-feedback">
+            <?php echo $_SESSION['errors']['DiaChi']; ?>
+        </div>
+    <?php endif; ?>
+</div>
                 <div class="form-group">
                     <label for="formFile">Hình ảnh:</label>
                     <?php if (!empty($row['Img'])): ?>
                         <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center;" src="../assets/image/supplier/<?php echo htmlspecialchars($row['Img']); ?>" alt="Hình ảnh nhà cung cấp">
                     <?php else: ?>
-                        <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center;" src="#" alt="Hình ảnh nhà cung cấp" style="display: none;">
+                        
                     <?php endif; ?>
                     <input class="form-control" type="file" name="image" accept="image/*" onchange="previewImage()">
                 </div>
@@ -87,11 +101,7 @@ if (isset($_GET['id_NCC'])) {
     </div>
 </div>
 
-<?php
-// Xóa thông báo lỗi và dữ liệu sau khi hiển thị
-unset($_SESSION['errors']);
-unset($_SESSION['data']);
-?>
+
 
 <script>
     function previewImage() {
@@ -112,4 +122,32 @@ unset($_SESSION['data']);
             preview.style.display = 'none';
         }
     }
+    function clearTemporaryData() {
+    // Gửi yêu cầu xóa dữ liệu tạm thời trước khi chuyển hướng
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "clear_temp_data.php", true);
+    xhr.send();
+}
 </script>
+<style>
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 60px;
+}
+.card-header .btn {
+    margin-right: auto; /* Đẩy nút sang bên trái */
+}
+
+.card-header h5 {
+    margin: 0;
+    flex-grow: 1; /* Giúp tiêu đề tự động chiếm không gian còn lại */
+    text-align: center; /* Căn giữa tiêu đề */
+}
+</style>

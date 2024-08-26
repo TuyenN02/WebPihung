@@ -26,30 +26,51 @@ if (isset($_POST['submit'])) {
     // Kiểm tra lỗi bỏ trống
     if (empty($TenNCC)) {
         $_SESSION['errors']['TenNCC'] = "Tên nhà cung cấp không được để trống.";
-    }
-    if (empty($Email)) {
-        $_SESSION['errors']['email'] = "Email không được để trống.";
-    }
-    if (empty($SoDienThoai)) {
-        $_SESSION['errors']['phone'] = "Số điện thoại không được để trống.";
-    }
-    if (empty($DiaChi)) {
-        $_SESSION['errors']['DiaChi'] = "Địa chỉ không được để trống.";
-    }
-
-    // Kiểm tra độ dài tên nhà cung cấp
-    if (strlen($TenNCC) > 50) {
+    } elseif (strlen($TenNCC) < 3) {
+        $_SESSION['errors']['TenNCC'] = "Tên nhà cung cấp phải có ít nhất 3 ký tự.";
+    } elseif (strlen($TenNCC) > 50) {
         $_SESSION['errors']['TenNCC'] = "Tên nhà cung cấp không được vượt quá 50 ký tự.";
     }
 
-    // Kiểm tra định dạng số điện thoại
-    if (!preg_match('/^0[0-9]{9}$/', $SoDienThoai)) {
+    if (empty($Email)) {
+        $_SESSION['errors']['email'] = "Email không được để trống.";
+    } elseif (!filter_var($Email, FILTER_VALIDATE_EMAIL) || strlen(explode('@', $Email)[0]) < 4 || strlen($Email) > 50) {
+        $_SESSION['errors']['email'] = "Email chưa đúng định dạng!";
+    }
+
+    if (empty($SoDienThoai)) {
+        $_SESSION['errors']['phone'] = "Số điện thoại không được để trống.";
+    } elseif (!preg_match('/^0[0-9]{9}$/', $SoDienThoai)) {
         $_SESSION['errors']['phone'] = "Vui lòng nhập đúng định dạng.";
     }
 
-    // Kiểm tra định dạng email với ít nhất 4 ký tự trước @ và không quá 255 ký tự
-    if (!filter_var($Email, FILTER_VALIDATE_EMAIL) || strlen(explode('@', $Email)[0]) < 4 || strlen($Email) > 50) {
-        $_SESSION['errors']['email'] = "Email chưa đúng định dạng!";
+    if (empty($DiaChi)) {
+        $_SESSION['errors']['DiaChi'] = "Địa chỉ không được để trống.";
+    } elseif (strlen($DiaChi) < 5) {
+        $_SESSION['errors']['DiaChi'] = "Địa chỉ phải có ít nhất 5 ký tự.";
+    } elseif (strlen($DiaChi) > 255) {
+        $_SESSION['errors']['DiaChi'] = "Địa chỉ không được vượt quá 255 ký tự.";
+    }
+
+    // Kiểm tra trùng lặp tên nhà cung cấp
+    $sql_checkTenNCC = "SELECT * FROM nhacungcap WHERE TenNCC='$TenNCC' AND ID_NCC != $ID_NCC";
+    $result_checkTenNCC = mysqli_query($mysqli, $sql_checkTenNCC);
+    if (mysqli_num_rows($result_checkTenNCC) > 0) {
+        $_SESSION['errors']['TenNCC'] = "Tên nhà cung cấp đã tồn tại!";
+    }
+
+    // Kiểm tra trùng lặp email
+    $sql_checkEmail = "SELECT * FROM nhacungcap WHERE Email='$Email' AND ID_NCC != $ID_NCC";
+    $result_checkEmail = mysqli_query($mysqli, $sql_checkEmail);
+    if (mysqli_num_rows($result_checkEmail) > 0) {
+        $_SESSION['errors']['email'] = "Email đã tồn tại!";
+    }
+
+    // Kiểm tra trùng lặp số điện thoại
+    $sql_checkPhone = "SELECT * FROM nhacungcap WHERE SoDienThoai='$SoDienThoai' AND ID_NCC != $ID_NCC";
+    $result_checkPhone = mysqli_query($mysqli, $sql_checkPhone);
+    if (mysqli_num_rows($result_checkPhone) > 0) {
+        $_SESSION['errors']['phone'] = "Số điện thoại đã tồn tại!";
     }
 
     // Kiểm tra nếu có lỗi

@@ -74,7 +74,7 @@
                 <a class="navbar-brand" href="./index.php">
                     <img class="logo" src="./assets/image/logo/l5.png" alt="Shop Logo"/>
                 </a>
-                <h1 class="main-titles">SHOP CÂY CẢNH PI HƯNG</h1>
+                <h1 class="main-titles">CÂY CẢNH PI HƯNG</h1>
                 <a class="navbar-brand" href="./index.php">
                     <img class="logos" src="./assets/image/logo/kcc.png" alt="Shop Logo"/>
                 </a>

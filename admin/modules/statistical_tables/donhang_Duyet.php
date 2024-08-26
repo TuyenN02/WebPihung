@@ -7,7 +7,7 @@ $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : null;
 $orderDate = isset($_GET['order_date']) ? $_GET['order_date'] : null;
 
 // Tạo câu truy vấn SQL cơ bản
-$query = "SELECT COUNT(*) as completedOrders FROM donhang WHERE XuLy = 5";
+$query = "SELECT COUNT(*) as donhang_Duyet FROM donhang WHERE XuLy = 1";
 
 // Kiểm tra xem người dùng muốn thống kê theo ngày cụ thể hay theo khoảng thời gian
 if ($orderDate) {
@@ -24,5 +24,5 @@ $result = $mysqli->query($query);
 $row = $result->fetch_assoc();
 
 // Trả về kết quả dưới dạng JSON
-echo json_encode(['completedOrders' => $row['completedOrders']]);
+echo json_encode(['donhang_Duyet' => $row['donhang_Duyet']]);
 ?>

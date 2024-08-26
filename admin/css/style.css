@@ -124,15 +124,16 @@ a:hover {
 }
 
 #sidebar {
-    background-color: #c2fecf; /* Màu xanh nhạt */
+    background-color: #98ffaf; /* Màu xanh nhạt */
 }
 
 #wp-content {
     flex: auto;
-     height: calc(100vh - 58px); 
+     height: auto; 
     min-height: 100vh;
     padding-top: 3.625rem;
     padding-left: 5rem;
+    margin-top: 20px;
 }
 
 #content {
