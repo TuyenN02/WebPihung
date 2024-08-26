@@ -45,7 +45,7 @@ if ($status === 'success') {
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Danh sách đơn hàng</h5>
-            <div class="form-search d-flex align-items-center">
+            <div class="form-search d-flex align-items-center" style = 'width: 405px;'>
                 <form action="" method="POST" class="d-flex">
                     <input type="text" class="form-control form-search" placeholder="Nhập từ khóa..." name="tukhoa" value="<?php echo htmlspecialchars($tukhoa); ?>">
                     <select name="trangthai" class="form-control ml-2">
