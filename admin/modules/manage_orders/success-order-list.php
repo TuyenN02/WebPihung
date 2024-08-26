@@ -53,7 +53,7 @@ if ($status === 'success') {
                     <input type="text" class="form-control form-search" placeholder="Nhập từ khóa..." name="tukhoa" value="<?php echo htmlspecialchars($tukhoa); ?>">
                     <select name="trangthai" class="form-control ml-2">
                         <option value="">Tất cả trạng thái</option>
-                        <option value="0" <?php if ($trangThai == '0') echo 'selected'; ?>>Chưa xác nhận</option>
+                        <option value="0" <?php if ($trangThai == '1') echo 'selected'; ?>>Chưa xác nhận</option>
                         <option value="1" <?php if ($trangThai == '1') echo 'selected'; ?>>Đã xác nhận</option>
                         <option value="2" <?php if ($trangThai == '2') echo 'selected'; ?>>Đã hủy</option>
                         <option value="3" <?php if ($trangThai == '3') echo 'selected'; ?>>Chờ lấy hàng</option>

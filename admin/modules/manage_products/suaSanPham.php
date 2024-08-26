@@ -26,10 +26,12 @@ $success = isset($_SESSION['success']) ? $_SESSION['success'] : '';
 
 <div id="content" class="container-fluid">
     <div class="card">
-        <button class="btn btn-primary">
-            <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?product=list-product">Quay lại</a>
-        </button>
-        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Sửa sản phẩm</h5>
+    <div class="card-header font-weight-bold d-flex align-items-center">
+    <button class="btn btn-primary" style="margin-right: 10px;">
+        <a style="color: white; text-decoration: none; border-radius: 5px;" href="?product=list-product">Quay lại</a>
+    </button>
+    <h5 class="m-0" style="text-align:center; font-size: 28px; flex-grow: 1;">Sửa sản phẩm</h5>
+</div>
         <div class="card-body">
             <form action="modules/manage_products/sua.php?id=<?= $ID_SanPham ?>" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
@@ -242,3 +244,10 @@ unset($_SESSION['data']);
         });
     });
 </script>
+<style>
+ #wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 60px;
+ }</style>

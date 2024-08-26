@@ -100,10 +100,10 @@ body {
         <div id="warpper" class="nav-fixed">
             <nav class="topnav shadow navbar-light bg-white d-flex">
             <div class="navbar-brand">
-    <a href="index.php" style="color: #228B22;">Shop cây cảnh Pi Hưng - Admin</a>
+    <a href="index.php" style="color: #228B22;">Shop cây cảnh PI HƯNG - Admin</a>
 </div>
                
-            <a class="btn btn-danger mr-2" href="logout.php">Thoát</a>
+            <a class="btn btn-danger mr-2" href="logout.php">Đăng xuất</a>
             </div>
             </nav>
             <div id="page-body" class="d-flex">

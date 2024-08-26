@@ -66,8 +66,8 @@
 <div class="container">
     <div class="section">
         <h2 class="section-title animate__animated animate__fadeInDown">Giới thiệu cửa hàng</h2>
-        <p>Chào mừng quý khách đến với Shop Cây Cảnh Pi Hưng, một địa chỉ uy tín và chất lượng cho những ai yêu thích cây cảnh và muốn mang thiên nhiên vào không gian sống của mình. Tọa lạc tại trung tâm thành phố, Shop Cây Cảnh Pi Hưng tự hào là một trong những cửa hàng cây cảnh hàng đầu với đa dạng các loại cây cảnh, từ những loại cây phổ biến như cây kim ngân, cây lưỡi hổ, cây phú quý, đến những loại cây đặc biệt và hiếm có như cây bonsai, cây thủy sinh, và cây không khí.</p>
-        <p>Shop Cây Cảnh Pi Hưng không chỉ cung cấp cây cảnh mà còn mang đến những giải pháp toàn diện cho việc trang trí và chăm sóc cây xanh. Chúng tôi hiểu rằng mỗi loại cây đều cần có những điều kiện chăm sóc riêng biệt để phát triển tốt nhất. Do đó, Pi Hưng cam kết cung cấp cho khách hàng những hướng dẫn chi tiết và tận tình về cách chăm sóc từng loại cây. Đội ngũ nhân viên của chúng tôi đều là những chuyên gia trong lĩnh vực cây cảnh, sẵn sàng tư vấn và giải đáp mọi thắc mắc của quý khách.</p>
+        <p>Chào mừng quý khách đến với Shop Cây Cảnh PI HƯNG, một địa chỉ uy tín và chất lượng cho những ai yêu thích cây cảnh và muốn mang thiên nhiên vào không gian sống của mình. Tọa lạc tại trung tâm thành phố, Shop Cây Cảnh PI HƯNG tự hào là một trong những cửa hàng cây cảnh hàng đầu với đa dạng các loại cây cảnh, từ những loại cây phổ biến như cây kim ngân, cây lưỡi hổ, cây phú quý, đến những loại cây đặc biệt và hiếm có như cây bonsai, cây thủy sinh, và cây không khí.</p>
+        <p>Shop Cây Cảnh PI HƯNG không chỉ cung cấp cây cảnh mà còn mang đến những giải pháp toàn diện cho việc trang trí và chăm sóc cây xanh. Chúng tôi hiểu rằng mỗi loại cây đều cần có những điều kiện chăm sóc riêng biệt để phát triển tốt nhất. Do đó, PI HƯNG cam kết cung cấp cho khách hàng những hướng dẫn chi tiết và tận tình về cách chăm sóc từng loại cây. Đội ngũ nhân viên của chúng tôi đều là những chuyên gia trong lĩnh vực cây cảnh, sẵn sàng tư vấn và giải đáp mọi thắc mắc của quý khách.</p>
     </div>
     
     <div class="section">
@@ -86,7 +86,7 @@
 
     <div class="section">
         <h2 class="section-title animate__animated animate__fadeInDown">Chủ cửa hàng</h2>
-        <p>Chủ cửa hàng: Khuất Thanh Ngoan </p>
+        <p>Chủ cửa hàng: Khuất Thị Thanh Ngoan </p>
         <div class="image-container">
             <img src="./assets/image/logo/b12.jpg" alt="Owner Image 1" class="animate__animated animate__fadeIn">
             <img src="./assets/image/logo/b13.jpg" alt="Owner Image 2" class="animate__animated animate__fadeIn">

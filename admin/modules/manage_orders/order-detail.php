@@ -60,5 +60,28 @@ $query_order_detail = mysqli_query($mysqli, $sql_order_detail);
                 <th colspan="4">Tổng tiền: <?= number_format($row['GiaTien'], 0, ',', '.') ?> VND</th>
             </tr>
         </table>
+
+              <!-- Print Order Button at the Bottom-Right -->
+              <div class="d-flex justify-content-end">
+            <a href="indonhang.php?id=<?= $id_order ?>" class="btn btn-primary">
+                <i class="fas fa-print"></i> In đơn hàng
+            </a>
+        </div>
     </div>
 </div>
+
+</div><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+   
+    .btn {
+        position: relative;
+        bottom: 5px;
+        right: 5px;
+    }
+#wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 60px;
+}
+</style>
