@@ -2,6 +2,7 @@
 include("../../config/connection.php"); 
 
 if (isset($_GET['id_baiviet'])) {
+
     $ID_baiviet = $_GET['id_baiviet'];
 
     // Lấy tên ảnh từ cơ sở dữ liệu
@@ -18,7 +19,7 @@ if (isset($_GET['id_baiviet'])) {
     if (mysqli_query($mysqli, $sql_xoa)) {
         // Lưu thông báo thành công vào session
         session_start();
-        $_SESSION['success_message'] = "Xóa bài viết thành công.";
+        $_SESSION['success'] = "Xóa bài viết thành công.";
     }
 }
 
