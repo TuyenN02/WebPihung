@@ -16,7 +16,7 @@ $query_order_detail = mysqli_query($mysqli, $sql_order_detail);
     <div class="card">
         <!-- Button to go back -->
         <div class="card-header">
-            <a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>
+            <a href="index.php?order=success-order-list" class="btn btn-secondary">Quay lại</a>
         </div>
 
         <table class="table table-bordered table-checkall">
