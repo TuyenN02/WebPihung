@@ -23,6 +23,21 @@ $isEmpty = mysqli_num_rows($query_category_product) == 0;
         <!-- Phần danh sách danh mục -->
         <div class="col-12">
             <div class="card">
+                  
+            <?php if (isset($_SESSION['success'])): ?>
+                        <div class="alert alert-success" role="alert" id="alert-success">
+                            <p><?php echo htmlspecialchars($_SESSION['success']); ?></p>
+                            <?php unset($_SESSION['success']); ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (isset($_SESSION['errors'])): ?>
+    <?php foreach ($_SESSION['errors'] as $error): ?>
+        <div class="alert alert-danger">
+            <?php echo htmlspecialchars($error); ?>
+        </div>
+    <?php endforeach; ?>
+    <?php unset($_SESSION['errors']); ?>
+<?php endif; ?>
                 <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
                 <button class="btn btn-primary">
         <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?cat=add-cat">Thêm mới</a>
@@ -36,14 +51,6 @@ $isEmpty = mysqli_num_rows($query_category_product) == 0;
                     </div>
                 </div>
                 <div class="card-body">
-                  
-                    
-                    <?php if (isset($_SESSION['success'])): ?>
-                        <div class="alert alert-success" role="alert" id="alert-success">
-                            <p><?php echo htmlspecialchars($_SESSION['success']); ?></p>
-                            <?php unset($_SESSION['success']); ?>
-                        </div>
-                    <?php endif; ?>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -92,21 +99,24 @@ $isEmpty = mysqli_num_rows($query_category_product) == 0;
 
     // Hàm để ẩn thông báo sau 3 giây
     function hideAlerts() {
-        const alertErrors = document.getElementById('alert-errors');
-        const alertSuccess = document.getElementById('alert-success');
+        const alertErrors = document.querySelectorAll('.alert-danger');
+        const alertSuccess = document.querySelectorAll('.alert-success');
         
-        if (alertErrors) {
+        alertErrors.forEach(alert => {
             setTimeout(() => {
-                alertErrors.style.display = 'none';
+                alert.style.opacity = 0;
+                setTimeout(() => alert.style.display = 'none', 500); // 0.5 giây cho hiệu ứng chuyển tiếp
             }, 3000); // 3 giây
-        }
+        });
         
-        if (alertSuccess) {
+        alertSuccess.forEach(alert => {
             setTimeout(() => {
-                alertSuccess.style.display = 'none';
+                alert.style.opacity = 0;
+                setTimeout(() => alert.style.display = 'none', 500); // 0.5 giây cho hiệu ứng chuyển tiếp
             }, 3000); // 3 giây
-        }
+        });
     }
+
 
     // Gọi hàm khi trang tải
     document.addEventListener('DOMContentLoaded', hideAlerts);
@@ -118,5 +128,35 @@ $isEmpty = mysqli_num_rows($query_category_product) == 0;
     flex: 1;
     padding: 10px;
     margin-top: 100px;
+}
+
+
+.alert-success {
+    background-color: #d4edda;
+    color: #ff0000;
+    border: 3px solid #ff0000;
+    position: fixed;
+    top: 50px;
+    right: 970px;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 3px solid #ff0000;
+    position: fixed;
+    top: 50px;
+    right: 780px;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+  
 }
 </style>

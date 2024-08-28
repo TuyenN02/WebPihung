@@ -102,6 +102,30 @@ unset($_SESSION['success']);
                         padding: 8px; /* Adjust padding to make columns closer */
                         border: 2px solid #dee2e6; /* Add border for clarity */
                     }
+                   
+
+.alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
 /* Điều chỉnh chiều cao của phần tử chính */
 #content {
     min-height: 80vh; /* Tăng chiều cao tối thiểu của phần tử chính */

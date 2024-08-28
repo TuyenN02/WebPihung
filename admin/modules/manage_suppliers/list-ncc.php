@@ -2,9 +2,9 @@
 include("config/connection.php"); // Kết nối đến cơ sở dữ liệu
 
 // Kiểm tra thông báo thành công
-if (isset($_SESSION['success'])) {
-    echo '<div class="alert alert-success">' . $_SESSION['success'] . '</div>';
-    unset($_SESSION['success']); // Xóa thông báo sau khi đã hiển thị
+if (isset($_SESSION['success_message'])) {
+    echo '<div class="alert alert-success">' . $_SESSION['success_message'] . '</div>';
+    unset($_SESSION['success_message']); // Xóa thông báo sau khi đã hiển thị
 }
 
 // Xử lý phân trang
@@ -49,7 +49,7 @@ if (isset($_SESSION['success_message'])): ?>
         if (successMessage) {
             successMessage.style.display = 'none';
         }
-    }, 5000); // 5000 ms = 5 giây
+    }, 3000); // 5000 ms = 5 giây
 </script>
 
 <div id="content" class="container-fluid">
@@ -131,6 +131,20 @@ if (isset($_SESSION['success_message'])): ?>
         }
     }
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert');
+
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.style.opacity = 0;
+                setTimeout(() => {
+                    alert.remove();
+                }, 500);
+            }, 3000);
+        });
+    });
+</script>
 <style>
 #wp-content {
     margin-left: 250px;
@@ -185,5 +199,27 @@ if (isset($_SESSION['success_message'])): ?>
 .table .btn {
     padding: 5px 10px; /* Điều chỉnh kích thước nút */
     font-size: 12px; /* Kích thước chữ trong nút */
+}
+.alert {
+    position: fixed;
+    top: 50px;
+    right: 940px;
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #ff0000;
+    border: 3px solid #ff0000;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
 </style>
