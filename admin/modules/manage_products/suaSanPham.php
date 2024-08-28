@@ -132,64 +132,91 @@ unset($_SESSION['data']);
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function previewImage() {
-        var fileInput = document.querySelector('input[name="image"]');
-        var file = fileInput.files[0];
-        var preview = document.getElementById('imagePreview');
+   function previewImage() {
+    var fileInput = document.querySelector('input[name="image"]');
+    var file = fileInput.files[0];
+    var preview = document.getElementById('imagePreview');
+    var reader = new FileReader();
+
+    // Kiểm tra định dạng ảnh
+    var validExtensions = ['image/png', 'image/jpeg']; // Định dạng hợp lệ
+
+    if (file && !validExtensions.includes(file.type)) {
+        Swal.fire({
+            title: 'Lỗi định dạng!',
+            text: 'Vui lòng chọn tệp có định dạng PNG hoặc JPG.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+        fileInput.value = ''; // Xóa tệp không hợp lệ
+        preview.style.display = 'none'; // Ẩn hình ảnh nếu không hợp lệ
+        return;
+    }
+
+    reader.onloadend = function () {
+        preview.src = reader.result;
+        preview.style.display = 'block'; // Hiển thị ảnh khi có ảnh mới
+    };
+
+    if (file) {
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = "<?php echo (!empty($product['Img'])) ? '../assets/image/product/' . htmlspecialchars($product['Img']) : '#'; ?>";
+        preview.style.display = '<?php echo (!empty($product['Img'])) ? 'block' : 'none'; ?>';
+    }
+}
+    function previewAdditionalImages() {
+    var fileInput = document.querySelector('input[name="additional_images[]"]');
+    var files = fileInput.files;
+    var container = document.getElementById('additionalImagesContainer');
+    container.innerHTML = ''; // Xóa các hình ảnh hiện có
+
+    var validExtensions = ['image/png', 'image/jpeg']; // Định dạng hợp lệ
+
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
         var reader = new FileReader();
 
-        reader.onloadend = function () {
-            preview.src = reader.result;
-            preview.style.display = 'block'; // Hiển thị ảnh khi có ảnh mới
+        if (!validExtensions.includes(file.type)) {
+            Swal.fire({
+                title: 'Lỗi định dạng!',
+                text: 'Vui lòng chọn tệp có định dạng PNG hoặc JPG.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            fileInput.value = ''; // Xóa tệp không hợp lệ
+            return;
+        }
+
+        reader.onloadend = function (e) {
+            var img = document.createElement('img');
+            img.style.width = '100px';
+            img.style.height = '100px';
+            img.style.objectFit = 'cover';
+            img.style.objectPosition = 'center center';
+            img.src = e.target.result;
+
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'btn btn-danger btn-sm remove-image';
+            button.textContent = 'Xóa';
+            button.addEventListener('click', function () {
+                img.parentElement.remove();
+            });
+
+            var div = document.createElement('div');
+            div.className = 'image-item';
+            div.style.display = 'flex';
+            div.style.flexDirection = 'column';
+            div.style.alignItems = 'center';
+            div.appendChild(img);
+            div.appendChild(button);
+            container.appendChild(div);
         };
 
-        if (file) {
-            reader.readAsDataURL(file);
-        } else {
-            preview.src = "<?php echo (!empty($product['Img'])) ? '../assets/image/product/' . htmlspecialchars($product['Img']) : '#'; ?>";
-            preview.style.display = '<?php echo (!empty($product['Img'])) ? 'block' : 'none'; ?>';
-        }
+        reader.readAsDataURL(file);
     }
-
-    function previewAdditionalImages() {
-        var fileInput = document.querySelector('input[name="additional_images[]"]');
-        var files = fileInput.files;
-        var container = document.getElementById('additionalImagesContainer');
-        container.innerHTML = ''; // Xóa các hình ảnh hiện có
-
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            var reader = new FileReader();
-
-            reader.onloadend = function (e) {
-                var img = document.createElement('img');
-                img.style.width = '100px';
-                  img.style.height = '100px';
-                img.style.objectFit = 'cover';
-                 img.style.objectPosition = 'center center';
-                img.src = e.target.result;
-
-                var button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'btn btn-danger btn-sm remove-image';
-                button.textContent = 'Xóa';
-                button.addEventListener('click', function () {
-                    img.parentElement.remove();
-                });
-
-                        var div = document.createElement('div');
-                        div.className = 'image-item';
-                        div.style.display = 'flex';
-                          div.style.flexDirection = 'column';
-                        div.style.alignItems = 'center';
-                         div.appendChild(img);
-                        div.appendChild(button);
-                        container.appendChild(div);
-                    };
-
-            reader.readAsDataURL(file);
-        }
-    }
+}
 
     
 </script>

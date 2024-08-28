@@ -83,11 +83,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 ?>
-<style>
-#wp-content {
-    margin-left: 250px;
-    flex: 1;
-    padding: 10px;
-    margin-top: 100px;
-}
-</style>

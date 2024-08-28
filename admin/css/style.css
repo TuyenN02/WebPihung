@@ -3,7 +3,7 @@
 body {
     font-family: "Roboto", sans-serif;
     font-size: 16px;
-    background-color: #efefef;
+    background-color: #95ff9c;
 }
 
 a {
@@ -69,11 +69,7 @@ a:hover {
     font-weight: 700;
 }
 
-.topnav {
-    padding-left: 0;
-    padding: 10px 0px;
-    z-index: 1039;
-}
+
 
 #sidebar-toggle {
     outline: none;
@@ -96,13 +92,13 @@ a:hover {
 }
 
 .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
+    background-color: #fe5151;
+    border-color: #fe5151;
 }
 
 .btn-danger:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
+    background-color: #c0131f;
+    border-color: #ff3135;
 }
 
 .form-group label {

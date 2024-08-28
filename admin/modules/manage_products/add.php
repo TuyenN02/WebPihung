@@ -31,7 +31,7 @@ if (isset($_POST['submit'])) {
         $sql_check_name = "SELECT * FROM sanpham WHERE TenSanPham = '$TenSanPham'";
         $result_check_name = mysqli_query($mysqli, $sql_check_name);
         if (mysqli_num_rows($result_check_name) > 0) {
-            $errors['duplicate_name'] = 'Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác.';
+            $errors['duplicate_name'] = 'Tên sản phẩm đã tồn tại!';
         }
     }
 
