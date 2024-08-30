@@ -42,7 +42,7 @@ if (isset($_POST['submit'])) {
     $sql = "INSERT INTO chinhsach(TieuDe, NoiDung) VALUES('$TieuDe', '$NoiDung')";
     mysqli_query($mysqli, $sql);
     unset($_SESSION['data']);
-    $_SESSION['success'] = "Thêm mới chính sách thành công!";
+    $_SESSION['success'] = "Thêm chính sách thành công!";
     header("Location: ../../index.php?policy=list-policy");
     exit();
 }

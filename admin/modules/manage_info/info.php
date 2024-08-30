@@ -62,10 +62,7 @@ $current_info = mysqli_fetch_assoc($result);
 ?>
 
 <div class="container mt-5">
-    <div class="bg-white p-4 rounded shadow-sm"> <!-- Thêm lớp để nền trắng và có khoảng cách nội dung -->
-    <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 35px;">Quản lý thông tin</h5>
-        <form action="" method="POST">
-            <?php if (isset($success_message)): ?>
+<?php if (isset($success_message)): ?>
                 <div class="alert alert-success"><?php echo $success_message; ?></div>
             <?php endif; ?>
             
@@ -73,6 +70,10 @@ $current_info = mysqli_fetch_assoc($result);
                 <div class="alert alert-danger"><?php echo $errors['update']; ?></div>
             <?php endif; ?>
 
+    <div class="bg-white p-4 rounded shadow-sm"> <!-- Thêm lớp để nền trắng và có khoảng cách nội dung -->
+    <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 35px;">Quản lý thông tin</h5>
+        <form action="" method="POST">
+          
             <div class="form-group mb-3">
                 <label for="phone">Số điện thoại:</label>
                 <input type="text" class="form-control" id="phone" name="phone" value="<?php echo htmlspecialchars($current_info['SDT']); ?>" required>
@@ -112,3 +113,41 @@ $current_info = mysqli_fetch_assoc($result);
         </form>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert');
+
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.style.opacity = 0;
+                setTimeout(() => {
+                    alert.remove();
+                }, 500);
+            }, 2000);
+        });
+    });
+</script>
+<style>
+.alert {
+    position: fixed;
+    top: 50px;
+    right: 970px;
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #ff0000;
+    border: 3px solid #ff0000;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+</style>
