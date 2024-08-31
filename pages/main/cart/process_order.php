@@ -26,7 +26,7 @@ if (empty($NguoiNhan) || empty($DiaChi) || empty($SoDienThoai) || !is_numeric($G
 
 // Thêm đơn hàng vào cơ sở dữ liệu
 $sql_insert_order = "INSERT INTO donhang (ID_ThanhVien, ThoiGianLap, DiaChi, GhiChu, GiaTien, SoDienThoai, XuLy) 
-                     VALUES ($id_cus, NOW(), '$DiaChi', '$GhiChu', $GiaTien, '$SoDienThoai', 0)";
+                     VALUES ($id_cus, NOW(), '$DiaChi', '$GhiChu', $GiaTien, '$SoDienThoai', 1)";
 if (mysqli_query($mysqli, $sql_insert_order)) {
     $order_id = mysqli_insert_id($mysqli);
 

@@ -65,70 +65,69 @@ $row_ncc = mysqli_num_rows($query_ncc) > 0 ? mysqli_fetch_array($query_ncc) : nu
 
 <main role="main">
     <div class="container">
-        <form name="frmsanphamchitiet" id="frmsanphamchitiet" method="post"
-              action="pages/main/cart/add.php?id=<?php echo $row_product['ID_SanPham']; ?>">
-            <input type="hidden" name="sp_ten" id="sp_ten" value="<?php echo htmlspecialchars($row_product['TenSanPham']); ?>">
-            <input type="hidden" name="sp_gia" id="sp_gia" value="<?php echo htmlspecialchars($row_product['GiaBan']); ?>">
-            <input type="hidden" name="hinhdaidien" id="hinhdaidien" value="<?php echo htmlspecialchars($row_product['Img']); ?>">
-            
-            <h1 class="text-center"><?php echo htmlspecialchars($row_product['TenSanPham']); ?></h1>
-            
-            <div class="row">
-                <div class="col-lg-5" id="pic-3">
-                    <div class="card">
-                        <img src="./assets/image/product/<?php echo htmlspecialchars($row_product['Img']); ?>"
-                             style="display: block; width: 100%; height: 360px; object-fit: cover; object-position: center center;">
-                    </div>
-                </div>
-                
-                <div class="col-lg-3 p-3">
-                    <h5 class="text-center">Thông tin</h5>
-                    <hr>
-                    <h6>Giá hiện tại: <?php echo number_format($row_product['GiaBan'], 0, ',', '.'); ?> VND</h6>
-                    <h6>Số lượng sản phẩm: <?php echo number_format($row_product['SoLuong']); ?> </h6>
-                    <p><i>Miễn phí giao hàng</i></p>
-                    
-                    <?php if (isset($_SESSION['TenDangNhap'])) { ?>
-                        <?php if ($row_product['SoLuong'] <= 0) { ?>
-                            <!-- Nếu số lượng sản phẩm bằng hoặc nhỏ hơn 0, hiển thị thông báo hết hàng -->
-                            <p class="text-danger">Sản phẩm đã hết hàng.</p>
-                        <?php } else { ?>
-                            <?php if ($show_quantity_input) { ?>
-                                <div class="form-group">
-                                    <label for="soluong"><b>Số lượng:</b></label>
-                                    <input type="number" class="form-control" id="soluong" name="soluong" value="1" 
-                                        min="1" max="<?php echo $row_product['SoLuong']; ?>" onblur="checkQuantity(this)">
-                                </div>
-                                <div>
-                                    <input type="submit" class="btn btn-success" name="mua" value="Thêm vào giỏ hàng">
-                                </div>
-                            <?php } else { ?>
-                                <p class="text-danger">Sản phẩm đã có trong giỏ hàng với số lượng tối đa.</p>
-                            <?php } ?>
-                        <?php } ?>
-                    <?php } ?>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card p-3">
-                        <h5 class="text-center">Mô tả</h5>
-                        <hr>
-                        <p><?php echo htmlspecialchars($row_product['MoTa']); ?></p>
-                        
-                        <h5 class="text-center">Hãng cung cấp</h5>
-                        <hr>
-                        
-                        <?php if ($row_ncc) { ?>
-                            <p><?php echo htmlspecialchars($row_ncc['TenNCC']); ?></p>
-                            <p>Địa chỉ: <?php echo htmlspecialchars($row_ncc['DiaChi']); ?></p>
-                            <p>SĐT: <?php echo htmlspecialchars($row_ncc['SoDienThoai']); ?></p>
-                            <p>Email: <?php echo htmlspecialchars($row_ncc['Email']); ?></p>
-                        <?php } else { ?>
-                            <p class="text-warning">Không có dữ liệu nhà cung cấp</p>
-                        <?php } ?>
-                    </div>
-                </div>
+    <form name="frmsanphamchitiet" id="frmsanphamchitiet" method="post"
+      action="pages/main/cart/add.php?id=<?php echo $row_product['ID_SanPham']; ?>">
+
+    <input type="hidden" name="sp_ten" id="sp_ten" value="<?php echo htmlspecialchars($row_product['TenSanPham']); ?>">
+    <input type="hidden" name="sp_gia" id="sp_gia" value="<?php echo htmlspecialchars($row_product['GiaBan']); ?>">
+    <input type="hidden" name="hinhdaidien" id="hinhdaidien" value="<?php echo htmlspecialchars($row_product['Img']); ?>">
+    <input type="hidden" name="action_type" id="action_type" value="">
+
+    <h1 class="text-center"><?php echo htmlspecialchars($row_product['TenSanPham']); ?></h1>
+
+    <div class="row">
+        <div class="col-lg-5" id="pic-3">
+            <div class="card">
+                <img src="./assets/image/product/<?php echo htmlspecialchars($row_product['Img']); ?>"
+                     style="display: block; width: 100%; height: 360px; object-fit: cover; object-position: center center;">
             </div>
-        </form>
+        </div>
+
+        <div class="col-lg-3 p-3">
+            <h5 class="text-center">Thông tin</h5>
+            <hr>
+            <h6>Giá hiện tại: <?php echo number_format($row_product['GiaBan'], 0, ',', '.'); ?> VND</h6>
+            <h6>Số lượng sản phẩm: <?php echo number_format($row_product['SoLuong']); ?> </h6>
+            <p><i>Miễn phí giao hàng</i></p>
+            <?php if ($row_product['SoLuong'] <= 0) { ?>
+                <p class="text-danger">Sản phẩm đã hết hàng.</p>
+            <?php } else { ?>
+                <?php if ($show_quantity_input) { ?>
+                    <div class="form-group">
+                        <label for="soluong"><b>Số lượng:</b></label>
+                        <input type="number" class="form-control" id="soluong" name="soluong" value="1" 
+                            min="1" max="<?php echo $row_product['SoLuong']; ?>" onblur="checkQuantity(this)">
+                    </div>
+                    <div class = " d-flex">
+                        <button type="submit" class="btn btn-success mr-2" name="mua" value="add_to_cart" onclick="setAction('add_to_cart')">Thêm vào giỏ hàng</button>
+                        <button type="submit" class="btn btn-success" name="mua" value="buy_now" onclick="setAction('buy_now')">Mua Ngay</button>
+                    </div>
+                <?php } else { ?>
+                    <p class="text-danger">Sản phẩm đã có trong giỏ hàng với số lượng tối đa.</p>
+                <?php } ?>
+            <?php } ?>
+        </div>
+        <div class="col-lg-4">
+            <div class="card p-3">
+                <h5 class="text-center">Mô tả</h5>
+                <hr>
+                <p><?php echo htmlspecialchars($row_product['MoTa']); ?></p>
+                
+                <h5 class="text-center">Hãng cung cấp</h5>
+                <hr>
+                
+                <?php if ($row_ncc) { ?>
+                    <p><?php echo htmlspecialchars($row_ncc['TenNCC']); ?></p>
+                    <p>Địa chỉ: <?php echo htmlspecialchars($row_ncc['DiaChi']); ?></p>
+                    <p>SĐT: <?php echo htmlspecialchars($row_ncc['SoDienThoai']); ?></p>
+                    <p>Email: <?php echo htmlspecialchars($row_ncc['Email']); ?></p>
+                <?php } else { ?>
+                    <p class="text-warning">Không có dữ liệu nhà cung cấp</p>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+</form>
     </div>
 
     <div class="container mt-60">
@@ -164,21 +163,24 @@ $row_ncc = mysqli_num_rows($query_ncc) > 0 ? mysqli_fetch_array($query_ncc) : nu
 </main>
 
 <script>
-function checkQuantity(input) {
-    const maxQuantity = parseInt(input.max, 10);
-    const currentQuantity = parseInt(input.value, 10);
-    const currentCartQuantity = <?php echo $cart_quantity; ?>;
+    function setAction(action) {
+    document.getElementById('action_type').value = action;
+    }
+    function checkQuantity(input) {
+        const maxQuantity = parseInt(input.max, 10);
+        const currentQuantity = parseInt(input.value, 10);
+        const currentCartQuantity = <?php echo $cart_quantity; ?>;
 
-    if (currentQuantity + currentCartQuantity > maxQuantity) {
-        setTimeout(() => {
-            alert('Bạn đã nhập quá số lượng cho phép trong giỏ hàng.');
-            input.value = maxQuantity - currentCartQuantity; // Điều chỉnh giá trị input cho phù hợp
-        }, 0);
-    } else if (currentQuantity > maxQuantity) {
-        setTimeout(() => {
-            alert('Bạn đã nhập quá số lượng cho phép.');
-            input.value = maxQuantity; // Reset lại giá trị input về số lượng tối đa
-        }, 0);
-    } 
-}
+        if (currentQuantity + currentCartQuantity > maxQuantity) {
+            setTimeout(() => {
+                alert('Bạn đã nhập quá số lượng cho phép trong giỏ hàng.');
+                input.value = maxQuantity - currentCartQuantity; // Điều chỉnh giá trị input cho phù hợp
+            }, 0);
+        } else if (currentQuantity > maxQuantity) {
+            setTimeout(() => {
+                alert('Bạn đã nhập quá số lượng cho phép.');
+                input.value = maxQuantity; // Reset lại giá trị input về số lượng tối đa
+            }, 0);
+        } 
+    }
 </script>
