@@ -115,4 +115,26 @@ $num_rows = mysqli_num_rows($query_comment);
     padding: 10px;
     margin-top: 60px;
 }
+.alert {
+    position: fixed;
+    top: 50px;
+    right: 970px;
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #ff0000;
+    border: 3px solid #ff0000;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
 </style>

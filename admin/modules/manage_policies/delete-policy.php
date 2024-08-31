@@ -9,7 +9,7 @@ if (isset($_GET['id'])) {
     $sql = "DELETE FROM chinhsach WHERE ID_ChinhSach='$ID_ChinhSach'";
     if (mysqli_query($mysqli, $sql)) {
         // Lưu thông báo thành công vào session
-        $_SESSION['message'] = 'Chính sách đã được xóa thành công!';
+        $_SESSION['message'] = 'Xóa chính sách thành công!';
         $_SESSION['message_type'] = 'success';
     } else {
         // Nếu có lỗi khi xóa chính sách
