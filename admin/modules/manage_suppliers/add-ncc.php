@@ -1,14 +1,27 @@
 <?php
 
-$TenNCCError = isset($_SESSION['errors']['TenNCC']) ? $_SESSION['errors']['TenNCC'] : '';
-$DiaChiError = isset($_SESSION['errors']['DiaChi']) ? $_SESSION['errors']['DiaChi'] : '';
-$EmailError = isset($_SESSION['errors']['Email']) ? $_SESSION['errors']['Email'] : '';
-$PhoneError = isset($_SESSION['errors']['SoDienThoai']) ? $_SESSION['errors']['SoDienThoai'] : '';
-$MoTaError = isset($_SESSION['errors']['MoTa']) ? $_SESSION['errors']['MoTa'] : '';
-$ImgError = isset($_SESSION['errors']['Img']) ? $_SESSION['errors']['Img'] : '';
-$data = isset($_SESSION['data']) ? $_SESSION['data'] : [];
-unset($_SESSION['errors']); // Xóa thông tin lỗi sau khi đã lấy
-unset($_SESSION['data']); // Xóa dữ liệu sau khi đã lấy
+
+// Xóa dữ liệu cũ từ session khi người dùng truy cập trang này
+unset($_SESSION['data']);
+unset($_SESSION['success_message']);
+unset($_SESSION['error_message']);
+
+// Lấy dữ liệu từ session nếu có
+$data = isset($_SESSION['data']) ? $_SESSION['data'] : [
+    'TenNCC' => '',
+    'MoTa' => '',
+    'Email' => '',
+    'SoDienThoai' => '',
+    'DiaChi' => '',
+];
+
+// Hiển thị thông báo nếu có
+$success_message = isset($_SESSION['success_message']) ? $_SESSION['success_message'] : '';
+$error_message = isset($_SESSION['error_message']) ? $_SESSION['error_message'] : '';
+
+// Xóa thông báo sau khi hiển thị
+unset($_SESSION['success_message']);
+unset($_SESSION['error_message']);
 ?>
 
 <div id="content" class="container-fluid">
@@ -20,172 +33,183 @@ unset($_SESSION['data']); // Xóa dữ liệu sau khi đã lấy
             <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Thêm Nhà Cung Cấp</h5>
         </div>
         <div class="card-body">
-            <form id="nccForm" method="POST" enctype="multipart/form-data">
+        <form id="addSupplierForm" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="TenNCC">Tên Nhà Cung Cấp:</label>
-                    <input class="form-control" type="text" name="TenNCC" id="TenNCC" value="<?php echo htmlspecialchars($data['TenNCC'] ?? ''); ?>">
-                    <div id="TenNCCError" class="text-danger"><?php echo $errors['TenNCC'] ?? ''; ?></div>
+                    <label for="TenNCC">Tên nhà cung cấp:</label>
+                    <input required class="form-control" type="text" name="TenNCC" id="TenNCC" value="<?php echo htmlspecialchars($data['TenNCC']); ?>" >
+                    <div id="TenNCCError" class="error-message"><?php echo isset($error_message['TenNCC']) ? $error_message['TenNCC'] : ''; ?></div>
                 </div>
+
                 <div class="form-group">
-                    <label for="MoTa">Mô Tả:</label>
-                    <textarea class="form-control" name="MoTa" id="MoTa" rows="4" style="width: 100%; resize: both;"><?php echo htmlspecialchars($data['MoTa'] ?? ''); ?></textarea>
-                    <div id="MoTaError" class="text-danger"><?php echo $errors['MoTa'] ?? ''; ?></div>
+                    <label for="MoTa">Mô tả:</label>
+                    <textarea class="form-control" name="MoTa" id="MoTa" rows="5"><?php echo htmlspecialchars($data['MoTa']); ?></textarea>
                 </div>
+
                 <div class="form-group">
                     <label for="Email">Email:</label>
-                    <input class="form-control" type="email" name="Email" id="Email" value="<?php echo htmlspecialchars($data['Email'] ?? ''); ?>">
-                    <div id="EmailError" class="text-danger"><?php echo $errors['Email'] ?? ''; ?></div>
+                    <input required class="form-control" type="email" name="Email" id="Email" value="<?php echo htmlspecialchars($data['Email']); ?>">
+                    <div id="EmailError" class="error-message"><?php echo isset($error_message['Email']) ? $error_message['Email'] : ''; ?></div>
                 </div>
+
                 <div class="form-group">
-                    <label for="SoDienThoai">Số Điện Thoại:</label>
-                    <input class="form-control" type="text" name="SoDienThoai" id="SoDienThoai" value="<?php echo htmlspecialchars($data['SoDienThoai'] ?? ''); ?>">
-                    <div id="PhoneError" class="text-danger"><?php echo $errors['SoDienThoai'] ?? ''; ?></div>
+                    <label for="SoDienThoai">Số điện thoại:</label>
+                    <input required class="form-control" type="text" name="SoDienThoai" id="SoDienThoai" value="<?php echo htmlspecialchars($data['SoDienThoai']); ?>">
+                    <div id="SoDienThoaiError" class="error-message"><?php echo isset($error_message['SoDienThoai']) ? $error_message['SoDienThoai'] : ''; ?></div>
                 </div>
+
                 <div class="form-group">
-                    <label for="DiaChi">Địa Chỉ:</label>
-                    <input class="form-control" type="text" name="DiaChi" id="DiaChi" value="<?php echo htmlspecialchars($data['DiaChi'] ?? ''); ?>">
-                    <div id="DiaChiError" class="text-danger"><?php echo $errors['DiaChi'] ?? ''; ?></div>
+                    <label for="DiaChi">Địa chỉ:</label>
+                    <input required class="form-control" type="text" name="DiaChi" id="DiaChi" value="<?php echo htmlspecialchars($data['DiaChi']); ?>">
+                    <div id="DiaChiError" class="error-message"><?php echo isset($error_message['DiaChi']) ? $error_message['DiaChi'] : ''; ?></div>
                 </div>
-                
-               
+
                 <div class="form-group">
-                    <label>Hình ảnh:</label>
-                    <input class="form-control" type="file" name="Img" id="Img" accept=".jpg,.png" onchange="validateImage()">
-                    <div id="ImgError" class="text-danger"><?php echo $errors['Img'] ?? ''; ?></div>
-                    <img id="preview" src="<?php echo isset($data['Img']) ? '../../../assets/image/supplier/' . htmlspecialchars($data['Img']) : ''; ?>" style="max-width: 200px; margin-top: 10px;">
+                    <label for="Img">Hình ảnh:</label>
+                    <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center; display: none;" />
+                    <input required class="form-control" type="file" name="Img" id="Img" accept="image/*" onchange="previewImage()">
+                    <div id="ImgError" class="error-message"></div>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="submitForm()">Thêm mới</button>
-                <a href="index.php?ncc=list-ncc" class="btn btn-secondary">Hủy</a>
+
+                <button type="submit" class="btn btn-primary">Thêm</button>
+                <button type="button" id="cancelButton" class="btn btn-secondary">Hủy</button>
             </form>
         </div>
     </div>
 </div>
-<script>
-function validateForm() {
-    let isValid = true;
-    
- 
 
-    // Check for empty fields and length constraints
+<script>
+document.getElementById('addSupplierForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Ngăn gửi form mặc định
+
+    // Lấy giá trị từ form
     const tenNCC = document.getElementById('TenNCC').value.trim();
-    const diaChi = document.getElementById('DiaChi').value.trim();
     const email = document.getElementById('Email').value.trim();
     const soDienThoai = document.getElementById('SoDienThoai').value.trim();
+    const diaChi = document.getElementById('DiaChi').value.trim();
+    const image = document.getElementById('Img').files[0];
     const moTa = document.getElementById('MoTa').value.trim();
-    const img = document.getElementById('Img').files[0];
+    
+    let hasError = false;
 
-    if (tenNCC === '') {
-        document.getElementById('TenNCCError').textContent = 'Tên nhà cung cấp không được để trống.';
-        isValid = false;
-    } else if (tenNCC.length < 3 || tenNCC.length > 255) {
-        document.getElementById('TenNCCError').textContent = 'Tên nhà cung cấp phải từ 3 đến 255 ký tự.';
-        isValid = false;
+    // Kiểm tra lỗi
+    if (tenNCC.length < 3 || tenNCC.length > 50) {
+        document.getElementById('TenNCCError').textContent = "Tên nhà cung cấp phải từ 3 đến 50 ký tự.";
+        hasError = true;
+    } else {
+        document.getElementById('TenNCCError').textContent = "";
+    }
+
+    if (email !== '' && !/^\S+@\S+\.\S+$/.test(email)) {
+        document.getElementById('EmailError').textContent = "Email không hợp lệ.";
+        hasError = true;
+    } else {
+        document.getElementById('EmailError').textContent = "";
+    }
+
+    if (soDienThoai !== '' && !/^\d{10}$/.test(soDienThoai)) {
+        document.getElementById('SoDienThoaiError').textContent = "Số điện thoại phải có 10 chữ số.";
+        hasError = true;
+    } else {
+        document.getElementById('SoDienThoaiError').textContent = "";
     }
 
     if (diaChi === '') {
-        document.getElementById('DiaChiError').textContent = 'Địa chỉ không được để trống.';
-        isValid = false;
-    }
-
-    if (email === '') {
-        document.getElementById('EmailError').textContent = 'Email không được để trống.';
-        isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-        document.getElementById('EmailError').textContent = 'Email không hợp lệ.';
-        isValid = false;
-    }
-
-    if (soDienThoai === '') {
-        document.getElementById('PhoneError').textContent = 'Số điện thoại không được để trống.';
-        isValid = false;
-    } else if (!/^\d{10,15}$/.test(soDienThoai)) {
-        document.getElementById('PhoneError').textContent = 'Số điện thoại không hợp lệ.';
-        isValid = false;
-    }
-
- 
-    if (!img) {
-        document.getElementById('ImgError').textContent = 'Hãy chọn hình ảnh để tải lên.';
-        isValid = false;
+        document.getElementById('DiaChiError').textContent = "Địa chỉ không được để trống.";
+        hasError = true;
     } else {
-        const allowedExtensions = ['image/jpeg', 'image/png'];
-        if (!allowedExtensions.includes(img.type)) {
-            document.getElementById('ImgError').textContent = 'Định dạng tệp không hợp lệ! Vui lòng chỉ tải lên tệp có đuôi .jpg hoặc .png.';
-            isValid = false;
-        }
+        document.getElementById('DiaChiError').textContent = "";
     }
 
-    return isValid;
-}
-function validateImage() {
-    const fileInput = document.getElementById('Img');
-    const filePath = fileInput.value;
-    const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-
-    if (filePath && !allowedExtensions.exec(filePath)) {
-        document.getElementById('ImgError').textContent = 'Định dạng tệp không hợp lệ! Vui lòng chỉ tải lên tệp có đuôi .jpg hoặc .png.';
-        fileInput.value = ''; // Clear the input
-        document.getElementById('preview').src = '';
-        return false;
-    } else {
-        document.getElementById('ImgError').textContent = ''; // Clear error message
-        if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('preview').src = e.target.result;
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-        }
+    // Kiểm tra nếu có lỗi thì không gửi form
+    if (hasError) {
+        return;
     }
-}
-function submitForm() {
-    if (validateForm()) {
-        const form = document.getElementById('nccForm');
-        const formData = new FormData(form);
 
-        fetch('modules/manage_suppliers/add.php', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.text())
-        .then(data => {
-            if (data.includes('success')) {
-                // Thành công: Chuyển hướng về trang danh sách nhà cung cấp
-                window.location.href = 'index.php?ncc=list-ncc';
+    // Nếu không có lỗi, tạo FormData và gửi yêu cầu
+    const form = document.getElementById('addSupplierForm');
+    const formData = new FormData(form);
+
+    fetch('modules/manage_suppliers/add.php', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log('Fetch Result:', result); // Kiểm tra phản hồi từ máy chủ
+
+        if (result.status === 'success') {
+            // Reset form sau khi thêm thành công
+            form.reset();
+            document.getElementById('imagePreview').style.display = 'none'; // Ẩn hình ảnh xem trước
+
+            // Xóa tất cả các thông báo lỗi
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
+            // Chuyển hướng nếu cần
+            window.location.href = "index.php?ncc=list-ncc";
+        } else {
+            // Hiển thị thông báo lỗi cho từng trường cụ thể
+            if (result.message.includes('Email')) {
+                document.getElementById('EmailError').textContent = result.message;
+            } else if (result.message.includes('Số điện thoại')) {
+                document.getElementById('SoDienThoaiError').textContent = result.message;
             } else {
-                // Hiển thị thông báo lỗi
-                console.log(data);
-                alert('Có lỗi xảy ra, vui lòng kiểm tra lại.');
+                alert(result.message); // Hiển thị thông báo lỗi khác nếu có
             }
-        })
-        .catch(error => {
-            console.error('Lỗi:', error);
-            alert('Đã xảy ra lỗi khi gửi dữ liệu.');
-        });
+        }
+    })
+    .catch(error => {
+        console.error('Có lỗi xảy ra:', error);
+        alert('Đã xảy ra lỗi khi gửi dữ liệu.');
+    });
+});
+
+document.getElementById('cancelButton').addEventListener('click', function() {
+    // Reset form
+    const form = document.getElementById('addSupplierForm');
+    form.reset(); 
+
+    // Ẩn hình ảnh xem trước
+    document.getElementById('imagePreview').style.display = 'none';
+
+    // Xóa tất cả các thông báo lỗi
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
+    // Chuyển hướng về trang danh sách
+    window.location.href = "index.php?ncc=list-ncc";
+});
+
+function previewImage() {
+    var fileInput = document.getElementById('Img');
+    var file = fileInput.files[0];
+    var preview = document.getElementById('imagePreview');
+    var reader = new FileReader();
+
+    reader.onloadend = function () {
+        preview.src = reader.result;
+        preview.style.display = 'block'; // Hiển thị ảnh khi có ảnh mới
+    };
+
+    if (file) {
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = "#";
+        preview.style.display = 'none';
     }
 }
-
-function clearErrors() {
-    document.getElementById('TenNCCError').textContent = '';
-    document.getElementById('DiaChiError').textContent = '';
-    document.getElementById('EmailError').textContent = '';
-    document.getElementById('PhoneError').textContent = '';
-    document.getElementById('MoTaError').textContent = '';
-    document.getElementById('ImgError').textContent = '';
-}
-
-function clearFormData() {
-    document.getElementById('nccForm').reset();
-    document.getElementById('preview').src = '';
-}
-
 </script>
 
 <style>
-#wp-content {
+    #wp-content {
     margin-left: 250px;
     flex: 1;
     padding: 10px;
-    margin-top: 80px;
+    margin-top: 70px;
+}
+.error-message {
+    color: red;
+    font-size: 0.875em;
 }
 </style>
+</body>
+</html>

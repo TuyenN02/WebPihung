@@ -2,64 +2,64 @@
 session_start();
 include("../../config/connection.php");
 
-// Khởi tạo biến để lưu thông báo lỗi và dữ liệu
-$errors = [];
-$data = [];
-
-// Xử lý dữ liệu từ biểu mẫu
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Nhận dữ liệu từ biểu mẫu
-    $tenNCC = isset($_POST['TenNCC']) ? trim($_POST['TenNCC']) : '';
-    $moTa = isset($_POST['MoTa']) ? trim($_POST['MoTa']) : '';
-    $email = isset($_POST['Email']) ? trim($_POST['Email']) : '';
-    $diaChi = isset($_POST['DiaChi']) ? trim($_POST['DiaChi']) : '';
-    $soDienThoai = isset($_POST['SoDienThoai']) ? trim($_POST['SoDienThoai']) : '';
-    $img = isset($_FILES['Img']) ? $_FILES['Img'] : null;
+    $TenNCC = trim(mysqli_real_escape_string($mysqli, $_POST['TenNCC']));
+    $MoTa = trim(mysqli_real_escape_string($mysqli, $_POST['MoTa']));
+    $Email = trim(mysqli_real_escape_string($mysqli, $_POST['Email']));
+    $SoDienThoai = trim(mysqli_real_escape_string($mysqli, $_POST['SoDienThoai']));
+    $DiaChi = trim(mysqli_real_escape_string($mysqli, $_POST['DiaChi']));
+    $Img = $_FILES['Img']['name'];
+    $Img_tmp = $_FILES['Img']['tmp_name'];
 
-    // Lưu dữ liệu vào biến $data để giữ lại thông tin
-    $data['TenNCC'] = $tenNCC;
-    $data['MoTa'] = $moTa;
-    $data['Email'] = $email;
-    $data['DiaChi'] = $diaChi;
-    $data['SoDienThoai'] = $soDienThoai;
+    // Lưu dữ liệu vào session
+    $_SESSION['data'] = [
+        'TenNCC' => $TenNCC,
+        'MoTa' => $MoTa,
+        'Email' => $Email,
+        'SoDienThoai' => $SoDienThoai,
+        'DiaChi' => $DiaChi,
+    ];
 
-    // Nếu không có lỗi, thực hiện thêm dữ liệu vào cơ sở dữ liệu
-    if (empty($errors)) {
-        // Tạo đường dẫn lưu hình ảnh
-        $uploadDir = '../../../assets/image/supplier/';
-        $imgPath = $uploadDir . basename($img['name']);
+    // Kiểm tra email có trùng không
+    $check_email_query = "SELECT ID_NCC FROM nhacungcap WHERE Email='$Email'";
+    $check_email_result = mysqli_query($mysqli, $check_email_query);
 
-        // Di chuyển tệp hình ảnh từ thư mục tạm thời đến thư mục đích
-        if (move_uploaded_file($img['tmp_name'], $imgPath)) {
-            // Lấy tên tệp hình ảnh để lưu vào cơ sở dữ liệu
-            $imgRelativePath = basename($img['name']);
+    if (mysqli_num_rows($check_email_result) > 0) {
+        echo json_encode(['status' => 'error', 'message' => "Email đã tồn tại!"]);
+        exit();
+    } 
 
-            // Thực hiện thêm nhà cung cấp vào cơ sở dữ liệu
-            $stmt = $mysqli->prepare("INSERT INTO nhacungcap (TenNCC, MoTa, Img, SoDienThoai, Email, DiaChi) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param('ssssss', $tenNCC, $moTa, $imgRelativePath, $soDienThoai, $email, $diaChi);
+    // Kiểm tra số điện thoại có trùng không
+    $check_phone_query = "SELECT ID_NCC FROM nhacungcap WHERE SoDienThoai='$SoDienThoai'";
+    $check_phone_result = mysqli_query($mysqli, $check_phone_query);
 
-            if ($stmt->execute()) {
-                // Xóa dữ liệu và thông báo lỗi trong session
-                unset($_SESSION['data']);
-                unset($_SESSION['errors']);
+    if (mysqli_num_rows($check_phone_result) > 0) {
+        echo json_encode(['status' => 'error', 'message' => "Số điện thoại đã tồn tại!"]);
+        exit();
+    }
 
-                // Đặt thông báo thành công vào session và chuyển hướng về trang danh sách nhà cung cấp
-                $_SESSION['success_message'] = 'Thêm nhà cung cấp thành công!';
-               
-            } else {
-                $errors['general'] = 'Có lỗi xảy ra khi thêm nhà cung cấp vào cơ sở dữ liệu: ' . $stmt->error;
-            }
+    // Kiểm tra và xử lý hình ảnh
+    if (!empty($Img)) {
+        $allowedExtensions = ['jpg', 'jpeg', 'png'];
+        $imgExtension = strtolower(pathinfo($Img, PATHINFO_EXTENSION));
+        if (in_array($imgExtension, $allowedExtensions)) {
+            move_uploaded_file($Img_tmp, "../../../assets/image/supplier/" . $Img);
         } else {
-            $errors['Img'] = 'Có lỗi xảy ra khi tải lên hình ảnh.';
+            echo json_encode(['status' => 'error', 'message' => "Định dạng hình ảnh không hợp lệ!"]);
+            exit();
         }
     }
 
-    // Lưu dữ liệu và lỗi vào session để hiển thị lại trên biểu mẫu
-    $_SESSION['errors'] = $errors;
-    $_SESSION['data'] = $data;
+    // Thêm nhà cung cấp vào cơ sở dữ liệu
+    $sql_insert = "INSERT INTO nhacungcap (TenNCC, MoTa, Email, SoDienThoai, DiaChi, Img) 
+                   VALUES ('$TenNCC', '$MoTa', '$Email', '$SoDienThoai', '$DiaChi', '$Img')";
 
-    // Chuyển hướng lại trang thêm nhà cung cấp với thông báo lỗi
-    header('Location: ' . $_SERVER['HTTP_REFERER']);
-    exit();
+    if (mysqli_query($mysqli, $sql_insert)) {
+        unset($_SESSION['data']); // Xóa dữ liệu lưu trữ sau khi thêm thành công
+        $_SESSION['success_message'] = "Thêm nhà cung cấp thành công!"; // Lưu thông báo thành công vào session
+        echo json_encode(['status' => 'success', 'redirect' => 'index.php?ncc=list-ncc']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => "Thêm thất bại. Vui lòng thử lại."]);
+    }
 }
 ?>
