@@ -98,7 +98,7 @@ $result = $mysqli->query($sql_posts);
                     <a href="articleDetail.php?id=<?php echo $row['ID_baiviet']; ?>" class="post-title"><?php echo htmlspecialchars($row['Tenbaiviet']); ?></a>
                     <div class="post-content">
                         <p><?php echo substr(strip_tags($row['Noidung']), 0, 10); ?>...</p>
-                        <a href="articles.php?id=<?php echo $row['ID_baiviet']; ?>" class="read-more">Xem thêm</a>
+                        <a href="articleDetail.php?id=<?php echo $row['ID_baiviet']; ?>" class="read-more">Xem thêm</a>
                     </div>
                 </div>
             </div>
