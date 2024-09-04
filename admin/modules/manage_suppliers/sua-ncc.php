@@ -1,6 +1,4 @@
 <?php
-
-
 if (isset($_GET['id_NCC'])) {
     $ID_NCC = intval($_GET['id_NCC']); // Bảo mật: ép kiểu ID_NCC thành số nguyên
     $sql_getNCC = "SELECT * FROM nhacungcap WHERE ID_NCC=$ID_NCC";
@@ -116,26 +114,34 @@ document.getElementById('editSupplierForm').addEventListener('submit', function(
         document.getElementById('TenNCCError').textContent = "";
     }
 
-    if (email !== '' && !/^\S+@\S+\.\S+$/.test(email)) {
-        document.getElementById('EmailError').textContent = "Email không hợp lệ.";
-        hasError = true;
+   // Kiểm tra email
+   if (email.length < 4 || email.length > 255) {
+    document.getElementById('EmailError').textContent = "Email không đúng định dạng!";
+    hasError = true;
     } else {
-        document.getElementById('EmailError').textContent = "";
+        const [localPart, domain] = email.split('@');
+        if (!localPart || localPart.length < 4 || domain.length < 3 || !/^[a-zA-Z0-9.-]+$/.test(domain) || domain.split('.').length < 2) {
+            document.getElementById('EmailError').textContent = "Email không đúng định dạng!";
+            hasError = true;
+        } else {
+            document.getElementById('EmailError').textContent = "";
+        }
     }
-
-    if (soDienThoai !== '' && !/^\d{10}$/.test(soDienThoai)) {
-        document.getElementById('SoDienThoaiError').textContent = "Số điện thoại phải có 10 chữ số.";
+    // Kiểm tra số điện thoại
+    if (soDienThoai.length !== 10 || !/^\d{10}$/.test(soDienThoai) || !soDienThoai.startsWith('0')) {
+        document.getElementById('SoDienThoaiError').textContent = "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0!";
         hasError = true;
     } else {
         document.getElementById('SoDienThoaiError').textContent = "";
     }
 
     if (diaChi === '') {
-        document.getElementById('DiaChiError').textContent = "Địa chỉ không được để trống.";
+        document.getElementById('DiaChiError').textContent = "Địa chỉ không được để trống!";
         hasError = true;
     } else {
         document.getElementById('DiaChiError').textContent = "";
     }
+
 
     // Kiểm tra nếu có lỗi thì không gửi form
     if (hasError) {
