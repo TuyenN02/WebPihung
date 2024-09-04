@@ -1,8 +1,8 @@
 <?php
 
 
-if (isset($_GET['id_DanhMuc'])) {
-    $ID_DanhMuc = intval($_GET['id_DanhMuc']); // Bảo mật: ép kiểu ID_DanhMuc thành số nguyên
+if (isset($_GET['id'])) {
+    $ID_DanhMuc = intval($_GET['id']); // Bảo mật: ép kiểu ID_DanhMuc thành số nguyên
     $sql_getCat = "SELECT * FROM danhmuc WHERE ID_DanhMuc=$ID_DanhMuc";
     $query_getCat = mysqli_query($mysqli, $sql_getCat);
 
@@ -47,7 +47,7 @@ if (isset($_GET['id_DanhMuc'])) {
                     <div id="MoTaError" class="error-message"><?php echo $MoTaError; ?></div>
                 </div>
 
-                <input type="hidden" name="id_DanhMuc" value="<?php echo $ID_DanhMuc; ?>">
+                <input type="hidden" name="id" value="<?php echo $ID_DanhMuc; ?>">
                 <button type="submit" class="btn btn-primary">Lưu</button>
                 <a href="index.php?cat=list-cat" class="btn btn-secondary">Hủy</a>
             </form>
@@ -79,12 +79,7 @@ document.getElementById('editCategoryForm').addEventListener('submit', function(
         document.getElementById('TenDanhMucError').textContent = "";
     }
 
-    if (moTa.length === 0) {
-        document.getElementById('MoTaError').textContent = "Mô tả không được để trống.";
-        hasError = true;
-    } else {
-        document.getElementById('MoTaError').textContent = "";
-    }
+
 
     // Kiểm tra nếu có lỗi thì không gửi form
     if (hasError) {

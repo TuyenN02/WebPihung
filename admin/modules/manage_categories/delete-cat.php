@@ -15,7 +15,7 @@ if (isset($_GET['id'])) {
 
     if ($row['product_count'] > 0) {
         // Nếu có sản phẩm, lưu thông báo lỗi vào session
-        $_SESSION['errors']['database'] = "Danh mục này không thể xóa vì hiện tại đang có sản phẩm.";
+        $_SESSION['errors']['database'] = "Danh mục đang có sản phẩm!";
     } else {
         // Nếu không có sản phẩm, thực hiện xóa danh mục
         $sql_xoa = "DELETE FROM danhmuc WHERE ID_DanhMuc = '$ID_DanhMuc'";

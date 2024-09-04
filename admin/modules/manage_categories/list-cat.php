@@ -16,6 +16,13 @@ $query_category_product = mysqli_query($mysqli, $sql_category_product);
 
 // Kiểm tra kết quả tìm kiếm có rỗng không
 $isEmpty = mysqli_num_rows($query_category_product) == 0;
+// Kiểm tra xem có thông báo lỗi hoặc thành công trong session không
+if (isset($_SESSION['errors']['database'])) {
+    echo '<div class="alert alert-danger">' . $_SESSION['errors']['database'] . '</div>';
+    // Xóa thông báo lỗi sau khi hiển thị
+    unset($_SESSION['errors']['database']);
+}
+
 ?>
 
 <div id="content" class="container-fluid">
@@ -142,7 +149,8 @@ $isEmpty = mysqli_num_rows($query_category_product) == 0;
 
 .alert-danger {
     background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    color: #ff0000;
+    border: 3px solid #ff0000;
+
 }
 </style>
