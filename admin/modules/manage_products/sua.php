@@ -28,7 +28,7 @@ if (isset($_POST['update'])) {
         if (in_array($file_extension, $allowed_extensions)) {
             $targetFile = $targetDir . basename($imageName);
             if (move_uploaded_file($imageTemp, $targetFile)) {
-                $newImageName = $imageName;
+                $newImageName = $imageName;     
             } else {
                 $errors['Img'] = 'Không thể tải lên tệp hình ảnh chính. Vui lòng thử lại.';
             }

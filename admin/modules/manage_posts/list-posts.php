@@ -102,7 +102,7 @@ if (isset($_SESSION['error'])) {
                 setTimeout(() => {
                     alert.remove();
                 }, 500);
-            }, 3000);
+            }, 2000);
         });
     });
 </script>

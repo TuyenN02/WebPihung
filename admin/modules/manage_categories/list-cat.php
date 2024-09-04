@@ -30,14 +30,7 @@ $isEmpty = mysqli_num_rows($query_category_product) == 0;
                             <?php unset($_SESSION['success']); ?>
                         </div>
                     <?php endif; ?>
-                    <?php if (isset($_SESSION['errors'])): ?>
-    <?php foreach ($_SESSION['errors'] as $error): ?>
-        <div class="alert alert-danger">
-            <?php echo htmlspecialchars($error); ?>
-        </div>
-    <?php endforeach; ?>
-    <?php unset($_SESSION['errors']); ?>
-<?php endif; ?>
+                    
                 <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
                 <button class="btn btn-primary">
         <a style="color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;" href="?cat=add-cat">Thêm mới</a>
@@ -130,33 +123,26 @@ $isEmpty = mysqli_num_rows($query_category_product) == 0;
     margin-top: 100px;
 }
 
-
-.alert-success {
-    background-color: #d4edda;
-    color: #ff0000;
-    border: 3px solid #ff0000;
+.alert {
     position: fixed;
     top: 50px;
-    right: 970px;
-    padding: 5px;
+    right: 950px;
+    padding: 10px;
     border-radius: 5px;
     z-index: 9999;
     opacity: 1;
     transition: opacity 0.5s ease-out;
 }
 
+.alert-success {
+    background-color: #d4edda;
+    color: #ff0000;
+    border: 3px solid #ff0000;
+}
+
 .alert-danger {
     background-color: #f8d7da;
     color: #721c24;
-    border: 3px solid #ff0000;
-    position: fixed;
-    top: 50px;
-    right: 780px;
-    padding: 10px;
-    border-radius: 5px;
-    z-index: 9999;
-    opacity: 1;
-    transition: opacity 0.5s ease-out;
-  
+    border: 1px solid #f5c6cb;
 }
 </style>

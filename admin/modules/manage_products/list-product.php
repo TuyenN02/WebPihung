@@ -104,10 +104,10 @@ unset($_SESSION['success']);
                     }
                    
 
-.alert {
+                    .alert {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 50px;
+    right: 950px;
     padding: 15px;
     border-radius: 5px;
     z-index: 9999;
@@ -117,8 +117,8 @@ unset($_SESSION['success']);
 
 .alert-success {
     background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    color: #ff0000;
+    border: 3px solid #ff0000;
 }
 
 .alert-danger {

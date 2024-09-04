@@ -99,15 +99,23 @@ document.getElementById('addSupplierForm').addEventListener('submit', function(e
         document.getElementById('TenNCCError').textContent = "";
     }
 
-    if (email !== '' && !/^\S+@\S+\.\S+$/.test(email)) {
-        document.getElementById('EmailError').textContent = "Email không hợp lệ.";
+    // Kiểm tra email
+    if (email.length < 4 || email.length > 255 || !/^\S+@\S+\.\S+$/.test(email)) {
+        document.getElementById('EmailError').textContent = "Email không đúng định dạng.";
         hasError = true;
     } else {
-        document.getElementById('EmailError').textContent = "";
+        const [localPart, domain] = email.split('@');
+        if (!domain || domain.length < 3 || !/^[a-zA-Z0-9.-]+$/.test(domain) || domain.split('.').length < 2) {
+            document.getElementById('EmailError').textContent = "Email không đúng định dạng.";
+            hasError = true;
+        } else {
+            document.getElementById('EmailError').textContent = "";
+        }
     }
 
-    if (soDienThoai !== '' && !/^\d{10}$/.test(soDienThoai)) {
-        document.getElementById('SoDienThoaiError').textContent = "Số điện thoại phải có 10 chữ số.";
+    // Kiểm tra số điện thoại
+    if (soDienThoai.length !== 10 || !/^\d{10}$/.test(soDienThoai) || !soDienThoai.startsWith('0')) {
+        document.getElementById('SoDienThoaiError').textContent = "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0.";
         hasError = true;
     } else {
         document.getElementById('SoDienThoaiError').textContent = "";
