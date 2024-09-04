@@ -375,7 +375,6 @@
 
                 if (statType === 'date-range') {
                     if (new Date(startDate) > new Date(endDate)) {
-                        alert('Nhập ngày không hợp lệ.');
                         return;
                     }
                     
