@@ -61,8 +61,8 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
                         <th scope="col">Họ tên</th>
                         <th scope="col">Địa chỉ</th>
                         <th scope="col">SĐT</th>
-                        <th scope="col">Đăng ký</th>
-                        <th scope="col">Xóa</th>
+                        <th scope="col">Ngày đăng ký</th>
+                     
                     </tr>
                 </thead>
                 <tbody>
@@ -77,9 +77,7 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
                             <td><?php echo htmlspecialchars($row_Customer['DiaChi']); ?></td>
                             <td><?php echo htmlspecialchars($row_Customer['SoDienThoai']); ?></td>
                             <td><?php echo htmlspecialchars($row_Customer['NgayDangKi']); ?></td>
-                            <td class="d-flex">
-                                <a href="javascript:void(0);" class="btn btn-danger btn-sm rounded text-white" type="button" data-toggle="tooltip" data-placement="top" title="Delete" onclick="confirmDelete(<?php echo $row_Customer['ID_ThanhVien']; ?>)"><i class="fa fa-trash"></i></a>
-                            </td>
+                           
                         </tr>
                     <?php } 
                     else: ?>
