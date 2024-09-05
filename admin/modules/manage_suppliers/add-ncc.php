@@ -93,7 +93,7 @@ document.getElementById('addSupplierForm').addEventListener('submit', function(e
 
     // Kiểm tra lỗi
     if (tenNCC.length < 3 || tenNCC.length > 50) {
-        document.getElementById('TenNCCError').textContent = "Tên nhà cung cấp phải từ 3 đến 50 ký tự.";
+        document.getElementById('TenNCCError').textContent = "Tên nhà cung cấp phải từ 3 đến 50 ký tự!";
         hasError = true;
     } else {
         document.getElementById('TenNCCError').textContent = "";
@@ -101,27 +101,27 @@ document.getElementById('addSupplierForm').addEventListener('submit', function(e
 
     // Kiểm tra email
     if (email.length < 4 || email.length > 255) {
-    document.getElementById('EmailError').textContent = "Email phải có ít nhất 4 ký tự trước '@' và không vượt quá 255 ký tự.";
+    document.getElementById('EmailError').textContent = "Email không đúng định dạng!";
     hasError = true;
-} else {
-    const [localPart, domain] = email.split('@');
-    if (!localPart || localPart.length < 4 || domain.length < 3 || !/^[a-zA-Z0-9.-]+$/.test(domain) || domain.split('.').length < 2) {
-        document.getElementById('EmailError').textContent = "Email không hợp lệ. Đảm bảo có ít nhất 4 ký tự trước '@' và miền hợp lệ.";
-        hasError = true;
     } else {
-        document.getElementById('EmailError').textContent = "";
+        const [localPart, domain] = email.split('@');
+        if (!localPart || localPart.length < 4 || domain.length < 3 || !/^[a-zA-Z0-9.-]+$/.test(domain) || domain.split('.').length < 2) {
+            document.getElementById('EmailError').textContent = "Email không đúng định dạng!";
+            hasError = true;
+        } else {
+            document.getElementById('EmailError').textContent = "";
+        }
     }
-}
     // Kiểm tra số điện thoại
     if (soDienThoai.length !== 10 || !/^\d{10}$/.test(soDienThoai) || !soDienThoai.startsWith('0')) {
-        document.getElementById('SoDienThoaiError').textContent = "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0.";
+        document.getElementById('SoDienThoaiError').textContent = "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0!";
         hasError = true;
     } else {
         document.getElementById('SoDienThoaiError').textContent = "";
     }
 
     if (diaChi === '') {
-        document.getElementById('DiaChiError').textContent = "Địa chỉ không được để trống.";
+        document.getElementById('DiaChiError').textContent = "Địa chỉ không được để trống!";
         hasError = true;
     } else {
         document.getElementById('DiaChiError').textContent = "";
