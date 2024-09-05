@@ -2,47 +2,42 @@
 session_start();
 include("../../config/connection.php");
 
-if (isset($_POST['updatePolicy'])) {
-    $id = $_POST['ID_ChinhSach'];
-    $tieude = mysqli_real_escape_string($mysqli, trim($_POST['TieuDe']));
-    $noidung = mysqli_real_escape_string($mysqli, trim($_POST['NoiDung']));
-    
-    // Khởi tạo mảng chứa lỗi
-    $errors = array();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['id'])) {
+        $ID_ChinhSach = intval($_POST['id']); // Bảo mật: ép kiểu ID_ChinhSach thành số nguyên
+        $TieuDe = trim(mysqli_real_escape_string($mysqli, $_POST['TieuDe']));
+        $NoiDung = trim(mysqli_real_escape_string($mysqli, $_POST['NoiDung']));
 
-    // Kiểm tra lỗi Tiêu đề
-    if (empty($tieude)) {
-        $errors['TieuDe'] = "Tiêu đề không được để trống.";
-    } elseif (strlen($tieude) < 3) {
-        $errors['TieuDe'] = "Tiêu đề phải có ít nhất 3 ký tự.";
-    }
+        // Lưu dữ liệu vào session
+        $_SESSION['data'] = [
+            'TieuDe' => $TieuDe,
+            'NoiDung' => $NoiDung,
+        ];
 
-    // Kiểm tra lỗi Nội dung
-    if (empty($noidung)) {
-        $errors['NoiDung'] = "Nội dung không được để trống.";
-    } elseif (strlen($noidung) < 10) {
-        $errors['NoiDung'] = "Nội dung phải có ít nhất 10 ký tự.";
-    }
+        // Kiểm tra tiêu đề chính sách có trùng không
+        $check_policy_query = "SELECT ID_ChinhSach FROM chinhsach WHERE TieuDe='$TieuDe' AND ID_ChinhSach != $ID_ChinhSach";
+        $check_policy_result = mysqli_query($mysqli, $check_policy_query);
 
-    // Nếu có lỗi, lưu lỗi vào session và chuyển hướng về trang chỉnh sửa
-    if (!empty($errors)) {
-        $_SESSION['errors'] = $errors;
-        header("Location: ../../index.php?policy=edit-policy&id=$id");
-        exit();
-    } else {
-        // Nếu không có lỗi, tiến hành cập nhật cơ sở dữ liệu
-        $sql_update = "UPDATE chinhsach SET TieuDe='$tieude', NoiDung='$noidung' WHERE ID_ChinhSach='$id'";
-        if (mysqli_query($mysqli, $sql_update)) {
-            $_SESSION['message'] = "Cập nhật chính sách thành công!";
-            $_SESSION['message_type'] = "success";
-        } else {
-            $_SESSION['message'] = "Cập nhật chính sách thất bại!";
-            $_SESSION['message_type'] = "danger";
+        if (mysqli_num_rows($check_policy_result) > 0) {
+            echo json_encode(['status' => 'error', 'message' => "Tiêu đề chính sách đã tồn tại!"]);
+            exit();
         }
 
-        // Xóa session lỗi sau khi xử lý
-        unset($_SESSION['errors']);
-        header("Location: ../../index.php?policy=list-policy");
-        exit();
+        // Cập nhật thông tin chính sách trong cơ sở dữ liệu
+        $sql_update = "UPDATE chinhsach SET 
+            TieuDe='$TieuDe', 
+            NoiDung='$NoiDung'
+            WHERE ID_ChinhSach=$ID_ChinhSach";
+
+        if (mysqli_query($mysqli, $sql_update)) {
+            unset($_SESSION['data']); // Xóa dữ liệu lưu trữ sau khi lưu thành công
+            $_SESSION['success'] = "Cập nhật chính sách thành công!"; // Lưu thông báo thành công vào session
+            echo json_encode(['status' => 'success', 'redirect' => 'index.php?policy=list-policy']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => "Cập nhật thất bại. Vui lòng thử lại."]);
+        }
+    } else {
+        echo json_encode(['status' => 'error', 'message' => "ID chính sách không hợp lệ."]);
     }
 }
+?>
