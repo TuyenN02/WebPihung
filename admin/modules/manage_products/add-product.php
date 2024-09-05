@@ -106,10 +106,6 @@ unset($_SESSION['data']);
 </div>
 
 <script>
-
-
-document.getElementById('ImgDescriptions').addEventListener('change', previewDescriptionImages);
-
 document.getElementById('productForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Ngăn gửi form mặc định
 
@@ -210,36 +206,35 @@ function previewImage() {
         preview.style.display = 'none'; // Ẩn ảnh nếu không có file
     }
 }
-
 function previewDescriptionImages() {
-    var fileInput = document.getElementById('ImgDescriptions');
     var previewContainer = document.getElementById('descriptionImagesPreview');
-    previewContainer.innerHTML = ''; // Xóa các ảnh hiện tại
+    var files = document.getElementById('ImgDescriptions').files;
+    previewContainer.innerHTML = '';
 
-    for (var i = 0; i < fileInput.files.length; i++) {
-        var file = fileInput.files[i];
-        var reader = new FileReader();
+    if (files.length > 0) {
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var reader = new FileReader();
 
-        reader.onloadend = function (event) {
-            var img = document.createElement('img');
-            img.src = event.target.result;
-            img.style.width = '120px';
-            img.style.height = '120px';
-            img.style.objectFit = 'cover';
-            img.style.margin = '5px';
-            previewContainer.appendChild(img);
-        };
+            reader.onload = (function(file) {
+                return function(e) {
+                    var img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '150px'; // Kích thước tối đa của ảnh
+                    img.style.marginRight = '10px'; // Khoảng cách giữa các ảnh
+                    previewContainer.appendChild(img);
+                };
+            })(file); // Đảm bảo rằng mỗi FileReader gắn liền với một file khác nhau
 
-        if (file) {
             reader.readAsDataURL(file);
         }
     }
 }
 
 document.getElementById('Img').addEventListener('change', previewImage);
-document.getElementById('ImgDescriptions').addEventListener('change', previewDescriptionImages);
+
 </script>
-</script>
+
 <style>
     #wp-content {
     margin-left: 250px;
@@ -252,7 +247,3 @@ document.getElementById('ImgDescriptions').addEventListener('change', previewDes
     font-size: 0.875em;
 }
 </style>
-
-
-
-

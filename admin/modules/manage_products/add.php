@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $product_id = mysqli_insert_id($mysqli); // Lấy ID của sản phẩm mới thêm vào
 
         // Xử lý ảnh mô tả
-        if (isset($_FILES['Imgs'])) {
-            $imgDescriptions = $_FILES['Imgs'];
+        if (isset($_FILES['ImgDescriptions'])) {
+            $imgDescriptions = $_FILES['ImgDescriptions'];
             $imgCount = count($imgDescriptions['name']);
 
             for ($i = 0; $i < $imgCount; $i++) {
