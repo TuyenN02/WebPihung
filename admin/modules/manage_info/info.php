@@ -62,71 +62,134 @@ $current_info = mysqli_fetch_assoc($result);
 ?>
 
 <div class="container mt-5">
-<?php if (isset($success_message)): ?>
-                <div class="alert alert-success"><?php echo $success_message; ?></div>
-            <?php endif; ?>
-            
-            <?php if (isset($errors['update'])): ?>
-                <div class="alert alert-danger"><?php echo $errors['update']; ?></div>
-            <?php endif; ?>
+    <?php if (isset($success_message)): ?>
+        <div class="alert alert-success"><?php echo $success_message; ?></div>
+    <?php endif; ?>
+    
+    <?php if (isset($errors['update'])): ?>
+        <div class="alert alert-danger"><?php echo $errors['update']; ?></div>
+    <?php endif; ?>
 
-    <div class="bg-white p-4 rounded shadow-sm"> <!-- Thêm lớp để nền trắng và có khoảng cách nội dung -->
-    <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 35px;">Quản lý thông tin</h5>
-        <form action="" method="POST">
-          
+    <div class="bg-white p-4 rounded shadow-sm"> 
+        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 35px;">Quản lý thông tin</h5>
+        <form id="infoForm" action="" method="POST">
             <div class="form-group mb-3">
                 <label for="phone">Số điện thoại:</label>
                 <input type="text" class="form-control" id="phone" name="phone" value="<?php echo htmlspecialchars($current_info['SDT']); ?>" required>
-                <?php if (isset($errors['phone'])): ?>
-                    <div class="text-danger"><?php echo $errors['phone']; ?></div>
-                <?php endif; ?>
+                <div id="phoneError" class="text-danger"></div>
             </div>
             <div class="form-group mb-3">
                 <label for="email">Email:</label>
                 <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($current_info['Email']); ?>" required>
-                <?php if (isset($errors['email'])): ?>
-                    <div class="text-danger"><?php echo $errors['email']; ?></div>
-                <?php endif; ?>
+                <div id="emailError" class="text-danger"></div>
             </div>
             <div class="form-group mb-3">
                 <label for="address">Địa chỉ:</label>
                 <input type="text" class="form-control" id="address" name="address" value="<?php echo htmlspecialchars($current_info['DiaChi']); ?>" required>
-                <?php if (isset($errors['address'])): ?>
-                    <div class="text-danger"><?php echo $errors['address']; ?></div>
-                <?php endif; ?>
+                <div id="addressError" class="text-danger"></div>
             </div>
             <div class="form-group mb-3">
                 <label for="work_hours">Giờ làm việc:</label>
                 <input type="time" class="form-control" id="work_hours" name="work_hours" value="<?php echo htmlspecialchars($current_info['gio_lam_viec']); ?>" required>
-                <?php if (isset($errors['work_hours'])): ?>
-                    <div class="text-danger"><?php echo $errors['work_hours']; ?></div>
-                <?php endif; ?>
+                <div id="workHoursError" class="text-danger"></div>
             </div>
             <div class="form-group mb-3">
                 <label for="break_hours">Giờ nghỉ:</label>
                 <input type="time" class="form-control" id="break_hours" name="break_hours" value="<?php echo htmlspecialchars($current_info['gio_nghi']); ?>" required>
-                <?php if (isset($errors['break_hours'])): ?>
-                    <div class="text-danger"><?php echo $errors['break_hours']; ?></div>
-                <?php endif; ?>
+                <div id="breakHoursError" class="text-danger"></div>
             </div>
             <button type="submit" class="btn btn-primary">Cập nhật</button>
+            <a href="index.php?info=info" class="btn btn-secondary">Hủy</a>
         </form>
     </div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const alerts = document.querySelectorAll('.alert');
 
-        alerts.forEach(alert => {
-            setTimeout(() => {
-                alert.style.opacity = 0;
-                setTimeout(() => {
-                    alert.remove();
-                }, 500);
-            }, 2000);
-        });
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('infoForm');
+
+    form.addEventListener('submit', function(event) {
+        // Xóa thông báo lỗi trước đó
+        document.getElementById('phoneError').innerHTML = '';
+        document.getElementById('emailError').innerHTML = '';
+        document.getElementById('addressError').innerHTML = '';
+        document.getElementById('workHoursError').innerHTML = '';
+        document.getElementById('breakHoursError').innerHTML = '';
+
+        let isValid = true;
+
+        // Kiểm tra số điện thoại
+        const phone = document.getElementById('phone').value.trim();
+        const phoneRegex = /^0\d{9}$/;
+        if (!phoneRegex.test(phone)) {
+            document.getElementById('phoneError').innerHTML = 'Số điện thoại phải có 10 chữ số, bắt đầu bằng 0!';
+            isValid = false;
+        }
+
+        // Kiểm tra email
+        const email = document.getElementById('email').value.trim();
+        const emailParts = email.split('@');
+        if (emailParts.length !== 2) {
+            document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
+            isValid = false;
+        } else {
+            const localPart = emailParts[0];
+            const domainPart = emailParts[1];
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (localPart.length < 4) {
+                document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
+                isValid = false;
+            } else if (!domainRegex.test(domainPart)) {
+                document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
+                isValid = false;
+            }
+        }
+
+        // Kiểm tra địa chỉ
+        const address = document.getElementById('address').value.trim();
+        if (address.length < 10) {
+            document.getElementById('addressError').innerHTML = 'Địa chỉ phải có ít nhất 10 ký tự!';
+            isValid = false;
+        }
+
+        // Kiểm tra giờ làm việc
+        const workHours = document.getElementById('work_hours').value.trim();
+        if (workHours === '') {
+            document.getElementById('workHoursError').innerHTML = 'Giờ làm việc không được để trống!';
+            isValid = false;
+        }
+
+        // Kiểm tra giờ nghỉ
+        const breakHours = document.getElementById('break_hours').value.trim();
+        if (breakHours === '') {
+            document.getElementById('breakHoursError').innerHTML = 'Giờ nghỉ không được để trống!';
+            isValid = false;
+        }
+
+        // Nếu có lỗi, ngăn không cho form submit
+        if (!isValid) {
+            event.preventDefault();
+        }
     });
+
+    // Tự động ẩn thông báo sau vài giây
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.opacity = 0;
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }, 2000);
+    });
+});
 </script>
+
 <style>
 .alert {
     position: fixed;
