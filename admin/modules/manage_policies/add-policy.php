@@ -1,11 +1,10 @@
 <?php
 
-
 // Lấy thông báo lỗi và dữ liệu từ session
 $TieuDeError = isset($_SESSION['errors']['TieuDe']) ? $_SESSION['errors']['TieuDe'] : '';
 $NoiDungError = isset($_SESSION['errors']['NoiDung']) ? $_SESSION['errors']['NoiDung'] : '';
 $successMessage = isset($_SESSION['success']) ? $_SESSION['success'] : '';
-$data = isset($_SESSION['data']) ? $_SESSION['data'] : [];
+$data = isset($_SESSION['data']) ? $_SESSION['data'] : ['TieuDe' => '', 'NoiDung' => '']; // Mặc định là rỗng
 
 // Xóa thông báo lỗi, thông báo thành công và dữ liệu sau khi hiển thị
 unset($_SESSION['errors']);
@@ -15,16 +14,16 @@ unset($_SESSION['success']);
 
 <div id="content" class="container-fluid">
     <div class="card">
-    <div class="card-header font-weight-bold d-flex align-items-center justify-content-between">
-    <button class="btn btn-primary" style="margin: 0;">
-        <a style="color: white; text-decoration: none; border-radius: 5px;" href="?policy=list-policy">Quay lại</a>
-    </button>
-    <h5 class="m-0" style="text-align: center; font-size: 28px; flex-grow: 1;">Thêm chính sách</h5>
+        <div class="card-header font-weight-bold d-flex align-items-center justify-content-between">
+            <button class="btn btn-primary" style="margin: 0;">
+                <a style="color: white; text-decoration: none; border-radius: 5px;" href="?policy=list-policy">Quay lại</a>
+            </button>
+            <h5 class="m-0" style="text-align: center; font-size: 28px; flex-grow: 1;">Thêm chính sách</h5>
         </div>
         <div class="card-body">
             <?php if ($successMessage): ?>
                 <div class="alert alert-success">
-                    <?php echo $successMessage; ?>
+                    <?php echo htmlspecialchars($successMessage); ?>
                 </div>
             <?php endif; ?>
             
@@ -37,10 +36,10 @@ unset($_SESSION['success']);
                         type="text" 
                         name="TieuDe" 
                         id="TieuDe"
-                        value="<?php echo isset($data['TieuDe']) ? htmlspecialchars(trim($data['TieuDe'])) : ''; ?>"
+                        value="<?php echo htmlspecialchars(trim($data['TieuDe'])); ?>"
                     >
                     <?php if ($TieuDeError): ?>
-                        <div class="invalid-feedback"><?php echo $TieuDeError; ?></div>
+                        <div class="invalid-feedback"><?php echo htmlspecialchars($TieuDeError); ?></div>
                     <?php endif; ?>
                 </div>
                 <div class="form-group">
@@ -50,9 +49,9 @@ unset($_SESSION['success']);
                         class="form-control <?php echo $NoiDungError ? 'is-invalid' : ''; ?>" 
                         name="NoiDung" 
                         id="NoiDung"
-                    ><?php echo isset($data['NoiDung']) ? htmlspecialchars(trim($data['NoiDung'])) : ''; ?></textarea>
+                    ><?php echo htmlspecialchars(trim($data['NoiDung'])); ?></textarea>
                     <?php if ($NoiDungError): ?>
-                        <div class="invalid-feedback"><?php echo $NoiDungError; ?></div>
+                        <div class="invalid-feedback"><?php echo htmlspecialchars($NoiDungError); ?></div>
                     <?php endif; ?>
                 </div>
                 <input 

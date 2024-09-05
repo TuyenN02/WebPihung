@@ -1,5 +1,13 @@
 <?php
 
+// Xóa thông báo lỗi và dữ liệu nếu có yêu cầu hủy bỏ
+if (isset($_GET['action']) && $_GET['action'] === 'cancel') {
+    unset($_SESSION['errors']);
+    unset($_SESSION['data']);
+    header("Location: index.php?policy=list-policy");
+    exit();
+}
+
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $sql_policy = "SELECT * FROM chinhsach WHERE ID_ChinhSach='$id' LIMIT 1";
@@ -7,7 +15,6 @@ if (isset($_GET['id'])) {
     $row = mysqli_fetch_array($query_policy);
 }
 ?>
-
 <div class="container">
     <div class="card">
     <div class="card-header font-weight-bold d-flex align-items-center justify-content-between">
@@ -38,7 +45,7 @@ if (isset($_GET['id'])) {
                 </div>
                 <input type="hidden" name="ID_ChinhSach" value="<?php echo $row['ID_ChinhSach']; ?>">
                 <button type="submit" name="updatePolicy" class="btn btn-primary">Cập nhật</button>
-                <a href="index.php?policy=list-policy" class="btn btn-secondary">Hủy</a>
+                <a href="index.php?policy=list-policy&action=cancel" class="btn btn-secondary">Hủy</a>
             </form>
         </div>
     </div>
