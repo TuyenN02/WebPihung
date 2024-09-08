@@ -119,7 +119,7 @@ $query_getDM = mysqli_query($mysqli, $sql_getDM);
                 <input class="form-control" type="file" name="ImgDescriptions[]" accept="image/*" multiple onchange="previewAdditionalImages()">
                 </div>
                 <input type="hidden" name="id" value="<?php echo $ID_SanPham; ?>">
-                <button type="submit" class="btn btn-primary">Lưu</button>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
                 <a href="index.php?product=list-product" class="btn btn-secondary">Hủy</a>
             </form>
         </div>

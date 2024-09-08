@@ -46,7 +46,7 @@ if (isset($_GET['id'])) {
                 </div>
 
                 <input type="hidden" name="id" value="<?php echo $ID_ChinhSach; ?>">
-                <button type="submit" class="btn btn-primary">Lưu</button>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
                 <a href="index.php?policy=list-policy" class="btn btn-secondary">Hủy</a>
             </form>
         </div>

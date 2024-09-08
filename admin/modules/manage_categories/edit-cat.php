@@ -1,6 +1,4 @@
 <?php
-
-
 if (isset($_GET['id'])) {
     $ID_DanhMuc = intval($_GET['id']); // Bảo mật: ép kiểu ID_DanhMuc thành số nguyên
     $sql_getCat = "SELECT * FROM danhmuc WHERE ID_DanhMuc=$ID_DanhMuc";
@@ -48,7 +46,7 @@ if (isset($_GET['id'])) {
                 </div>
 
                 <input type="hidden" name="id" value="<?php echo $ID_DanhMuc; ?>">
-                <button type="submit" class="btn btn-primary">Lưu</button>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
                 <a href="index.php?cat=list-cat" class="btn btn-secondary">Hủy</a>
             </form>
         </div>

@@ -79,7 +79,7 @@ if (isset($_GET['id_NCC'])) {
                 </div>
 
                 <input type="hidden" name="id_NCC" value="<?php echo $ID_NCC; ?>">
-                <button type="submit" class="btn btn-primary">Lưu</button>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
                 <a href="index.php?ncc=list-ncc" class="btn btn-secondary">Hủy</a>
             </form>
         </div>
