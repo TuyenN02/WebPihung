@@ -14,17 +14,17 @@ if (isset($_POST['submit'])) {
     $errors = [];
 
     if (empty($TieuDe)) {
-        $errors['TieuDe'] = "Tiêu đề không được bỏ trống.";
-    } elseif (strlen($TieuDe) < 4) {
-        $errors['TieuDe'] = "Tiêu đề phải có ít nhất 3 ký tự.";
-    } elseif (strlen($TieuDe) > 100) {
-        $errors['TieuDe'] = "Tiêu đề không được vượt quá 100 ký tự.";
+        $errors['TieuDe'] = "Tiêu đề không được bỏ trống!";
+    } elseif (strlen($TieuDe) < 3) {
+        $errors['TieuDe'] = "Tiêu đề phải từ 3 đến 50 ký tự!";
+    } elseif (strlen($TieuDe) > 50) {
+        $errors['TieuDe'] = "Tiêu đề phải từ 3 đến 50 ký tự!";
     }
 
     if (empty($NoiDung)) {
-        $errors['NoiDung'] = "Nội dung không được bỏ trống.";
+        $errors['NoiDung'] = "Nội dung không được bỏ trống!";
     } elseif (strlen($NoiDung) < 10) {
-        $errors['NoiDung'] = "Nội dung chính sách phải có ít nhất 10 ký tự.";
+        $errors['NoiDung'] = "Nội dung phải từ 10 ký tự!";
     }
 
     $check_title_query = "SELECT * FROM chinhsach WHERE TieuDe = '$TieuDe'";
