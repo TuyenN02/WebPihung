@@ -55,7 +55,7 @@ if (isset($_GET['id_baiviet'])) {
                     <div id="noidungError" class="error-message"><?php echo $noidungError; ?></div>
                 </div>
                 <input type="hidden" name="id_baiviet" value="<?php echo $ID_baiviet; ?>">
-                <button type="submit" class="btn btn-primary">Lưu</button>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
                 <a href="index.php?posts=list-posts" class="btn btn-secondary">Hủy</a>
             </form>
         </div>
