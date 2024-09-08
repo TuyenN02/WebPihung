@@ -10,40 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone = trim(mysqli_real_escape_string($mysqli, $_POST['phone']));
     $email = trim(mysqli_real_escape_string($mysqli, $_POST['email']));
 
-    // Kiểm tra số điện thoại không để trống
-    if (empty($phone)) {
-        $errors['phone'] = 'Số điện thoại không được để trống.';
-    } elseif (!preg_match('/^0\d{9}$/', $phone)) {
-        $errors['phone'] = 'Vui lòng nhập đúng định dạng.';
-    }
-
-    // Kiểm tra email
-    if (empty($email)) {
-        $errors['email'] = 'Email chưa đúng định dạng!';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors['email'] = 'Email chưa đúng định dạng!';
-    } else {
-        // Phân tách email thành phần trước và sau dấu @
-        list($local_part, $domain_part) = explode('@', $email);
-
-        // Kiểm tra phần miền domain không có ký tự đặc biệt
-        if (!preg_match('/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $domain_part)) {
-            $errors['email'] = 'Miền email không hợp lệ.';
-        } elseif (strlen($local_part) < 4) {
-            $errors['email'] = 'Email chưa đúng định dạng!';
-        }
-    }
-
-    // Kiểm tra các trường không để trống
-    if (empty($address)) {
-        $errors['address'] = 'Địa chỉ không được để trống.';
-    }
-    if (empty($work_hours)) {
-        $errors['work_hours'] = 'Giờ làm việc không được để trống.';
-    }
-    if (empty($break_hours)) {
-        $errors['break_hours'] = 'Giờ nghỉ không được để trống.';
-    }
 
     // Nếu không có lỗi, thực hiện cập nhật
     if (empty($errors)) {
@@ -60,6 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $result = mysqli_query($mysqli, "SELECT DiaChi, gio_lam_viec, gio_nghi, SDT, Email FROM thongtin WHERE ID=1");
 $current_info = mysqli_fetch_assoc($result);
 ?>
+
+
+
 
 <div class="container mt-5">
     <?php if (isset($success_message)): ?>
@@ -137,15 +106,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const domainPart = emailParts[1];
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const localPartRegex = /^[a-zA-Z0-9]+$/; // Chỉ cho phép ký tự chữ và số
 
+            // Kiểm tra local part
             if (localPart.length < 4) {
+                document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
+                isValid = false;
+            } else if (!localPartRegex.test(localPart)) {
                 document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
                 isValid = false;
             } else if (!emailRegex.test(email)) {
                 document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
                 isValid = false;
             } else if (!domainRegex.test(domainPart)) {
-                document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
+                document.getElementById('emailError').innerHTML = 'Miền email chưa đúng định dạng!';
                 isValid = false;
             }
         }
@@ -157,18 +131,33 @@ document.addEventListener('DOMContentLoaded', function() {
             isValid = false;
         }
 
-        // Kiểm tra giờ làm việc
+        // Kiểm tra giờ làm việc và giờ nghỉ
         const workHours = document.getElementById('work_hours').value.trim();
+        const breakHours = document.getElementById('break_hours').value.trim();
+
         if (workHours === '') {
             document.getElementById('workHoursError').innerHTML = 'Giờ làm việc không được để trống!';
             isValid = false;
         }
 
-        // Kiểm tra giờ nghỉ
-        const breakHours = document.getElementById('break_hours').value.trim();
         if (breakHours === '') {
             document.getElementById('breakHoursError').innerHTML = 'Giờ nghỉ không được để trống!';
             isValid = false;
+        }
+
+        // Kiểm tra giờ làm việc phải sớm hơn giờ nghỉ theo định dạng 24 giờ
+        if (workHours !== '' && breakHours !== '') {
+            const workTime = workHours.split(':');
+            const breakTime = breakHours.split(':');
+
+            // Chuyển đổi sang số phút kể từ 00:00
+            const workMinutes = parseInt(workTime[0]) * 60 + parseInt(workTime[1]);
+            const breakMinutes = parseInt(breakTime[0]) * 60 + parseInt(breakTime[1]);
+
+            if (workMinutes >= breakMinutes) {
+                document.getElementById('workHoursError').innerHTML = 'Giờ làm phải sớm hơn giờ nghỉ!';
+                isValid = false;
+            }
         }
 
         // Nếu có lỗi, ngăn không cho form submit
@@ -189,6 +178,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+
 
 <style>
 .alert {

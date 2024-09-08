@@ -31,6 +31,7 @@ if (!isset($_SESSION['admin'])) {
             crossorigin="anonymous"
         />
         <link rel="stylesheet" href="css/style.css" />
+                   
         <title>Admintrator</title>
         <style>
             /* style.css */
