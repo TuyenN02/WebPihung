@@ -213,13 +213,13 @@ if (isset($_SESSION['success_message'])): ?>
 
 .alert-success {
     background-color: #d4edda;
-    color: #ff0000;
-    border: 3px solid #ff0000;
+    color: #269963;
+    border: 3px solid #269963;
 }
 
 .alert-danger {
     background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    color: #269963;
+    border: 1px solid #269963;
 }
 </style>

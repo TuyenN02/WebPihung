@@ -99,19 +99,24 @@ document.getElementById('addSupplierForm').addEventListener('submit', function(e
         document.getElementById('TenNCCError').textContent = "";
     }
 
-    // Kiểm tra email
-    if (email.length < 4 || email.length > 255) {
+   // Kiểm tra email
+if (email.length < 4 || email.length > 255) {
     document.getElementById('EmailError').textContent = "Email không đúng định dạng!";
     hasError = true;
+} else {
+    const [localPart, domain] = email.split('@');
+    
+    // Kiểm tra localPart không chứa dấu và ký tự đặc biệt ngoại trừ dấu chấm và dấu gạch ngang
+    const specialCharRegex = /[^\w.-]/; // Chỉ cho phép chữ cái, số, dấu chấm và dấu gạch ngang
+    
+    if (!localPart || localPart.length < 4 || specialCharRegex.test(localPart) || domain.length < 3 || 
+        !/^[a-zA-Z0-9.-]+$/.test(domain) || domain.split('.').length < 2) {
+        document.getElementById('EmailError').textContent = "Email không đúng định dạng!";
+        hasError = true;
     } else {
-        const [localPart, domain] = email.split('@');
-        if (!localPart || localPart.length < 4 || domain.length < 3 || !/^[a-zA-Z0-9.-]+$/.test(domain) || domain.split('.').length < 2) {
-            document.getElementById('EmailError').textContent = "Email không đúng định dạng!";
-            hasError = true;
-        } else {
-            document.getElementById('EmailError').textContent = "";
-        }
+        document.getElementById('EmailError').textContent = "";
     }
+}
     // Kiểm tra số điện thoại
     if (soDienThoai.length !== 10 || !/^\d{10}$/.test(soDienThoai) || !soDienThoai.startsWith('0')) {
         document.getElementById('SoDienThoaiError').textContent = "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0!";
