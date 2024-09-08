@@ -15,12 +15,12 @@ if (isset($_POST['order_id']) && isset($_POST['order_status'])) {
 
     if (mysqli_query($mysqli, $query)) {
         $response['success'] = true;
-        $response['message'] = 'Cập nhật thành công';
+        $response['success'] = 'Cập nhật thành công';
     } else {
-        $response['message'] = 'Cập nhật thất bại: ' . mysqli_error($mysqli);
+        $response['success'] = 'Cập nhật thất bại: ' . mysqli_error($mysqli);
     }
 } else {
-    $response['message'] = 'Dữ liệu không hợp lệ';
+    $response['success'] = 'Dữ liệu không hợp lệ';
 }
 
 // Output the JSON response

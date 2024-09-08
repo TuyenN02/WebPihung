@@ -149,32 +149,39 @@ if ($status === 'success') {
     }
 
     function updateOrderStatus(orderId, status) {
-        if (confirm("Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?")) {
-            $.ajax({
-                url: 'modules/manage_orders/update_status.php',
-                type: 'POST',
-                data: {
-                    order_id: orderId,
-                    order_status: status
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
+    if (confirm("Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?")) {
+        $.ajax({
+            url: 'modules/manage_orders/update_status.php',
+            type: 'POST',
+            data: {
+                order_id: orderId,
+                order_status: status
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    // Thêm thông báo cập nhật thành công
+                    var successAlert = document.createElement('div');
+                    successAlert.className = 'alert alert-success';
+                    successAlert.innerHTML = 'Cập nhật trạng thái đơn hàng thành công';
+                    document.getElementById('content').prepend(successAlert);
+                    
+                    // Ẩn thông báo sau 3 giây
+                    setTimeout(function() {
+                        successAlert.style.display = 'none';
+                    }, 3000);
+                    
+                    // Tải lại trang để cập nhật dữ liệu
+                    setTimeout(function() {
                         window.location.reload();
-                    } else {
-                        alert("Có lỗi xảy ra khi cập nhật trạng thái.");
-                    }
+                    }, 3500);
+                } else {
+                    alert("Có lỗi xảy ra khi cập nhật trạng thái.");
                 }
-            });
-        }
+            }
+        });
     }
-
-    setTimeout(function() {
-        var alert = document.getElementById('status-alert');
-        if (alert) {
-            alert.style.display = 'none';
-        }
-    }, 3000);
+}
 </script>
 
 <style>
@@ -226,4 +233,22 @@ table {
     input[type="submit"].btn.btn-primary.ml-2 {
         width: 100px; /* Thay đổi chiều rộng của nút Tìm kiếm */
     }
+    .alert {
+    position: fixed;
+    top: 50px;
+    right: 900px;
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #269963;
+    border: 3px solid #269963;
+}
+
+
 </style>
