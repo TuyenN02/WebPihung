@@ -117,8 +117,8 @@ unset($_SESSION['success']);
 
 .alert-success {
     background-color: #d4edda;
-    color: #ff0000;
-    border: 3px solid #ff0000;
+    color: #269963;
+    border: 3px solid #269963;
 }
 
 .alert-danger {

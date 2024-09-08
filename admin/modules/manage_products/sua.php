@@ -1,141 +1,105 @@
 <?php
-include("../../config/connection.php");
 session_start();
+include("../../config/connection.php");
 
-// Khởi tạo biến lỗi và thành công
-$errors = [];
-$success = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['id'])) {
+        $ID_SanPham = intval($_POST['id']);
+        $ID_DanhMuc = intval($_POST['ID_DanhMuc']);
+        $ID_NhaCungCap = intval($_POST['ID_NhaCungCap']);
+        $TenSanPham = trim(mysqli_real_escape_string($mysqli, $_POST['TenSanPham']));
+        $MoTa = trim(mysqli_real_escape_string($mysqli, $_POST['MoTa']));
+        $GiaBan = floatval($_POST['GiaBan']);
+        $SoLuong = floatval($_POST['SoLuong']);
+        $Img = $_FILES['Img']['name'];
+        $Img_tmp = $_FILES['Img']['tmp_name'];
+        $ImgDescriptions = $_FILES['ImgDescriptions']['name'];
+        $ImgDescriptions_tmp = $_FILES['ImgDescriptions']['tmp_name'];
 
-// Kiểm tra xem có yêu cầu cập nhật không
-if (isset($_POST['update'])) {
-    $ID_SanPham = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-    $TenSanPham = trim($_POST['TenSanPham']);
-    $GiaBan = trim($_POST['GiaBan']);
-    $SoLuong = trim($_POST['SoLuong']);
-    $MoTa = trim($_POST['MoTa']);
-    $ID_DanhMuc = (int)$_POST['danhmuc'];
-    $ID_NCC = (int)$_POST['nhacungcap'];
+        // Save data to session
+        $_SESSION['data'] = [
+            'ID_DanhMuc' => $ID_DanhMuc,
+            'ID_NhaCungCap' => $ID_NhaCungCap,
+            'TenSanPham' => $TenSanPham,
+            'MoTa' => $MoTa,
+            'GiaBan' => $GiaBan,
+            'SoLuong' => $SoLuong,
+        ];
 
-    // Xử lý ảnh chính
-    $imageName = $_FILES['image']['name'];
-    $imageTemp = $_FILES['image']['tmp_name'];
-    $targetDir = "../../../assets/image/product/";
-    $newImageName = '';
+        // Check for existing product name
+        $check_name_query = "SELECT ID_SanPham FROM sanpham WHERE TenSanPham='$TenSanPham' AND ID_SanPham != $ID_SanPham";
+        $check_name_result = mysqli_query($mysqli, $check_name_query);
 
-    if (!empty($imageName)) {
-        $allowed_extensions = ['jpg', 'jpeg', 'png'];
-        $file_extension = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
-        if (in_array($file_extension, $allowed_extensions)) {
-            $targetFile = $targetDir . basename($imageName);
-            if (move_uploaded_file($imageTemp, $targetFile)) {
-                $newImageName = $imageName;     
+        if (mysqli_num_rows($check_name_result) > 0) {
+            echo json_encode(['status' => 'error', 'message' => "Tên sản phẩm đã tồn tại!"]);
+            exit();
+        }
+
+        // Update product information
+        $sql_update = "UPDATE sanpham SET 
+            ID_DanhMuc='$ID_DanhMuc', 
+            ID_NhaCungCap='$ID_NhaCungCap', 
+            TenSanPham='$TenSanPham', 
+            MoTa='$MoTa', 
+            GiaBan='$GiaBan', 
+            SoLuong='$SoLuong'";
+
+        // Handle main image
+        if (!empty($Img)) {
+            $allowedExtensions = ['jpg', 'jpeg', 'png'];
+            $imgExtension = strtolower(pathinfo($Img, PATHINFO_EXTENSION));
+            if (in_array($imgExtension, $allowedExtensions)) {
+                // Delete old image if it exists
+                $result = mysqli_query($mysqli, "SELECT Img FROM sanpham WHERE ID_SanPham=$ID_SanPham");
+                $oldImg = mysqli_fetch_assoc($result)['Img'];
+                if ($oldImg && file_exists("../../../assets/image/product/$oldImg")) {
+                    unlink("../../../assets/image/product/$oldImg");
+                }
+
+                // Move new image
+                move_uploaded_file($Img_tmp, "../../../assets/image/product/" . $Img);
+                $sql_update .= ", Img='$Img'";
             } else {
-                $errors['Img'] = 'Không thể tải lên tệp hình ảnh chính. Vui lòng thử lại.';
+                echo json_encode(['status' => 'error', 'message' => "Định dạng hình ảnh không hợp lệ!"]);
+                exit();
             }
-        } else {
-            $errors['Img'] = 'Định dạng tệp không hợp lệ! Vui lòng chỉ tải lên tệp có đuôi .jpg, .jpeg, hoặc .png.';
         }
-    } else {
-        // Nếu không có hình ảnh mới, giữ hình ảnh cũ
-        $result = $mysqli->query("SELECT Img FROM sanpham WHERE ID_SanPham=$ID_SanPham");
-        if ($result && $result->num_rows > 0) {
-            $newImageName = $result->fetch_assoc()['Img'];
-        } else {
-            $errors['Img'] = 'Không tìm thấy hình ảnh của sản phẩm.';
-        }
-    }
 
-    // Xử lý ảnh phụ
-    if (isset($_FILES['additional_images']) && !empty($_FILES['additional_images']['name'][0])) {
-        foreach ($_FILES['additional_images']['name'] as $key => $name) {
-            if ($name) {
-                $tempName = $_FILES['additional_images']['tmp_name'][$key];
-                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-                if (in_array($ext, ['jpg', 'jpeg', 'png'])) {
-                    $targetFile = $targetDir . basename($name);
-                    if (move_uploaded_file($tempName, $targetFile)) {
-                        // Lưu ảnh phụ vào cơ sở dữ liệu
-                        $sql_insert_image = "INSERT INTO hinhanh_sanpham (ID_SanPham, Anh) VALUES (?, ?)";
-                        $stmt = $mysqli->prepare($sql_insert_image);
-                        $stmt->bind_param("is", $ID_SanPham, $name);
-                        if (!$stmt->execute()) {
-                            $errors['additional_images'][] = "Không thể lưu tệp hình ảnh phụ: $name";
+        $sql_update .= " WHERE ID_SanPham=$ID_SanPham";
+
+        if (mysqli_query($mysqli, $sql_update)) {
+            // Handle description images
+            if (!empty($ImgDescriptions[0])) {
+                // Delete existing description images for this product
+                mysqli_query($mysqli, "DELETE FROM hinhanh_sanpham WHERE ID_SanPham=$ID_SanPham");
+                
+                foreach ($ImgDescriptions as $key => $imgDesc) {
+                    if ($imgDesc) {
+                        $imgDesc_tmp = $ImgDescriptions_tmp[$key];
+                        $allowedExtensions = ['jpg', 'jpeg', 'png'];
+                        $imgDescExtension = strtolower(pathinfo($imgDesc, PATHINFO_EXTENSION));
+                        if (in_array($imgDescExtension, $allowedExtensions)) {
+                            // Move the uploaded description image
+                            move_uploaded_file($imgDesc_tmp, "../../../assets/image/product/" . $imgDesc);
+
+                            // Insert into database
+                            $sql_insert_desc = "INSERT INTO hinhanh_sanpham (ID_SanPham, Anh) VALUES ('$ID_SanPham', '$imgDesc')";
+                            mysqli_query($mysqli, $sql_insert_desc);
+                        } else {
+                            echo json_encode(['status' => 'error', 'message' => "Định dạng hình ảnh mô tả không hợp lệ!"]);
+                            exit();
                         }
-                    } else {
-                        $errors['additional_images'][] = "Không thể tải lên tệp hình ảnh phụ: $name";
                     }
-                } else {
-                    $errors['additional_images'][] = "Định dạng tệp không hợp lệ cho hình ảnh phụ: $name";
                 }
             }
-        }
-    }
 
-    // Kiểm tra các trường không được để trống
-    if (empty($TenSanPham)) {
-        $errors['TenSanPham'] = 'Tên sản phẩm không được bỏ trống.';
-    } elseif (strlen($TenSanPham) < 3) {
-        $errors['TenSanPham'] = 'Tên sản phẩm phải có ít nhất 3 ký tự.';
-    } elseif (strlen($TenSanPham) > 50) {
-        $errors['TenSanPham'] = 'Tên sản phẩm không được quá 50 ký tự.';
-    } else {
-        // Kiểm tra trùng tên sản phẩm
-        $sql_checkTenSanPham = "SELECT * FROM sanpham WHERE TenSanPham=? AND ID_SanPham != ?";
-        $stmt = $mysqli->prepare($sql_checkTenSanPham);
-        $stmt->bind_param("si", $TenSanPham, $ID_SanPham);
-        $stmt->execute();
-        $result_checkTenSanPham = $stmt->get_result();
-
-        if ($result_checkTenSanPham->num_rows > 0) {
-            $errors['TenSanPham'] = 'Tên sản phẩm này đã tồn tại. Vui lòng chọn tên khác.';
-        }
-    }
-
-    if (empty($GiaBan)) {
-        $errors['GiaBan'] = 'Giá không được bỏ trống.';
-    } elseif (!is_numeric($GiaBan) || $GiaBan <= 0) {
-        $errors['GiaBan'] = 'Giá phải là số dương.';
-    }
-
-    if (empty($SoLuong)) {
-        $errors['SoLuong'] = 'Số lượng không được bỏ trống.';
-    } elseif (!is_numeric($SoLuong) || $SoLuong <= 0) {
-        $errors['SoLuong'] = 'Số lượng phải là số dương.';
-    }
-
-    if (empty($MoTa)) {
-        $errors['MoTa'] = 'Mô tả sản phẩm không được bỏ trống.';
-    }
-
-    if (empty($errors)) {
-        // Thực hiện truy vấn để cập nhật sản phẩm vào cơ sở dữ liệu
-        $sql_update = "UPDATE sanpham SET 
-            ID_DanhMuc=?, 
-            ID_NhaCungCap=?, 
-            TenSanPham=?, 
-            MoTa=?, 
-            GiaBan=?, 
-            SoLuong=?, 
-            Img=? 
-            WHERE ID_SanPham=?";
-        $stmt = $mysqli->prepare($sql_update);
-        $stmt->bind_param("iissdssi", $ID_DanhMuc, $ID_NCC, $TenSanPham, $MoTa, $GiaBan, $SoLuong, $newImageName, $ID_SanPham);
-
-        if ($stmt->execute()) {
-            // Lưu thông báo thành công vào session
-            $_SESSION['success'] = 'Cập nhật sản phẩm thành công!';
-            // Chuyển hướng đến trang danh sách sản phẩm
-            header("Location:../../index.php?product=list-product");
-            exit();
+            unset($_SESSION['data']);
+            $_SESSION['success'] = "Cập nhật sản phẩm thành công!";
+            echo json_encode(['status' => 'success', 'redirect' => 'index.php?product=list-product']);
         } else {
-            $errors['sql_error'] = 'Lỗi khi cập nhật. Vui lòng thử lại.';
+            echo json_encode(['status' => 'error', 'message' => "Cập nhật thất bại. Vui lòng thử lại."]);
         }
+    } else {
+        echo json_encode(['status' => 'error', 'message' => "ID sản phẩm không hợp lệ."]);
     }
-
-    // Lưu lỗi vào session và quay lại trang form
-    $_SESSION['errors'] = $errors;
-    $_SESSION['form_data'] = $_POST;
-    header("Location:../../index.php?product=suaSanPham&id=$ID_SanPham");
-    exit();
 }
-?>

@@ -104,7 +104,9 @@ unset($_SESSION['data']);
         </div>
     </div>
 </div>
-
+<!-- Thêm vào phần <head> của trang HTML -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.getElementById('productForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Ngăn gửi form mặc định
@@ -123,35 +125,35 @@ document.getElementById('productForm').addEventListener('submit', function(event
 
     // Kiểm tra lỗi
     if (tenSanPham.length < 3 || tenSanPham.length > 50) {
-        document.getElementById('TenSanPhamError').textContent = "Tên sản phẩm phải từ 3 đến 50 ký tự.";
+        document.getElementById('TenSanPhamError').textContent = "Tên sản phẩm phải từ 3 đến 50 ký tự!";
         hasError = true;
     } else {
         document.getElementById('TenSanPhamError').textContent = "";
     }
 
     if (!giaBan || isNaN(giaBan) || giaBan <= 0) {
-        document.getElementById('GiaBanError').textContent = "Giá phải là một số dương.";
+        document.getElementById('GiaBanError').textContent = "Giá phải là một số dương!";
         hasError = true;
     } else {
         document.getElementById('GiaBanError').textContent = "";
     }
 
     if (!soLuong || isNaN(soLuong) || soLuong <= 0) {
-        document.getElementById('SoLuongError').textContent = "Số lượng phải là một số dương.";
+        document.getElementById('SoLuongError').textContent = "Số lượng phải là một số dương!";
         hasError = true;
     } else {
         document.getElementById('SoLuongError').textContent = "";
     }
 
     if (danhMuc === '') {
-        document.getElementById('danhmucError').textContent = "Vui lòng chọn danh mục.";
+        document.getElementById('danhmucError').textContent = "Vui lòng chọn danh mục!";
         hasError = true;
     } else {
         document.getElementById('danhmucError').textContent = "";
     }
 
     if (nhaCungCap === '') {
-        document.getElementById('nhacungcapError').textContent = "Vui lòng chọn nhà cung cấp.";
+        document.getElementById('nhacungcapError').textContent = "Vui lòng chọn nhà cung cấp!";
         hasError = true;
     } else {
         document.getElementById('nhacungcapError').textContent = "";
@@ -191,45 +193,205 @@ document.getElementById('productForm').addEventListener('submit', function(event
     });
 });
 function previewImage() {
-    var file = document.getElementById('Img').files[0];
+    var fileInput = document.getElementById('Img');
+    var file = fileInput.files[0];
     var preview = document.getElementById('imagePreview');
     
+    // Các định dạng tệp hợp lệ
+    var validExtensions = ['image/png', 'image/jpeg'];
+    
     if (file) {
-        var reader = new FileReader();
-        reader.onloadend = function() {
-            preview.src = reader.result;
-            preview.style.display = 'block'; // Hiển thị ảnh sau khi chọn
-        };
-        reader.readAsDataURL(file);
+        // Kiểm tra định dạng tệp
+        if (validExtensions.includes(file.type)) {
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                preview.src = reader.result;
+                preview.style.display = 'block'; // Hiển thị ảnh sau khi chọn
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // Hiển thị thông báo lỗi nếu định dạng không hợp lệ
+            Swal.fire({
+                title: 'Lỗi định dạng!',
+                text: 'Vui lòng chọn tệp có định dạng PNG, JPEG hoặc JPG!',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+
+            // Xóa giá trị của input file và ẩn ảnh preview
+            fileInput.value = '';
+            preview.src = "";
+            preview.style.display = 'none';
+        }
     } else {
         preview.src = "";
         preview.style.display = 'none'; // Ẩn ảnh nếu không có file
     }
 }
+
+// Mảng chứa các ảnh đã thêm trước đó (dữ liệu từ backend)
+var validFiles = []; // Mảng chứa các tệp hợp lệ đã thêm
+var existingImages = []; // Mảng chứa các ảnh đã có từ trước
+
+// Hiển thị các ảnh đã thêm trước đó
+function displayExistingImages() {
+    var previewContainer = document.getElementById('descriptionImagesPreview');
+    previewContainer.innerHTML = ''; // Xóa nội dung cũ
+
+    existingImages.forEach(function(imageSrc, index) {
+        var img = document.createElement('img');
+        img.src = imageSrc;
+        img.style.width = '150px';
+        img.style.height = '150px';
+        img.style.objectFit = 'cover';
+        img.style.marginRight = '10px';
+
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'btn btn-danger btn-sm remove-image';
+        button.textContent = 'Xóa';
+        button.dataset.index = index; // Gán index cho ảnh đã có
+
+        // Sự kiện xóa ảnh
+        button.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: "Bạn có chắc chắn muốn xóa ảnh này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var index = parseInt(button.dataset.index, 10);
+                    existingImages.splice(index, 1); // Xóa ảnh khỏi mảng existingImages
+                    img.parentElement.remove(); // Xóa ảnh khỏi giao diện
+
+                    // Thông báo xóa thành công
+                    Swal.fire({
+                        title: 'Xóa thành công!',
+                        text: 'Ảnh đã được xóa khỏi danh sách.',
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+
+        var div = document.createElement('div');
+        div.style.display = 'inline-block';
+        div.style.textAlign = 'center';
+        div.style.marginBottom = '10px';
+        div.appendChild(img);
+        div.appendChild(button);
+        previewContainer.appendChild(div);
+    });
+}
+
+// Hiển thị các ảnh mới thêm vào
 function previewDescriptionImages() {
     var previewContainer = document.getElementById('descriptionImagesPreview');
-    var files = document.getElementById('ImgDescriptions').files;
-    previewContainer.innerHTML = '';
-
-    if (files.length > 0) {
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
+    var fileInput = document.getElementById('ImgDescriptions');
+    var newFiles = fileInput.files;
+    var validExtensions = ['image/png', 'image/jpeg','image/jpg']; // Định dạng hợp lệ
+    if (newFiles.length > 0) {
+        for (var i = 0; i < newFiles.length; i++) {
+            var file = newFiles[i];
             var reader = new FileReader();
+        if (!validExtensions.includes(file.type)) {
+            Swal.fire({
+                title: 'Lỗi định dạng!',
+                text: 'Vui lòng chọn tệp có định dạng PNG hoặc JPG.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            fileInput.value = ''; // Xóa tệp không hợp lệ
+            return;
+        }
 
-            reader.onload = (function(file) {
+            // Thêm tệp mới vào mảng validFiles mà không xóa các tệp đã có
+            validFiles.push(file);
+
+            reader.onload = (function(fileIndex) {
                 return function(e) {
                     var img = document.createElement('img');
                     img.src = e.target.result;
-                    img.style.maxWidth = '150px'; // Kích thước tối đa của ảnh
-                    img.style.marginRight = '10px'; // Khoảng cách giữa các ảnh
-                    previewContainer.appendChild(img);
+
+                    // Đặt kích thước ảnh cố định
+                    img.style.width = '150px';
+                    img.style.height = '150px';
+                    img.style.objectFit = 'cover';
+                    img.style.marginRight = '10px';
+
+                    var button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'btn btn-danger btn-sm remove-image';
+                    button.textContent = 'Xóa';
+                    button.dataset.index = validFiles.length - 1; // Gán index cho ảnh mới
+
+                    // Sự kiện xóa ảnh mới
+                    button.addEventListener('click', function() {
+                        Swal.fire({
+                            title: 'Xác nhận xóa?',
+                            text: "Bạn có chắc chắn muốn xóa ảnh này?",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Xác nhận',
+                            cancelButtonText: 'Hủy'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                var index = parseInt(button.dataset.index, 10);
+                                validFiles.splice(index, 1); // Xóa ảnh khỏi mảng validFiles
+                                img.parentElement.remove(); // Xóa ảnh khỏi giao diện
+                                updateFileInput(); // Cập nhật lại file input
+
+                                // Thông báo xóa thành công
+                                Swal.fire({
+                                    title: 'Xóa thành công!',
+                                    text: 'Ảnh đã được xóa khỏi danh sách.',
+                                    icon: 'success',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    });
+
+                    var div = document.createElement('div');
+                    div.style.display = 'inline-block';
+                    div.style.textAlign = 'center';
+                    div.style.marginBottom = '10px';
+                    div.appendChild(img);
+                    div.appendChild(button);
+                    previewContainer.appendChild(div);
                 };
-            })(file); // Đảm bảo rằng mỗi FileReader gắn liền với một file khác nhau
+            })(validFiles.length - 1); // Đảm bảo mỗi FileReader gắn liền với một file khác nhau
 
             reader.readAsDataURL(file);
         }
     }
+
+    updateFileInput(); // Cập nhật lại file input
 }
+
+// Hàm cập nhật lại fileInput sau khi xóa ảnh
+function updateFileInput() {
+    var dataTransfer = new DataTransfer();
+    validFiles.forEach(function(file) {
+        dataTransfer.items.add(file);
+    });
+    document.getElementById('ImgDescriptions').files = dataTransfer.files;
+
+    // Cập nhật lại dataset index cho các nút sau khi xóa ảnh
+    var removeButtons = document.querySelectorAll('.remove-image');
+    removeButtons.forEach((button, idx) => {
+        button.dataset.index = idx; // Cập nhật lại chỉ số sau khi xóa
+    });
+}
+
+// Gọi hàm để hiển thị ảnh đã có khi trang tải
+displayExistingImages();
 
 document.getElementById('Img').addEventListener('change', previewImage);
 
