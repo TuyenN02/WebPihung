@@ -8,16 +8,9 @@ if (isset($_SESSION['successMessage'])) {
     unset($_SESSION['successMessage']); // Xóa thông báo sau khi đã hiển thị
 }
 
-// Truy vấn sản phẩm nổi bật
 $sql_product = "SELECT * FROM sanpham
-                WHERE ID_SanPham IN (
-                    SELECT ID_SanPham
-                    FROM chitietdonhang
-                    INNER JOIN donhang ON chitietdonhang.ID_DonHang = donhang.ID_DonHang
-                    WHERE donhang.XuLy = 5
-                    GROUP BY ID_SanPham
-                    ORDER BY SUM(SoLuong) DESC
-                ) LIMIT 12";
+                ORDER BY ID_SanPham DESC
+                LIMIT 8"; // Hiển thị 8 sản phẩm mới nhất
 
 $query_product = mysqli_query($mysqli, $sql_product);
 
@@ -39,9 +32,16 @@ if (!$query_supplier) {
     die("Truy vấn nhà cung cấp thất bại: " . mysqli_error($mysqli));
 }
 ?>
+<?php if (isset($_SESSION['login_success'])): ?>
+    <div class="alert alert-success alert-custom text-center" role="alert">
+        <?php echo $_SESSION['login_success']; ?>
+        <?php unset($_SESSION['login_success']); // Xóa thông báo sau khi hiển thị ?>
+    </div>
+<?php endif; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang chủ - Shop Cây Cảnh Pi Hưng</title>
@@ -216,18 +216,30 @@ if (!$query_supplier) {
         font-weight: bold;
         color: #343a40;
     }
+/* Styles for success alert */
+.alert-success {
+    position: fixed; /* Fixed position to keep the alert in place */
+    top: 10px; /* Distance from the top of the viewport */
+    right: 10px; /* Distance from the right edge of the viewport */
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text color */
+    border: 1px solid #c3e6cb; /* Light green border */
+    padding: 15px 25px; /* Padding around the message */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for better visibility */
+    z-index: 9999; /* Ensure it appears on top of other elements */
+    opacity: 1; /* Make sure it's visible initially */
+    transition: opacity 0.5s ease; /* Smooth transition for fading out */
+}
+.alert-success.fade-out {
+    opacity: 0; /* Fade out effect */
+}
 </style>
 
     
 
 </head>
 <body>
-<?php if (isset($_SESSION['login_success'])): ?>
-    <div class="alert alert-success alert-custom text-center" role="alert">
-        <?php echo $_SESSION['login_success']; ?>
-        <?php unset($_SESSION['login_success']); // Xóa thông báo sau khi hiển thị ?>
-    </div>
-<?php endif; ?>
     <!-- Carousel -->
     <div id="slides" class="carousel slide" data-ride="carousel">
         <ul class="carousel-indicators">
@@ -336,7 +348,16 @@ if (!$query_supplier) {
         <?php } ?>
     </div>
 </section>
-
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var alert = document.querySelector('.alert-custom');
+    if (alert) {
+        setTimeout(function() {
+            alert.classList.add('fade-out');
+        }, 2000); // 2 giây
+    }
+});
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         <?php if (isset($successMessage)) { ?>
