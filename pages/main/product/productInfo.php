@@ -6,7 +6,9 @@ if (isset($_SESSION['ID_ThanhVien'])) {
 } else {
     $id_cus = null;
 }
-
+// Fetch additional images
+$sql_images = "SELECT Anh FROM hinhanh_sanpham WHERE ID_SanPham = '".mysqli_real_escape_string($mysqli, $_GET['id_product'])."'";
+$query_images = mysqli_query($mysqli, $sql_images);
 // Fetch product details
 $sql_product = "SELECT * FROM sanpham WHERE ID_SanPham = '".mysqli_real_escape_string($mysqli, $_GET['id_product'])."'";
 $query_product = mysqli_query($mysqli, $sql_product);
@@ -81,6 +83,18 @@ $row_ncc = mysqli_num_rows($query_ncc) > 0 ? mysqli_fetch_array($query_ncc) : nu
                 <img src="./assets/image/product/<?php echo htmlspecialchars($row_product['Img']); ?>"
                      style="display: block; width: 100%; height: 360px; object-fit: cover; object-position: center center;">
             </div>
+            <div class="additional-images mt-3">
+        <div class="row">
+            <?php while ($row_image = mysqli_fetch_array($query_images)) { ?>
+                <div class="col-4 mb-3">
+                    <a href="./assets/image/product/<?php echo htmlspecialchars($row_image['Anh']); ?>" data-lightbox="product-gallery" data-title="<?php echo htmlspecialchars($row_product['TenSanPham']); ?>">
+                        <img src="./assets/image/product/<?php echo htmlspecialchars($row_image['Anh']); ?>"
+                             style="width: 100%; height: 120px; object-fit: cover; object-position: center center;">
+                    </a>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
         </div>
 
         <div class="col-lg-3 p-3">
@@ -161,7 +175,11 @@ $row_ncc = mysqli_num_rows($query_ncc) > 0 ? mysqli_fetch_array($query_ncc) : nu
         </form>
     </div>
 </main>
+<!-- Lightbox2 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet" />
 
+<!-- Lightbox2 JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 <script>
     function setAction(action) {
     document.getElementById('action_type').value = action;
