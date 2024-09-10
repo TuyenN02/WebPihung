@@ -1,7 +1,6 @@
 <?php
 include("../../config/connection.php"); // Kết nối đến cơ sở dữ liệu
 
-
 if (isset($_GET['id'])) {
     $id_sanpham = intval($_GET['id']); // Lấy ID sản phẩm từ URL và chuyển thành số nguyên để bảo mật
 
@@ -63,6 +62,11 @@ if (isset($_GET['id'])) {
             echo '</div>'; // Đóng row
         }
 
+        // Thêm nút thoát
+        echo '<div class="text-center mt-4">';
+        echo '<a href="index.php?product=list-product" class="btn btn-secondary">Đóng</a>'; // Trở về trang danh sách sản phẩm
+        echo '</div>';;
+        
         echo '</div>'; // Đóng container
     } else {
         echo '<p class="text-center">Sản phẩm không tồn tại.</p>';
@@ -92,5 +96,19 @@ hr {
     height: 200px; /* Hoặc kích thước mong muốn */
     object-fit: cover;
     margin-bottom: 10px;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
 }
 </style>

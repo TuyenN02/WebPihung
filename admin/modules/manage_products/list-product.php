@@ -104,7 +104,7 @@ unset($_SESSION['success']);
                     }
                    
 
-                    .alert {
+.alert {
     position: fixed;
     top: 50px;
     right: 950px;
@@ -243,8 +243,7 @@ unset($_SESSION['success']);
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="productDetailModalLabel">Chi tiết sản phẩm</h5>
-                <!-- Nút đóng (X) -->
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               
             </div>
             <div class="modal-body">
                 <div id="productDetailContent">
