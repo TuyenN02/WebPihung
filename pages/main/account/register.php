@@ -1,6 +1,7 @@
 <?php
 // Khởi tạo các biến để tránh lỗi "Undefined variable"
 $username = $password = $password_repeat = $email = $fullname = $address = $phonenumber = "";
+$username_err = $password_err = $password_repeat_err = $email_err = $fullname_err = $address_err = $phonenumber_err = "";
 $checkRegister = "";
 
 // Nhận dữ liệu từ người dùng
@@ -15,53 +16,58 @@ if (isset($_POST['submit'])) {
     $NgayDangKi = date("Y-m-d H:i:s");
 
     // Mẫu regex để kiểm tra định dạng email hợp lệ
-    $email_pattern = "/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/";
+    $email_pattern = "/^[a-zA-Z0-9]{4,}[a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/";
+   // Mẫu regex để kiểm tra số điện thoại hợp lệ
+$phonenumber_pattern = "/^0[0-9]{9}$/";
 
     // Kiểm tra các trường có được điền đầy đủ không
     if (!empty($username) && !empty($password) && !empty($password_repeat) && !empty($email) && !empty($fullname) && !empty($address) && !empty($phonenumber)) {
 
         // Kiểm tra độ dài của tên và địa chỉ
         if (strlen($fullname) < 2 || strlen($fullname) > 50) {
-            $checkRegister = "Tên phải từ 2 đến 50 ký tự";
+            $fullname_err = "Tên phải từ 2 đến 50 ký tự!";
         } elseif (strlen($address) < 10 || strlen($address) > 100) {
-            $checkRegister = "Địa chỉ phải từ 10 đến 100 ký tự";
+            $address_err = "Địa chỉ phải từ 10 đến 100 ký tự!";
         
         // Kiểm tra mật khẩu nhập lại có trùng khớp không
         } elseif ($password != $password_repeat) {
-            $checkRegister = "Nhập lại mật khẩu không trùng khớp";
+            $password_repeat_err = "Mật khẩu không trùng khớp!";
         
         // Kiểm tra định dạng email
         } elseif (!preg_match($email_pattern, $email)) {
-            $checkRegister = "Email bạn vừa nhập không hợp lệ";
+            $email_err = "Email không đúng định dạng!";
         
         // Kiểm tra số điện thoại có hợp lệ không
         } elseif (!preg_match("/^[0-9]{10,12}$/", $phonenumber)) {
-            $checkRegister = "Số điện thoại không hợp lệ.";
+            $phonenumber_err = "Số điện thoại không đúng định dạng!";
         
         // Kiểm tra trùng lặp tên đăng nhập
         } else {
             $sql_check_username = "SELECT * FROM thanhvien WHERE TenDangNhap = '$username'";
             $result_username = mysqli_query($mysqli, $sql_check_username);
             if (mysqli_num_rows($result_username) > 0) {
-                $checkRegister = "Tên đăng nhập đã tồn tại";
+                $username_err = "Tên đăng nhập đã tồn tại!";
             }
 
             // Kiểm tra trùng lặp email
             $sql_check_email = "SELECT * FROM thanhvien WHERE Email = '$email'";
             $result_email = mysqli_query($mysqli, $sql_check_email);
             if (mysqli_num_rows($result_email) > 0) {
-                $checkRegister = "Email đã tồn tại";
+                $email_err = "Email đã tồn tại!";
             }
 
             // Kiểm tra trùng lặp số điện thoại
             $sql_check_phonenumber = "SELECT * FROM thanhvien WHERE SoDienThoai = '$phonenumber'";
             $result_phonenumber = mysqli_query($mysqli, $sql_check_phonenumber);
             if (mysqli_num_rows($result_phonenumber) > 0) {
-                $checkRegister = "Số điện thoại đã tồn tại";
+                $phonenumber_err = "Số điện thoại đã tồn tại!";
             }
-
+            // Kiểm tra số điện thoại có hợp lệ không
+            if (!preg_match($phonenumber_pattern, $phonenumber)) {
+              $phonenumber_err = "Số điện thoại không đúng định dạng!";
+            }
             // Nếu không có lỗi, tiến hành lưu vào cơ sở dữ liệu
-            if (empty($checkRegister)) {
+            if (empty($username_err) && empty($password_err) && empty($password_repeat_err) && empty($email_err) && empty($fullname_err) && empty($address_err) && empty($phonenumber_err)) {
                 // Thêm thông tin thành viên vào bảng `thanhvien`
                 $sql_add = "INSERT INTO thanhvien(TenDangNhap,MatKhau,Email,HoVaTen,DiaChi,SoDienThoai,NgayDangKi)
                             VALUES('$username', '".md5($password)."', '$email', '$fullname', '$address', '$phonenumber', '$NgayDangKi')";
@@ -75,7 +81,7 @@ if (isset($_POST['submit'])) {
                 mysqli_query($mysqli, $sql_insert_giohang);
 
                 // Thông báo đăng ký thành công và chuyển hướng tới trang đăng nhập
-                $checkRegister = "Đăng kí thành công";
+                $checkRegister = "Đăng kí thành công!";
                 echo "<script>
                 alert('Đăng ký thành công'); 
                 window.location.href='index.php?navigate=login';
@@ -88,7 +94,6 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
-
 
 <section>
   <div class="container h-100">
@@ -109,6 +114,7 @@ if (isset($_POST['submit'])) {
                     <i class="fa fa-user fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
                       <input type="text" id="form3Example1c" class="form-control" required name="fullname" placeholder="Họ tên" value="<?php echo htmlspecialchars($fullname); ?>"/>
+                      <small class="text-danger"><?php echo $fullname_err; ?></small>
                     </div>
                   </div>
 
@@ -116,6 +122,7 @@ if (isset($_POST['submit'])) {
                     <i class="fa fa-home fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
                       <input type="text" class="form-control" required name="address" placeholder="Địa chỉ" value="<?php echo htmlspecialchars($address); ?>"/>
+                      <small class="text-danger"><?php echo $address_err; ?></small>
                     </div>
                   </div>
 
@@ -123,6 +130,7 @@ if (isset($_POST['submit'])) {
                     <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
                       <input type="email" class="form-control" required name="email" placeholder="Email" value="<?php echo htmlspecialchars($email); ?>"/>
+                      <small class="text-danger"><?php echo $email_err; ?></small>
                     </div>
                   </div>
 
@@ -130,6 +138,7 @@ if (isset($_POST['submit'])) {
                     <i class="fa fa-phone fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
                       <input type="text" class="form-control" required name="phonenumber" placeholder="Số điện thoại" value="<?php echo htmlspecialchars($phonenumber); ?>"/>
+                      <small class="text-danger"><?php echo $phonenumber_err; ?></small>
                     </div>
                   </div>
 
@@ -137,6 +146,7 @@ if (isset($_POST['submit'])) {
                     <i class="fa fa-user-circle fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
                       <input type="text" class="form-control" required name="username" placeholder="Tên đăng nhập" value="<?php echo htmlspecialchars($username); ?>"/>
+                      <small class="text-danger"><?php echo $username_err; ?></small>
                     </div>
                   </div>
 
@@ -144,6 +154,7 @@ if (isset($_POST['submit'])) {
                     <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
                       <input type="password" class="form-control" required name="password" placeholder="Mật khẩu"/>
+                      <small class="text-danger"><?php echo $password_err; ?></small>
                     </div>
                   </div>
 
@@ -151,11 +162,12 @@ if (isset($_POST['submit'])) {
                     <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
                       <input type="password" class="form-control" required name="password-repeat" placeholder="Nhập lại mật khẩu"/>
+                      <small class="text-danger"><?php echo $password_repeat_err; ?></small>
                     </div>
                   </div>
 
                   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                    <button type="submit" class="btn btn-primary" name="submit">Đăng ký</button>
+                    <button type="submit" name="submit" class="btn btn-primary btn-lg">Đăng ký</button>
                   </div>
                 </form>
               </div>
