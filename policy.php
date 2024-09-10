@@ -34,9 +34,9 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chính Sách: <?php echo htmlspecialchars($policy['TieuDe']); ?></title>
+    <title><?php echo htmlspecialchars($policy['TieuDe']); ?></title>
     <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
     <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="./assets/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -45,27 +45,49 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
         }
-        .policy-container {
-            max-width: 800px;
+        .post-container {
+            max-width: 900px;
             margin: 40px auto;
-            padding: 20px;
+            padding: 30px;
             background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             animation: fadeIn 1s ease-in-out;
+            position: relative;
         }
-        .policy-title {
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 5px 12px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #6ab780;
+            border-radius: 5px;
+            text-decoration: none;
+            position: absolute;
+            top: 20px;
+            left: 20px; /* Chuyển vị trí nút về bên trái */
+        }
+        .post-title {
             margin-bottom: 20px;
-            font-size: 32px;
+            font-size: 34px;
             font-weight: bold;
             color: #343a40;
-            border-bottom: 2px solid #007bff;
+            border-bottom: 2px solid #28a745;
             padding-bottom: 10px;
+            text-align: center;
         }
-        .policy-content {
+        .post-content {
             font-size: 18px;
             line-height: 1.8;
             color: #495057;
+            margin-top: 20px;
+        }
+        .post-image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
         }
         @keyframes fadeIn {
             from {
@@ -80,25 +102,26 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             color: #ffffff;
             padding: 20px;
             text-align: center;
+            margin-top: 40px;
         }
     </style>
 </head>
 <body>
-<?php 
-    include("./admin/config/connection.php");
-    session_start();
-?>
-    <?php include("./pages/menu.php"); ?>
+    <?php include("./admin/config/connection.php"); session_start(); ?>
     
-    <div class="policy-container">
-        <h1 class="policy-title"><?php echo htmlspecialchars($policy['TieuDe']); ?></h1>
-        <div class="policy-content">
-            <?php echo nl2br(htmlspecialchars($policy['NoiDung'])); ?>
+    <?php include("./pages/menu.php") ?>
+    <div class="post-container">
+    <h1 class="post-title" style="text-align: center;"><?php echo htmlspecialchars($policy['TieuDe']); ?></h1>
+       
+        <div class="post-content">
+        <?php echo nl2br(htmlspecialchars($policy['NoiDung'])); ?>
         </div>
+        
+        <!-- Nút "Quay lại" -->
+        <a href="javascript:history.back()" class="back-button">Quay lại</a>
+
     </div>
 
-    <?php include("./pages/footer.php") ?>
-
-
+    <?php include("./pages/footer.php"); ?>
 </body>
 </html>

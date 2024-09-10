@@ -60,7 +60,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             padding: 5px 12px;
             font-size: 14px;
             color: #fff;
-            background-color: #28a745;
+            background-color: #6ab780;
             border-radius: 5px;
             text-decoration: none;
             position: absolute;
@@ -107,7 +107,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 </head>
 <body>
     <?php include("./admin/config/connection.php"); session_start(); ?>
-    
+    <?php include("./pages/menu.php") ?>
     <div class="post-container">
         <h1 class="post-title"><?php echo htmlspecialchars($post['Tenbaiviet']); ?></h1>
         <img src="./assets/image/supplier/<?php echo htmlspecialchars($post['Img']); ?>" alt="<?php echo htmlspecialchars($post['Tenbaiviet']); ?>" class="post-image">
