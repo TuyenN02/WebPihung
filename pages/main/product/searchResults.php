@@ -1,4 +1,5 @@
 <?php
+
 // Thiết lập trang mặc định là trang 1 nếu không có trang nào được chọn
 $page = isset($_GET['trang']) ? (int)$_GET['trang'] : 1;
 $records_per_page = 8;
@@ -10,32 +11,42 @@ $keyword = '';
 
 // Xử lý tìm kiếm
 if (isset($_POST['search'])) {
-    // Lấy từ khóa và xóa dấu cách thừa
     $keyword = trim($_POST['keyword']);
-    $keyword = preg_replace('/\s+/', ' ', $keyword); // Thay thế nhiều dấu cách liên tiếp bằng một dấu cách
+    $keyword = preg_replace('/\s+/', ' ', $keyword);
 
-    // Thực hiện truy vấn tìm kiếm
     $search_sql = " AND sanpham.TenSanPham LIKE '%$keyword%'";
+    $order_by = isset($_POST['sortOrder']) ? $_POST['sortOrder'] : 'ID_SanPham DESC';
 } else {
-    $search_sql = '';
+    $search_sql = isset($_GET['keyword']) ? " AND sanpham.TenSanPham LIKE '%" . mysqli_real_escape_string($mysqli, $_GET['keyword']) . "%'" : '';
+    $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+    $order_by = isset($_GET['sortOrder']) ? $_GET['sortOrder'] : 'ID_SanPham DESC';
 }
 
 // Xử lý sắp xếp
-if (isset($_POST['sortOrder'])) {
-    switch ($_POST['sortOrder']) {
-        case 'desc':
-            $order_by = 'GiaBan DESC';
-            break;
-        case 'asc':
-            $order_by = 'GiaBan ASC';
-            break;
-        case 'hot':
-            $order_by = '(SELECT SUM(SoLuong) FROM chitietdonhang WHERE chitietdonhang.ID_SanPham = sanpham.ID_SanPham) DESC';
-            break;
-        default:
-            $order_by = 'ID_SanPham DESC';
-            break;
-    }
+switch ($order_by) {
+    case 'desc':
+        $order_by = 'GiaBan DESC';
+        break;
+    case 'asc':
+        $order_by = 'GiaBan ASC';
+        break;
+    case 'hot':
+        $order_by = '(SELECT SUM(SoLuong) FROM chitietdonhang WHERE chitietdonhang.ID_SanPham = sanpham.ID_SanPham) DESC';
+        break;
+    default:
+        $order_by = 'ID_SanPham DESC';
+        break;
+}
+
+// Đếm tổng số sản phẩm khớp với tìm kiếm
+$total_products_query = mysqli_query($mysqli, "SELECT COUNT(*) AS total FROM sanpham WHERE 1 $search_sql");
+$total_products = mysqli_fetch_assoc($total_products_query)['total'];
+$total_pages = ceil($total_products / $records_per_page);
+
+// Kiểm tra nếu trang hiện tại vượt quá số trang hợp lệ
+if ($page > $total_pages && $total_pages > 0) {
+    header("Location: ".$_SERVER['PHP_SELF']."?trang=".$total_pages."&keyword=".urlencode($keyword)."&sortOrder=".urlencode($order_by));
+    exit;
 }
 
 // Câu truy vấn lấy sản phẩm dựa trên sắp xếp và phân trang
@@ -47,6 +58,7 @@ $total_products_query = mysqli_query($mysqli, "SELECT COUNT(*) AS total FROM san
 $total_products = mysqli_fetch_assoc($total_products_query)['total'];
 $total_pages = ceil($total_products / $records_per_page);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,27 +104,28 @@ $total_pages = ceil($total_products / $records_per_page);
 </head>
 <body>
 <div class="container mt-4">
-    <!-- Form tìm kiếm và sắp xếp -->
-    <form method="POST" action="" class="search-form">
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="keyword">Từ khóa tìm kiếm:</label>
-                <input type="text" class="form-control" id="keyword" name="keyword" value="<?php echo htmlspecialchars($keyword); ?>">
-            </div>
-            <div class="form-group col-md-3">
-                <label>&nbsp;</label>
-                <button type="submit" class="btn btn-primary btn-block" name="search">Tìm kiếm</button>
-            </div>
-            <div class="form-group col-md-3">
-                <label for="sortOrder">Sắp xếp theo:</label>
-                <select id="sortOrder" name="sortOrder" class="form-control" onchange="this.form.submit()">
-                    <option value="desc" <?php echo ($_POST['sortOrder'] ?? '') == 'desc' ? 'selected' : ''; ?>>Giá giảm dần</option>
-                    <option value="asc" <?php echo ($_POST['sortOrder'] ?? '') == 'asc' ? 'selected' : ''; ?>>Giá tăng dần</option>
-                    <option value="hot" <?php echo ($_POST['sortOrder'] ?? '') == 'hot' ? 'selected' : ''; ?>>Bán chạy nhất</option>
-                </select>
-            </div>
+<!-- Form tìm kiếm và sắp xếp -->
+<form method="POST" action="" class="search-form">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="keyword">Từ khóa tìm kiếm:</label>
+            <input type="text" class="form-control" id="keyword" name="keyword" value="<?php echo htmlspecialchars($keyword); ?>">
         </div>
-    </form>
+       
+        <div class="form-group col-md-3">
+            <label for="sortOrder">Sắp xếp theo:</label>
+            <select id="sortOrder" name="sortOrder" class="form-control">
+                <option value="desc" <?php echo ($order_by == 'GiaBan DESC') ? 'selected' : ''; ?>>Giá giảm dần</option>
+                <option value="asc" <?php echo ($order_by == 'GiaBan ASC') ? 'selected' : ''; ?>>Giá tăng dần</option>
+                <option value="hot" <?php echo ($order_by == '(SELECT SUM(SoLuong) FROM chitietdonhang WHERE chitietdonhang.ID_SanPham = sanpham.ID_SanPham) DESC') ? 'selected' : ''; ?>>Bán chạy nhất</option>
+            </select>
+        </div>
+        <div class="form-group col-md-3">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary btn-block" name="search">Tìm kiếm</button>
+        </div>
+    </div>
+</form>
 
     <!-- Hiển thị sản phẩm -->
     <div class="row">
@@ -149,21 +162,31 @@ $total_pages = ceil($total_products / $records_per_page);
     </div>
 
     <!-- Phân trang -->
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <?php if ($page > 1) { ?>
-                <li class="page-item"><a class="page-link" href="?trang=<?php echo $page - 1; ?>">Trang trước</a></li>
-            <?php } ?>
-            <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
-                <li class="page-item <?php echo ($page == $i) ? 'active' : ''; ?>">
-                    <a class="page-link" href="?trang=<?php echo $i; ?>"><?php echo $i; ?></a>
-                </li>
-            <?php } ?>
-            <?php if ($page < $total_pages) { ?>
-                <li class="page-item"><a class="page-link" href="?trang=<?php echo $page + 1; ?>">Trang kế tiếp</a></li>
-            <?php } ?>
-        </ul>
-    </nav>
+    <?php if ($total_pages > 1) { ?>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <!-- Nút Previous -->
+                <?php if ($page > 1) { ?>
+                    <li class="page-item"><a class="page-link" href="<?php echo $_SERVER['PHP_SELF'] . '?trang=' . ($page - 1) . '&keyword=' . urlencode($keyword) . '&sortOrder=' . urlencode($order_by); ?>">Previous</a></li>
+                <?php } ?>
+
+                <!-- Các nút trang -->
+                <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+                    <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                        <a class="page-link" href="<?php echo $_SERVER['PHP_SELF'] . '?trang=' . $i . '&keyword=' . urlencode($keyword) . '&sortOrder=' . urlencode($order_by); ?>">
+                            <?php echo $i; ?>
+                        </a>
+                    </li>
+                <?php } ?>
+
+                <!-- Nút Next -->
+                <?php if ($page < $total_pages) { ?>
+                    <li class="page-item"><a class="page-link" href="<?php echo $_SERVER['PHP_SELF'] . '?trang=' . ($page + 1) . '&keyword=' . urlencode($keyword) . '&sortOrder=' . urlencode($order_by); ?>">Next</a></li>
+                <?php } ?>
+            </ul>
+        </nav>
+    <?php } ?>
+
 </div>
 </body>
 </html>
