@@ -59,11 +59,39 @@ body {
     height: 100vh; /* Đảm bảo thanh sidebar dài bằng chiều cao của viewport */
     position: fixed; /* Cố định vị trí của sidebar */
     margin-top: 50px;
+    padding: 20px 15px;
     left: 0;
     overflow-y: auto; /* Thêm thanh cuộn dọc nếu nội dung quá dài */
-    
+    background-color: #d4edda; /* Màu nền xanh lá cây nhạt */
 }
 
+
+            #sidebar-menu {
+                list-style-type: none; /* Loại bỏ dấu gạch đầu dòng cho các mục danh sách */
+                padding: 0;
+                margin: 0;
+            }
+
+            #sidebar-menu .nav-link {
+                padding: 10px;
+                color: #577f57; /* Màu chữ của các mục trong thanh điều hướng */
+                text-decoration: none; /* Loại bỏ gạch chân cho các liên kết */
+            }
+
+            #sidebar-menu .nav-link a {
+                color: #577f57; /* Màu chữ của các liên kết */
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+            }
+
+            #sidebar-menu .nav-link a:hover {
+                background-color: #c3e6cb; /* Màu nền khi di chuột qua (hover) */
+            }
+
+            #sidebar-menu .nav-link-icon {
+                margin-right: 10px; /* Khoảng cách giữa biểu tượng và chữ */
+            }
 #wp-content {
     margin-left: 250px; /* Đẩy nội dung sang phải bằng chiều rộng của sidebar */
     flex: 1;
@@ -79,14 +107,6 @@ body {
     margin-bottom: 5px; /* Thay đổi giá trị để điều chỉnh khoảng cách */
 }
 
-.topnav {
-    display: flex;
-    justify-content: space-between; /* Đẩy các phần tử ra hai bên */
-    align-items: center; /* Căn giữa các phần tử theo chiều dọc */
-    padding: 10px 20px; /* Giảm khoảng cách xung quanh thanh điều hướng */
-    margin: 0; /* Loại bỏ margin để thanh điều hướng nằm sát mép trên */
-    color:#7cc97c;
-}
 
 .topnav .navbar-brand {
     margin-right: 20px; /* Thay đổi giá trị để điều chỉnh khoảng cách */
@@ -101,7 +121,10 @@ body {
         <div id="warpper" class="nav-fixed">
             <nav class="topnav shadow navbar-light bg-white d-flex">
             <div class="navbar-brand">
-    <a href="index.php" style="color: #228B22;">Shop cây cảnh PI HƯNG - Admin</a>
+            <a href="index.php" style="color: #228B22; font-size: 30px;">
+    Shop cây cảnh <span style="font-size: 30px; font-weight: bold;">PI HƯNG</span> - Admin
+</a>
+
 </div>
                
             <a class="btn btn-danger mr-2" href="logout.php">Đăng xuất</a>

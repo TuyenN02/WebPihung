@@ -98,7 +98,7 @@ $num_rows = mysqli_num_rows($query_comment);
                     } else { ?>
                     <tr>
                         <td colspan="6" class="text-center">
-                            Không tìm thấy bình luận nào!
+                            Danh sách bình luận trống!
                         </td>
                     </tr>
                     <?php } ?>
@@ -115,10 +115,32 @@ $num_rows = mysqli_num_rows($query_comment);
     padding: 10px;
     margin-top: 60px;
 }
+/* CSS cho bảng */
+.table {
+    font-size: 16px;
+    width: 100%;
+    border-collapse: collapse; /* Đảm bảo các ô không có khoảng cách giữa các viền */
+}
+
+.table th, .table td {
+    border: 1px solid rgba(0, 0, 0, 0.2); /* Viền mờ cho các ô */
+    padding: 8px; /* Thêm khoảng đệm cho nội dung bên trong các ô */
+    text-align: center; /* Căn giữa nội dung theo chiều ngang */
+    vertical-align: middle; /* Căn giữa nội dung theo chiều dọc */
+}
+
+.table thead {
+    background-color: #f2f2f2; /* Màu nền cho hàng tiêu đề */
+}
+
+.table-checkall {
+    width: 100%;
+}
+
 .alert {
     position: fixed;
     top: 50px;
-    right: 970px;
+    right: 130px;
     padding: 15px;
     border-radius: 5px;
     z-index: 9999;
@@ -128,8 +150,8 @@ $num_rows = mysqli_num_rows($query_comment);
 
 .alert-success {
     background-color: #d4edda;
-    color: #ff0000;
-    border: 3px solid #ff0000;
+    color: #269963;
+    border: 3px solid #269963;
 }
 
 .alert-danger {
@@ -137,4 +159,5 @@ $num_rows = mysqli_num_rows($query_comment);
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
+
 </style>
