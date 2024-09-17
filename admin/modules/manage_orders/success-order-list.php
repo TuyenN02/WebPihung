@@ -13,18 +13,27 @@ if (isset($_POST['trangthai'])) {
 
 // Construct the SQL query based on search and status filter
 $sql = "
-    SELECT *
-    FROM donhang Where 1= 1
-"; 
+    SELECT donhang.*, 
+           GROUP_CONCAT(sanpham.TenSanPham SEPARATOR ', ') AS TenSanPham, 
+           GROUP_CONCAT(chitietdonhang.SoLuong SEPARATOR ', ') AS SoLuong
+    FROM donhang
+    LEFT JOIN chitietdonhang ON donhang.ID_DonHang = chitietdonhang.ID_DonHang
+    LEFT JOIN sanpham ON chitietdonhang.ID_SanPham = sanpham.ID_SanPham
+    WHERE 1 = 1
+";
 
 if ($tukhoa !== '') {
-    $sql .= " AND sanpham.TenSanPham LIKE '%" . $tukhoa . "%'";
+    // Search by product name, order ID, and recipient's name
+    $sql .= " AND (sanpham.TenSanPham LIKE '%" . $tukhoa . "%' 
+                 OR donhang.ID_DonHang LIKE '%" . $tukhoa . "%' 
+                 OR donhang.NguoiNhan LIKE '%" . $tukhoa . "%')";
 }
 
 if ($trangThai !== '') {
     $sql .= " AND donhang.XuLy = " . $trangThai;
 }
 
+$sql .= " GROUP BY donhang.ID_DonHang";
 $sql .= " ORDER BY donhang.ID_DonHang DESC";
 
 $query_order = mysqli_query($mysqli, $sql);
@@ -69,6 +78,8 @@ if ($status === 'success') {
                 <tr>
                     <th scope="col">STT</th>
                     <th scope="col">Mã Đơn Hàng</th>
+                    <th scope="col">Tên Sản Phẩm</th> <!-- Thêm cột Tên sản phẩm -->
+                    <th scope="col">Số Lượng</th> <!-- Thêm cột Số lượng -->
                     <th scope="col">Người Nhận</th>
                     <th scope="col">Địa chỉ</th>
                     <th scope="col">Tổng Tiền</th>
@@ -85,17 +96,19 @@ if ($status === 'success') {
                     $currentStatus = $row_Order['XuLy'];
             ?>
                 <tr>
-                    <td><?php echo $num; ?></td>
-                    <td><?php echo htmlspecialchars($row_Order['ID_DonHang']); ?></td>
-                    <td><?php echo $row_Order['NguoiNhan']; ?></td>
-                    <td><?php echo htmlspecialchars($row_Order['DiaChi']); ?></td>
-                    <td><?php echo number_format((int)$row_Order['GiaTien'], 0, ',', '.'); ?> VND</td>
-                    <td>
+        <td><?php echo $num; ?></td>
+        <td><?php echo htmlspecialchars($row_Order['ID_DonHang']); ?></td>
+        <td><?php echo htmlspecialchars($row_Order['TenSanPham']); ?></td> <!-- Hiển thị tên sản phẩm gộp -->
+        <td><?php echo htmlspecialchars($row_Order['SoLuong']); ?></td> <!-- Hiển thị số lượng gộp -->
+        <td><?php echo $row_Order['NguoiNhan']; ?></td>
+        <td><?php echo htmlspecialchars($row_Order['DiaChi']); ?></td>
+        <td><?php echo number_format((int)$row_Order['GiaTien'], 0, ',', '.'); ?> VND</td>
+        <td>
                         <form id="status-form-<?php echo $row_Order['ID_DonHang']; ?>" method="POST">
                             <input type="hidden" name="order_id" value="<?php echo (int)$row_Order['ID_DonHang']; ?>">
                             <select name="order_status" class="form-control" 
                                 onchange="updateOrderStatus(<?php echo (int)$row_Order['ID_DonHang']; ?>, this.value)"
-                                style="text-align: center; text-align-last: center; width: 190px;"
+                                style="text-align: center; text-align-last: center; font-size: 15px; width: 164px;"
                                 <?php echo ($currentStatus == 2) ? 'disabled' : ''; ?>
                                 <?php echo ($currentStatus == 5) ? 'disabled' : ''; ?>>
                                 <?php if ($currentStatus == 1) { ?>
@@ -116,7 +129,7 @@ if ($status === 'success') {
                                     <option value="8">Lỗi vận chuyển</option>
                                     <option value="6" >Đã hoàn trả</option>
                                 <?php } elseif ($currentStatus == 5) { ?>
-                                    <option value="5" selected>Giao hàng thành công</option>
+                                    <option value="5" selected>Giao thành công</option>
                                 <?php } elseif ($currentStatus == 6) { ?>
                                     <option value="6" selected>Đã hoàn trả</option>
                                 <?php } elseif ($currentStatus == 8) { ?>
@@ -215,7 +228,7 @@ if ($status === 'success') {
     white-space: nowrap; /* Ngăn không cho dòng mới xuất hiện trong cột */
 }
 table {
-    font-size: 14px;
+    font-size: 13px;
     width: 100%;
     border-collapse: collapse;
 }
@@ -255,7 +268,7 @@ table {
     border: 1px solid #f5c6cb;
 }
 table {
-    font-size: 14px;
+    font-size: 13px;
     width: 100%;
     border-collapse: collapse; /* Đảm bảo không có khoảng cách giữa các đường viền của các ô */
 }
@@ -268,6 +281,8 @@ th, td {
     padding: 8px; /* Thêm khoảng đệm cho các ô */
     text-align: center; /* Căn giữa nội dung */
     vertical-align: middle; /* Căn giữa theo chiều dọc */
+    background-color: #f2f2f2; /* Màu nền cho tiêu đề bảng */
+    white-space: nowrap; /* Ngăn tiêu đề xuống dòng */
 }
 
 thead {
