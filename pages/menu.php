@@ -6,6 +6,8 @@
     <title>SHOP CÂY CẢNH PI HƯNG</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <style>
         .primary-background {
             background-color: #4CAF50; /* Nền của thanh điều hướng */
@@ -15,6 +17,7 @@
         }
         .logos {
             height: 20px;
+            margin-left: 5vh;
         }
         .kc {
             height: 20px; /* Chiều cao của hình ảnh chèn */
@@ -23,7 +26,7 @@
             color: #ffffff; /* Màu chữ trắng */
             font-family: 'Georgia', serif;
             text-align: center;
-            margin: 0 auto;
+            margin-left: 6vh;
             position: relative;
             text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
             animation: glow 1s infinite alternate;
@@ -65,6 +68,7 @@
             width: 100%; /* Đảm bảo menu chiếm hết chiều ngang của thanh điều hướng */
             padding-left: 0; /* Xóa padding nếu có */
         }
+
     </style>
 </head>
 <body>
@@ -74,7 +78,9 @@
                 <a class="navbar-brand" href="./index.php">
                     <img class="logo" src="./assets/image/logo/l5.png" alt="Shop Logo"/>
                 </a>
-                <h1 class="main-titles">CÂY CẢNH PI HƯNG</h1>
+                <h1 class="main-titles">
+                <span style="font-size: 35px;">CÂY CẢNH </span> <span style="font-size: 40px;">PI HƯNG</span>
+                </h1>
                 <a class="navbar-brand" href="./index.php">
                     <img class="logos" src="./assets/image/logo/kcc.png" alt="Shop Logo"/>
                 </a>
@@ -83,21 +89,31 @@
                 </button>
                 <div class="collapse navbar-collapse" id="collapsibleNavbar">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="./index.php">Trang chủ</a>
+                    <li class="nav-item">
+                            <a class="nav-link text-light" href="./index.php">
+                                <i class="fas fa-home"></i> Trang chủ
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="./about.php">Giới thiệu</a>
+                            <a class="nav-link text-light" href="./about.php">
+                            <i class="	fa fa-info-circle"></i> Giới thiệu
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="./index.php?navigate=showProducts">Danh mục cây</a>
+                            <a class="nav-link text-light" href="./articles.php">
+                            <i class="	far fa-newspaper"></i> Bài viết
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="./articles.php">Bài viết</a>
+                            <a class="nav-link text-light" href="./index.php?navigate=showProducts">
+                            <i class="fa fa-th-list"></i> Danh mục cây
+                            </a>
                         </li>
                         <li class="nav-item">
                             <?php if(isset($_SESSION['TenDangNhap'])) { ?>
-                            <a class="nav-link text-light" href="./index.php?navigate=cart">Giỏ hàng</a>
+                            <a class="nav-link text-light" href="./index.php?navigate=cart">
+                            <i class="	fas fa-shopping-cart"></i> Giỏ hàng
+                            </a>
                             <?php } else { ?>
                                 <a class="nav-link text-light" href="./index.php?navigate=login">Giỏ hàng</a>
                             <?php } ?>
@@ -106,7 +122,9 @@
                         <li class="nav-item">
                             <div class="dropdown show">
                                 <a class="nav-link text-light dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
-                                    Tài khoản
+                                    
+                              
+                                <i class="fas fa-user-alt"></i> Tài khoản
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                     <a class="dropdown-item" href="./index.php?navigate=profile">Tài khoản của tôi</a>

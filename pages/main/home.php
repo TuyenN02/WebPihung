@@ -48,195 +48,202 @@ if (!$query_supplier) {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-    /* Carousel Styles */
-    .carousel-item img {
-        object-fit: cover;
-        height: 500px; /* Điều chỉnh chiều cao hình ảnh */
-        width: 300%; /* Đảm bảo hình ảnh rộng đầy đủ */
-    }
-    .carousel-caption p {
-        background: rgba(0, 0, 0, 0.5);
-        border-radius: 5px;
-        padding: 10px;
-        font-size: 1.25rem;
-    }
 
-    /* Product Cards */
-    .product-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .product-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .product-img {
-        object-fit: cover;
-        height: 300px;
-        cursor: pointer; /* Thay đổi con trỏ khi di chuột qua ảnh */
-    }
+/* Carousel Styles */
+.carousel-item img {
+    object-fit: cover;
+    height: 500px; /* Điều chỉnh chiều cao hình ảnh */
+    width: 300%; /* Đảm bảo hình ảnh rộng đầy đủ */
+}
+.carousel-caption p {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1.25rem;
+}
 
-    .product-price, .product-title {
-        cursor: pointer; /* Thay đổi con trỏ khi di chuột qua giá tiền hoặc tên sản phẩm */
-    }
+/* Product Cards */
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.product-img {
+    object-fit: cover;
+    height: 300px;
+    cursor: pointer; /* Thay đổi con trỏ khi di chuột qua ảnh */
+}
 
-    /* Supplier Cards */
-    .supplier .card {
-        border-radius: 30px;
-        overflow: hidden;
-        transition: transform 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* Căn giữa tất cả nội dung trong thẻ card */
-        justify-content: center; /* Căn giữa tất cả nội dung trong thẻ card */
-        height: 300px; /* Đặt chiều cao cố định cho card */
-        width: 100%; /* Thẻ card chiếm toàn bộ chiều rộng cột */
-        max-width: 350px; /* Giới hạn chiều rộng tối đa của card */
-        margin: 0 auto; /* Căn giữa card trong cột */
-    }
+.product-price, .product-title {
+    cursor: pointer; /* Thay đổi con trỏ khi di chuột qua giá tiền hoặc tên sản phẩm */
+}
 
-    .supplier .card-img-top {
-        display: flex;
-        justify-content: center; /* Căn giữa ảnh trong thẻ card */
-        margin-bottom: 5px; /* Khoảng cách giữa ảnh và các phần tử khác */
-    }
+/* Supplier Cards */
+.supplier .card {
+    border-radius: 30px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Căn giữa tất cả nội dung trong thẻ card */
+    justify-content: center; /* Căn giữa tất cả nội dung trong thẻ card */
+    height: 300px; /* Đặt chiều cao cố định cho card */
+    width: 100%; /* Thẻ card chiếm toàn bộ chiều rộng cột */
+    max-width: 350px; /* Giới hạn chiều rộng tối đa của card */
+    margin: 0 auto; /* Căn giữa card trong cột */
+}
 
-    .supplier .card-img-top img {
-        width: 200px; /* Đặt chiều rộng cố định cho ảnh */
-        height: 200px; /* Đặt chiều cao cố định cho ảnh */
-        object-fit: cover; /* Đảm bảo ảnh không bị biến dạng */
-        border-radius: 80%; /* Làm cho ảnh có hình tròn */
-    }
+.supplier .card-img-top {
+    display: flex;
+    justify-content: center; /* Căn giữa ảnh trong thẻ card */
+    margin-bottom: 5px; /* Khoảng cách giữa ảnh và các phần tử khác */
+}
 
-    .supplier .card-body {
-        text-align: center; /* Căn giữa văn bản trong thẻ card-body */
-        flex: 1; /* Giúp card-body chiếm không gian còn lại */
-    }
+.supplier .card-img-top img {
+    width: 200px; /* Đặt chiều rộng cố định cho ảnh */
+    height: 200px; /* Đặt chiều cao cố định cho ảnh */
+    object-fit: cover; /* Đảm bảo ảnh không bị biến dạng */
+    border-radius: 80%; /* Làm cho ảnh có hình tròn */
+}
 
-    /* General Styles */
-    .text-dark {
-        color: #343a40;
-    }
-    .text-secondary {
-        color: #6c757d;
-    }
-    .mt-60 {
-        margin-top: 60px;
-    }
-    .card-body p {
-        height: 150px;
-        overflow: hidden;
-    }
+.supplier .card-body {
+    text-align: center; /* Căn giữa văn bản trong thẻ card-body */
+    flex: 1; /* Giúp card-body chiếm không gian còn lại */
+}
 
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-    }
-    .posts-container {
-        max-width: 1200px;
-        margin: 40px auto;
-        padding: 20px;
-        background-color: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        animation: fadeIn 1s ease-in-out;
-    }
-    .post-item {
-        margin-bottom: 40px;
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-    }
-    .post-image {
-        max-width: 300px;
-        width: 90%;
-        height: auto;
-        margin-right: 20px;
-        border-radius: 8px;
-        transition: transform 0.3s ease;
-    }
-    .post-image:hover {
-        transform: scale(1.05);
-    }
-    .post-title {
-        font-size: 24px;
-        font-weight: bold;
-        color: #343a40;
-        margin-bottom: 10px;
-        text-decoration: none;
-    }
-    .post-content {
-        font-size: 16px;
-        color: #495057;
-        line-height: 1.6;
-    }
-    .post-content p {
-        margin-bottom: 10px;
-    }
-    .read-more {
-        font-size: 16px;
-        color: #007bff;
-        text-decoration: none;
-    }
-    .read-more:hover {
-        text-decoration: underline;
-    }
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-    .footer {
-        background-color: #007bff;
-        color: #ffffff;
-        padding: 20px;
-        text-align: center;
-    }
-    /* Supplier Cards */
-    .supplier .card-img-top img {
-        object-fit: cover;
-        height: 150px; /* Chiều cao ảnh */
-        width: 150px; /* Chiều rộng ảnh */
-        margin: 0 auto; /* Căn giữa hình ảnh trong thẻ card */
-        border-radius: 5px; /* Bo tròn các góc ảnh */
-    }
+/* General Styles */
+.text-dark {
+    color: #343a40;
+}
+.text-secondary {
+    color: #6c757d;
+}
+.mt-60 {
+    margin-top: 60px;
+}
+.card-body p {
+    height: 150px;
+    overflow: hidden;
+}
 
-    /* Tiêu đề phần bài viết */
-    .posts-container h2 {
-        font-size: 32px; /* Điều chỉnh kích thước tiêu đề phần bài viết */
-        font-weight: bold;
-        color: #343a40;
-    }
 
-    /* Tiêu đề phần nhà cung cấp */
-    .supplier h2 {
-        font-size: 24px; /* Điều chỉnh kích thước tiêu đề phần nhà cung cấp */
-        font-weight: bold;
-        color: #343a40;
+.posts-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #d7f4d8;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+}
+.container text-center {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #a8e8a7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+}
+.post-item {
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+.post-image {
+    max-width: 300px;
+    width: 90%;
+    height: auto;
+    margin-right: 20px;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+.post-image:hover {
+    transform: scale(1.05);
+}
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #343a40;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+.post-content {
+    font-size: 16px;
+    color: #495057;
+    line-height: 1.6;
+}
+.post-content p {
+    margin-bottom: 10px;
+}
+.read-more {
+    font-size: 16px;
+    color: #007bff;
+    text-decoration: none;
+}
+.read-more:hover {
+    text-decoration: underline;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
     }
+    to {
+        opacity: 1;
+    }
+}
+.footer {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+}
+/* Supplier Cards */
+.supplier .card-img-top img {
+    object-fit: cover;
+    height: 150px; /* Chiều cao ảnh */
+    width: 150px; /* Chiều rộng ảnh */
+    margin: 0 auto; /* Căn giữa hình ảnh trong thẻ card */
+    border-radius: 5px; /* Bo tròn các góc ảnh */
+}
+
+/* Tiêu đề phần bài viết */
+.posts-container h2 {
+    font-size: 32px; /* Điều chỉnh kích thước tiêu đề phần bài viết */
+    font-weight: bold;
+    color: #343a40;
+}
+
+/* Tiêu đề phần nhà cung cấp */
+.supplier h2 {
+    font-size: 24px; /* Điều chỉnh kích thước tiêu đề phần nhà cung cấp */
+    font-weight: bold;
+    color: #343a40;
+}
 /* Styles for success alert */
 .alert-success {
-    position: fixed; /* Fixed position to keep the alert in place */
-    top: 10px; /* Distance from the top of the viewport */
-    right: 10px; /* Distance from the right edge of the viewport */
-    background-color: #d4edda; /* Light green background */
-    color: #155724; /* Dark green text color */
-    border: 1px solid #c3e6cb; /* Light green border */
-    padding: 15px 25px; /* Padding around the message */
-    border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for better visibility */
-    z-index: 9999; /* Ensure it appears on top of other elements */
-    opacity: 1; /* Make sure it's visible initially */
-    transition: opacity 0.5s ease; /* Smooth transition for fading out */
+position: fixed; /* Fixed position to keep the alert in place */
+top: 10px; /* Distance from the top of the viewport */
+right: 10px; /* Distance from the right edge of the viewport */
+background-color: #d4edda; /* Light green background */
+color: #155724; /* Dark green text color */
+border: 1px solid #c3e6cb; /* Light green border */
+padding: 15px 25px; /* Padding around the message */
+border-radius: 5px; /* Rounded corners */
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for better visibility */
+z-index: 9999; /* Ensure it appears on top of other elements */
+opacity: 1; /* Make sure it's visible initially */
+transition: opacity 0.5s ease; /* Smooth transition for fading out */
 }
 .alert-success.fade-out {
-    opacity: 0; /* Fade out effect */
+opacity: 0; /* Fade out effect */
 }
 </style>
 
-    
+
 
 </head>
 <body>
@@ -270,10 +277,10 @@ if (!$query_supplier) {
     </div>
 
     <!-- Featured Products -->
-    <div class="container mt-60">
-        <h2 class="text-dark text-center">Sản phẩm nổi bật</h2>
+    <div class="posts-container">
+        <h2 class="text-dark text-center">Sản phẩm mới</h2>
         <p class="text-secondary text-center">
-            <i>Những sản phẩm được khách hàng ưu thích nhất</i>
+            <i>Những sản phẩm mới đa dạng!</i>
         </p>
         <div class="row">
             <?php while ($row_product = mysqli_fetch_array($query_product)) { ?>
@@ -309,7 +316,7 @@ if (!$query_supplier) {
                 <div>
                     <a href="articleDetail.php?id=<?php echo $row['ID_baiviet']; ?>" class="post-title"><?php echo htmlspecialchars($row['Tenbaiviet']); ?></a>
                     <div class="post-content">
-                        <p><?php echo substr(strip_tags($row['Noidung']), 0, 150); ?>...</p> <!-- Hiển thị 150 ký tự đầu tiên của nội dung -->
+                        <p><?php echo substr(strip_tags($row['Noidung']), 0, 50); ?>...</p> <!-- Hiển thị 150 ký tự đầu tiên của nội dung -->
                         <a href="articleDetail.php?id=<?php echo $row['ID_baiviet']; ?>" class="read-more">Xem thêm</a>
                     </div>
                 </div>
@@ -320,15 +327,17 @@ if (!$query_supplier) {
 <!-- Suppliers -->
 <!-- Suppliers -->
 <section class="supplier mt-60">
+<div class="posts-container">
     <div class="container text-center">
         <h2 class="text-dark">Một số nhà cung cấp</h2>
         <p class="text-dark">
             <i>Những đối tác đáng tin cậy cung cấp cây cảnh chất lượng cho không gian của bạn!</i>
         </p>
     </div>
+    </div>
     <div class="row">
         <?php while ($row_supplier = mysqli_fetch_array($query_supplier)) { ?>
-            <div class="col-md-4 col-sm-6 mb-4">
+            <div class="posts-container">
                 <div class="card shadow-sm border-0 rounded">
                     <div class="card-img-top">
                         <img src="./assets/image/supplier/<?php echo htmlspecialchars($row_supplier['Img']); ?>" 
@@ -406,5 +415,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 </script>
+
 </body>
 </html>

@@ -52,6 +52,36 @@ $query_policies = mysqli_query($mysqli, $sql_policies);
         .footer .policies ul li a:hover {
             text-decoration: underline;
         }
+        .contact-info {
+    text-align: left; /* Căn chữ tiêu đề sang trái */
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-left: 25px; /* Đặt khoảng cách để thẳng với biểu tượng */
+}
+
+.contact-item i {
+    position: absolute; /* Để icon đứng yên trong hàng */
+    left: 0; /* Đặt icon sát lề trái */
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.contact-item span {
+    margin-left: -5px; /* Đặt khoảng cách giữa icon và văn bản */
+}
+
+.contact-item span a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.contact-item span a:hover {
+    text-decoration: underline;
+}
     </style>
 </head>
 <body>
@@ -61,13 +91,37 @@ $query_policies = mysqli_query($mysqli, $sql_policies);
             <div class="row">
                 <!-- Contact Info -->
                 <div class="col-md-4 col-sm-12 contact-info">
-                    <h4>Thông tin liên hệ</h4>
-                    <p><i class="fas fa-clock"></i> Giờ làm việc từ: <?php echo date("H:i", strtotime($info['gio_lam_viec'])); ?> </p>
-                    <p><i class="fas fa-clock"></i> Giờ nghỉ: <?php echo date("H:i", strtotime($info['gio_nghi'])); ?> </p>
-                    <p><i class="fas fa-map-marker-alt"></i> <?php echo $info['DiaChi']; ?></p>
-                    <p><i class="fas fa-phone"></i> <a href="tel:+<?php echo $info['SDT']; ?>">Liên hệ: <?php echo $info['SDT']; ?></a></p>
-                    <p><i class="fas fa-envelope"></i> <a href="mailto:<?php echo $info['Email']; ?>">Email: <?php echo $info['Email']; ?></a></p>
-                </div>
+    <h4>Thông tin liên hệ</h4>
+    <p class="contact-item">
+        <i class="fas fa-clock"></i> 
+        <span>Giờ làm việc từ: 
+        <?php 
+            echo str_replace(['AM', 'PM'], ['SA', 'CH'], date("g:i A", strtotime($info['gio_lam_viec']))); 
+        ?>
+        </span>
+    </p>
+    <p class="contact-item">
+        <i class="fas fa-clock"></i> 
+        <span>Giờ nghỉ: 
+        <?php 
+            echo str_replace(['AM', 'PM'], ['SA', 'CH'], date("g:i A", strtotime($info['gio_nghi']))); 
+        ?>
+        </span>
+    </p>
+    <p class="contact-item">
+        <i class="fas fa-map-marker-alt"></i> 
+        <span><?php echo $info['DiaChi']; ?></span>
+    </p>
+    <p class="contact-item">
+        <i class="fas fa-phone"></i> 
+        <span><a href="tel:+<?php echo $info['SDT']; ?>">Liên hệ: <?php echo $info['SDT']; ?></a></span>
+    </p>
+    <p class="contact-item">
+        <i class="fas fa-envelope"></i> 
+        <span><a href="mailto:<?php echo $info['Email']; ?>">Email: <?php echo $info['Email']; ?></a></span>
+    </p>
+</div>
+
                 <!-- Policies -->
                 <div class="col-md-4 col-sm-12 policies">
                     <h4>Danh sách chính sách</h4>

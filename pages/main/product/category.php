@@ -5,40 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        .product-img {
-            object-fit: cover;
-            height: 200px; /* Điều chỉnh chiều cao hình ảnh */
-            width: 100%; /* Đảm bảo hình ảnh rộng đầy đủ */
-        }
-        .product-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 50%;
-            max-width: 250px; /* Điều chỉnh chiều rộng tối đa của thẻ sản phẩm */
-            background-color: #C8E6C9; /* Màu nền xanh lá sáng cho thẻ sản phẩm */
-            border: 1px solid #A5D6A7; /* Viền màu xanh lá nhạt cho thẻ sản phẩm */
-        }
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            background-color: #A5D6A7; /* Màu nền xanh lá nhạt khi hover */
-        }
-        .card-body h5, .card-body h6 {
-            margin: 0.5rem 0;
-        }
-        .card-body h5 a, .card-body h6 a {
-            text-decoration: none;
-            color: #000;
-        }
-        .product-container {
-            background-color: #d7edd7; /* Màu nền xanh lá sáng cho vùng hiển thị sản phẩm */
-            padding: 20px;
-            border-radius: 10px;
-        }
+     .text-center::after {
+        content: "";
+        width: 100px;
+        height: 3px;
+        background: #007bff;
+        display: block;
+        margin: 10px auto;
+      }
+      .product-img {
+        object-fit: cover;
+        height: 200px;
+        width: 100%;
+      }
+      .product-title, .product-price {
+        cursor: pointer;
+      }
+      .product-container {
+        background-color: #d7edd7; /* Màu nền xanh lá sáng */
+        padding: 20px;
+        border-radius: 10px;
+      }
+      .product-card {
+        background-color: #C8E6C9; /* Màu nền xanh lá sáng cho thẻ sản phẩm */
+        border: 1px solid #A5D6A7; /* Viền màu xanh lá nhạt cho thẻ sản phẩm */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        background-color: #A5D6A7; /* Màu nền xanh lá nhạt khi hover */
+      }
+      .pagination-container {
+        background-color: #C8E6C9; /* Màu nền xanh lá sáng cho phân trang */
+        padding: 10px;
+        border-radius: 10px;
+      }
     </style>
 </head>
 <body>
+
 <?php
 if (isset($_GET['id'])) {
+    // Lấy tên danh mục dựa vào ID_DanhMuc
+    $sql_category_name = "SELECT TenDanhMuc FROM danhmuc WHERE ID_DanhMuc='$_GET[id]'";
+    $query_category_name = mysqli_query($mysqli, $sql_category_name);
+    $row_category_name = mysqli_fetch_array($query_category_name);
+
+    // Lấy sản phẩm theo ID_DanhMuc
     $sql_category_product = "SELECT * FROM sanpham WHERE ID_DanhMuc='$_GET[id]' ORDER BY ID_SanPham DESC";
     $query_category_product = mysqli_query($mysqli, $sql_category_product);
 }
@@ -49,7 +63,8 @@ if (isset($_GET['id'])) {
             <?php include('pages/main/product/categoryList.php')?>
         </div>
         <div class="col-lg-10 product-container">
-            <h1 class="text-center">Tất cả sản phẩm</h1>
+            <!-- Thay "Tất cả cây" bằng tên danh mục -->
+            <h1 class="text-center"><?php echo isset($row_category_name['TenDanhMuc']) ? $row_category_name['TenDanhMuc'] : 'Tất cả cây'; ?></h1>
             <div class="row min-height-100">             
             <?php
             if (isset($_GET['id'])) {
@@ -64,14 +79,10 @@ if (isset($_GET['id'])) {
                           <a href="./index.php?navigate=productInfo&id_product=<?php echo $row_category_product['ID_SanPham'];?>" class="d-block">
                               <h5><?php echo $row_category_product['TenSanPham']; ?></h5>
                           </a>
-                          <h6 class="text-danger">
-                              <a href="./index.php?navigate=productInfo&id_product=<?php echo $row_category_product['ID_SanPham'];?>" class="d-block">
-                                  <s><?php echo number_format($row_category_product['GiaBan'],0,',','.')?> VND</s>
-                              </a>
-                          </h6>
+                         
                           <h6>
                               <a href="./index.php?navigate=productInfo&id_product=<?php echo $row_category_product['ID_SanPham'];?>" class="d-block">
-                                  <?php echo number_format($row_category_product['GiaBan'] / 100,0,',','.')?> VND
+                                  <?php echo number_format($row_category_product['GiaBan'] ,0,',','.')?> VND
                               </a>
                           </h6>
                       </div>        

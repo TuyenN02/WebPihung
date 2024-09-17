@@ -1,11 +1,13 @@
 <?php
 
 $redirect = '';
+$username = isset($_POST['username']) ? $_POST['username'] : null;
+$password = isset($_POST['password']) ? $_POST['password'] : null;
 
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
-    $password = md5($_POST['password']); // Mã hóa mật khẩu
-    $sql_login = "SELECT * FROM thanhvien WHERE TenDangNhap = '$username' AND MatKhau = '$password' LIMIT 1";
+    $password_hashed = md5($_POST['password']); // Mã hóa mật khẩu
+    $sql_login = "SELECT * FROM thanhvien WHERE TenDangNhap = '$username' AND MatKhau = '$password_hashed' LIMIT 1";
     $query_login = mysqli_query($mysqli, $sql_login);
     $count = mysqli_num_rows($query_login);
 
@@ -24,7 +26,7 @@ if (isset($_POST['login'])) {
         $_SESSION['ID_ThanhVien'] = $id_cus;
         $_SESSION['Email'] = $row['Email'];
         $_SESSION['ID_GioHang'] = $row_cart['ID_GioHang'];
-        
+
         // Lưu thông báo thành công vào session
         $_SESSION['login_success'] = 'Đăng nhập thành công! Chào mừng bạn trở lại.';
 
@@ -36,6 +38,7 @@ if (isset($_POST['login'])) {
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -81,24 +84,25 @@ if (isset($_POST['login'])) {
           <p class="lead text-muted">Vui lòng nhập tên đăng nhập và mật khẩu của bạn để tiếp tục.</p>
         </div>
         <form method="POST" action="">
-          <div class="form-outline mb-4">
-            <label for="username">Tên đăng nhập:</label>
-            <input required type="text" id="username" class="form-control form-control-lg" name="username" placeholder="Enter username" />
-          </div>
-          <div class="form-outline mb-3">
-            <label for="password">Mật khẩu:</label>
-            <input required type="password" id="password" class="form-control form-control-lg" name="password" placeholder="Enter password" />
-          </div>
-          <?php if (isset($checkLogin)): ?>
-            <div class="alert alert-danger alert-custom text-center" role="alert">
-                <?php echo $checkLogin; ?>
-            </div>
-          <?php endif; ?>
-          <div class="text-center text-lg-start mt-4 pt-2">
-            <input type="submit" class="btn btn-primary btn-lg" name="login" style="padding-left: 2.5rem; padding-right: 2.5rem;" value="Đăng nhập">
-            <p class="small font-weight-bold mt-2 pt-1 mb-0">Chưa có tài khoản? <a href="index.php?navigate=signup" class="text-danger">Đăng ký</a></p>
-          </div>
-        </form>
+  <div class="form-outline mb-4">
+    <label for="username">Tên đăng nhập:</label>
+    <input required type="text" id="username" class="form-control form-control-lg" name="username" placeholder="Enter username" value="<?php echo htmlspecialchars($username); ?>" />
+  </div>
+  <div class="form-outline mb-3">
+    <label for="password">Mật khẩu:</label>
+    <input required type="password" id="password" class="form-control form-control-lg" name="password" placeholder="Enter password" value="<?php echo htmlspecialchars($password); ?>" />
+  </div>
+  <?php if (isset($checkLogin)): ?>
+    <div class="alert alert-danger alert-custom text-center" role="alert">
+        <?php echo $checkLogin; ?>
+    </div>
+  <?php endif; ?>
+  <div class="text-center text-lg-start mt-4 pt-2">
+    <input type="submit" class="btn btn-primary btn-lg" name="login" style="padding-left: 2.5rem; padding-right: 2.5rem;" value="Đăng nhập">
+    <p class="small font-weight-bold mt-2 pt-1 mb-0">Chưa có tài khoản? <a href="index.php?navigate=signup" class="text-danger">Đăng ký</a></p>
+  </div>
+</form>
+
       </div>
     </div>
   </div>

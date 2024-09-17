@@ -9,11 +9,11 @@
     <style>
         .category-list {
             background-color: #33CC66; /* Màu nền tối */
-            padding: 20px; /* Đã tăng khoảng cách padding */
+            padding: 10px; /* Đã tăng khoảng cách padding */
             border-radius: 10px;
         }
         .category-list p {
-            font-size: 1rem; /* Tăng kích thước chữ tiêu đề */
+            font-size: 0.8rem; /* Tăng kích thước chữ tiêu đề */
             font-weight: bold;
             color: white; /* Màu chữ trắng */
         }
@@ -22,13 +22,17 @@
             padding: 10px;
             color: white; /* Màu chữ trắng */
             text-decoration: none;
-            transition: background-color 0.3s ease, font-size 0.3s ease;
-            font-size: 1rem; /* Tăng kích thước chữ liên kết */
+            transition: background-color 0.3s ease, font-size 0.3s ease, font-weight 0.3s ease;
+            font-size: 0.8rem; /* Tăng kích thước chữ liên kết */
+            font-weight: bold; /* Làm chữ đậm hơn */
+            white-space: nowrap; /* Không cho phép xuống dòng */
         }
         .category-list a:hover {
             background-color: #339999; /* Màu nền khi hover */
-            border-radius: 5px;
-            font-size: 1.3rem; /* Tăng kích thước chữ khi hover */
+            border-radius: 10px;
+            font-size: 0.9rem; /* Tăng kích thước chữ khi hover */
+            font-weight: bolder; /* Làm chữ đậm hơn khi hover */
+            text-decoration: none; /* Loại bỏ gạch chân khi hover */
         }
     </style>
 </head>

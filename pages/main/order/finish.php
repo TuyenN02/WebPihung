@@ -96,7 +96,7 @@ if (!empty($error_message)) {
     }
     echo "<script>
         alert('$error_message');
-        window.location.href = 'http://localhost/pihung/index.php?navigate=cart'; // Chuyển hướng về trang xác nhận đơn hàng
+        window.location.href = 'http://localhost/WebPihung/index.php?navigate=cart'; // Chuyển hướng về trang xác nhận đơn hàng
     </script>";
     exit();
 }

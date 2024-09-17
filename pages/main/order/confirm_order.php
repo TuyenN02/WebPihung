@@ -87,7 +87,7 @@ $tongtien_vnd = isset($_SESSION['allMoney']) ? $_SESSION['allMoney'] : 0;
                         <td><?= $i ?></td>
                         <td><?= htmlspecialchars($row_detail['TenSanPham']) ?></td>
                         <td><?= htmlspecialchars($row_detail['SoLuong']) ?></td>
-                        <td><?= number_format($row_detail['GiaBan']) ?> VND</td>
+                        <td><?= number_format($row_detail['GiaBan']) ?> VND/Cây</td>
                     </tr>
                 <?php 
                     $Money = (int)$row_detail['SoLuong'] * (int)$row_detail['GiaBan'];
@@ -107,10 +107,7 @@ $tongtien_vnd = isset($_SESSION['allMoney']) ? $_SESSION['allMoney'] : 0;
                     <input class="d-block btn btn-success mt-3 w-100" type="submit" name="cod" value="Thanh toán khi nhận hàng">
                     <input class="d-block btn btn-primary mt-3 w-100" type="submit" name="vnpay" value="Thanh toán qua VNPAY">
                 </form>
-                <form method="POST" target="_blank" enctype="application/x-www-form-urlencoded" action="pages/main/order/xulythanhtoanmomo.php">
-                    <input type="hidden" name="tongtien_vnd" value="<?php echo $tongtien_vnd ?>">
-                    <input class="btn text-light mt-3 w-100" style="background-color: #ae2170; border-color: #ae2170;" type="submit" value="Thanh toán qua MOMO QRCode">
-                </form>
+               
             </div>
         </div>
     </div>
