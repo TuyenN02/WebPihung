@@ -61,12 +61,13 @@ $query_order_detail = mysqli_query($mysqli, $sql_order_detail);
             </tr>
         </table>
 
-              <!-- Print Order Button at the Bottom-Right -->
-              <div class="d-flex justify-content-end">
-            <a href="indonhang.php?id=<?= $id_order ?>" class="btn btn-primary">
-                <i class="fas fa-print"></i> In đơn hàng
-            </a>
-        </div>
+        <!-- Print Order Button at the Bottom-Right -->
+<div class="d-flex justify-content-end">
+    <a href="modules/manage_orders/indonhang.php?id=<?= $id_order ?>" class="btn btn-primary" target="_blank">
+        <i class="fas fa-print"></i> In đơn hàng
+    </a>
+</div>
+
     </div>
 </div>
 
