@@ -104,8 +104,7 @@ if ($status === 'success') {
                                 <?php } elseif ($currentStatus == 0) { ?>
                                     <option value="0"selected>Chưa xác nhận</option>
                                     <option value="1">Đã xác nhận</option>
-                                    <option value="3" >Chờ lấy hàng</option>
-                                    <option value="4" x>Đang giao hàng</option>
+                              
                                 <?php } elseif ($currentStatus == 3) { ?>
                                     <option value="3" selected>Chờ lấy hàng</option>
                                     <option value="4">Đang giao hàng</option>

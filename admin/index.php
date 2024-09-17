@@ -43,7 +43,7 @@ if (!isset($_SESSION['admin'])) {
 }
 
 body {
-    background-color: #a0e5a0; 
+    background-color: #9ce5ab; 
 }
 
 #warpper {
@@ -70,6 +70,7 @@ body {
                 list-style-type: none; /* Loại bỏ dấu gạch đầu dòng cho các mục danh sách */
                 padding: 0;
                 margin: 0;
+                background-color:#bcffcb;
             }
 
             #sidebar-menu .nav-link {
@@ -79,14 +80,14 @@ body {
             }
 
             #sidebar-menu .nav-link a {
-                color: #577f57; /* Màu chữ của các liên kết */
+                color: #14351b; /* Màu chữ của các liên kết */
                 display: flex;
                 align-items: center;
                 text-decoration: none;
             }
 
             #sidebar-menu .nav-link a:hover {
-                background-color: #c3e6cb; /* Màu nền khi di chuột qua (hover) */
+                background-color: #abe8b9; /* Màu nền khi di chuột qua (hover) */
             }
 
             #sidebar-menu .nav-link-icon {
@@ -118,115 +119,114 @@ body {
 
     </head>
     <body>
-        <div id="warpper" class="nav-fixed">
-            <nav class="topnav shadow navbar-light bg-white d-flex">
-            <div class="navbar-brand">
-            <a href="index.php" style="color: #228B22; font-size: 30px;">
-    Shop cây cảnh <span style="font-size: 30px; font-weight: bold;">PI HƯNG</span> - Admin
-</a>
-
+    <div id="warpper" class="nav-fixed">
+    <nav class="topnav shadow navbar-light bg-white d-flex" style="background-color: #90EE90;">
+        <div class="navbar-brand">
+            <a href="index.php" style="background-color: #aae0b7; color: #228B22; font-size: 30px;">
+                Shop cây cảnh <span style="font-size: 30px; font-weight: bold;">PI HƯNG</span> - Admin
+            </a>
+        </div>
+        <a class="btn btn-danger mr-2" href="logout.php">Đăng xuất</a>
+    </nav>
 </div>
-               
-            <a class="btn btn-danger mr-2" href="logout.php">Đăng xuất</a>
-            </div>
-            </nav>
-            <div id="page-body" class="d-flex">
-                <div id="sidebar" class="bg-white">
-                    <ul id="sidebar-menu">
-                    <li class="nav-link">
-                            <a href="index.php">
-                                <div class="nav-link-icon d-inline-flex">
-                                    <i class="fas fa-chart-line"></i>
-                                </div>
-                                Thống kê
-                            </a>
-                        </li>
-                        <li class="nav-link">
-                            <a href="?ncc=list-ncc">
-                                <div class="nav-link-icon d-inline-flex">
-                                    <i class="fas fa-city"></i>
-                                </div>
-                                Quản lý nhà cung cấp
-                            </a>
-                          
-                        </li>
+<div id="warpper" class="nav-fixed">
+    <nav class="topnav shadow navbar-light bg-white d-flex">
+        <div class="navbar-brand">
+            <a href="index.php" style="color: #228B22; font-size: 30px;">
+                Shop cây cảnh <span style="font-size: 30px; font-weight: bold;">PI HƯNG</span> - Admin
+            </a>
+        </div>
+        <a class="btn btn-danger mr-2" href="logout.php">Đăng xuất</a>
+    </nav>
+</div>
+<div id="page-body" class="d-flex">
+    <div id="sidebar" class="bg-white">
+        <ul id="sidebar-menu">
+            <li class="nav-link" style="background-color: #91e0a4;"> <!-- Light green background covers full width -->
+                <a href="index.php">
+                    <div class="nav-link-icon d-inline-flex">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    Thống kê
+                </a>
+            </li>
+            <li class="nav-link" style="background-color: #91e0a4;"> <!-- Light green background covers full width -->
+                <a href="?ncc=list-ncc">
+                    <div class="nav-link-icon d-inline-flex">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    Quản lý nhà cung cấp
+                </a>
+            </li>
+            <li class="nav-link" style="background-color: #91e0a4;"> <!-- Light green background covers full width -->
+                <a href="?product=list-product">
+                    <div class="nav-link-icon d-inline-flex">
+                        <i class="fas fa-archive"></i>
+                    </div>
+                    Quản lý sản phẩm
+                </a>
+            </li>
+            <li class="nav-link" style="background-color: #91e0a4;"> <!-- Light green background covers full width -->
+                <a href="?cat=list-cat">
+                    <div class="nav-link-icon d-inline-flex">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    Quản lý danh mục
+                </a>
+            </li>
+            <li class="nav-link" style="background-color: #91e0a4;"> <!-- Light green background covers full width -->
+                <a href="?info=info">
+                    <div class="nav-link-icon d-inline-flex">
+                        <i class="far fa-address-book"></i>
+                    </div>
+                    Quản lý thông tin
+                </a>
+            </li>
+            <li class="nav-link" style="background-color: #91e0a4;"> <!-- Light green background covers full width -->
+                <a href="?posts=list-posts">
+                    <div class="nav-link-icon d-inline-flex">
+                        <i class="far fa-newspaper"></i>
+                    </div>
+                    Quản lý bài viết
+                </a>
+            </li>
+            <li class="nav-link" style="background-color: #91e0a4;"> <!-- Light green background covers full width -->
+                <a href="?policy=list-policy">
+                    <div class="nav-link-icon d-inline-flex">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    Quản lý chính sách
+                </a>
+            </li>
+            <li class="nav-link" style="background-color: #91e0a4;"> <!-- Light green background covers full width -->
+                <a href="index.php?order=success-order-list">
+                    <div class="nav-link-icon d-inline-flex">
+                        <i class="fa fa-shopping-cart"></i>
+                    </div>
+                    Quản lý đơn hàng
+                </a>
+            </li>
+            <li class="nav-link" style="background-color: #91e0a4;"> <!-- Light green background covers full width -->
+                <a href="?user=list-user">
+                    <div class="nav-link-icon d-inline-flex">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    Quản lý tài khoản
+                </a>
+            </li>
+            <li class="nav-link" style="background-color: #91e0a4;"> <!-- Light green background covers full width -->
+                <a href="?comment=comments">
+                    <div class="nav-link-icon d-inline-flex">
+                        <i class="far fa-comments"></i>
+                    </div>
+                    Quản lý bình luận
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
 
-                        <li class="nav-link">
-                            <a href="?product=list-product">
-                                <div class="nav-link-icon d-inline-flex">
-                                    <i class="fas fa-archive"></i>
-                                </div>
-                                Quản lý sản phẩm
-                            </a>
-                         
-                            
-                        </li>
-                        <li class="nav-link">
-    <a href="?cat=list-cat">
-        <div class="nav-link-icon d-inline-flex">
-            <i class="fas fa-tags"></i>
-        </div>
-        Quản lý danh mục
-    </a>
-  
-</li>
-                        <li class="nav-link">
-    <a href="?info=info">
-        <div class="nav-link-icon d-inline-flex">
-            <i class="	far fa-address-book"></i>
-        </div>
-        Quản lý thông tin
-    </a>
-</li>
-   
-<li class="nav-link">
-    <a href="?posts=list-posts">
-        <div class="nav-link-icon d-inline-flex">
-            <i class="far fa-newspaper"></i>
-        </div>
-        Quản lý bài viết
-    </a>
-   
-</li>
-    <li class="nav-link">
-    <a href="?policy=list-policy">
-        <div class="nav-link-icon d-inline-flex">
-            <i class="fas fa-book"></i>
-        </div>
-        Quản lý chính sách
-    </a>
-   
-</li>
 
-                        <li class="nav-link">
-                            <a href="index.php?order=success-order-list">
-                                <div class="nav-link-icon d-inline-flex">
-                                    <i class="fa fa-shopping-cart"></i>
-                                </div>
-                               Quản lý đơn hàng
-                            </a>
-               
-</li>
-                        <li class="nav-link">
-                            <a href="?user=list-user">
-                                <div class="nav-link-icon d-inline-flex">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                Quản lý tài khoản
-                            </a>
-                            
-                        </li>
-                        <li class="nav-link">
-                          <a href="?comment=comments">
-                          <div class="nav-link-icon d-inline-flex">
-                          <i class="far fa-comments"></i>
-                             </div>
-                            Quản lý bình luận
-                            </a>
-                         </li>
-       
-                    </ul>
-                </div>
                 <div id="wp-content">
     <?php
     if (isset($_GET['user'])) {

@@ -144,6 +144,7 @@ a:hover {
     right: 0;
     left: 0;
     z-index: 1030;
+    background-color: #95ff9c;
 }
 
 ul#sidebar-menu * {
@@ -222,6 +223,6 @@ ul#sidebar-menu * {
     align-items: center; /* Căn giữa các phần tử theo chiều dọc */
     padding: 10px 20px; /* Giảm khoảng cách xung quanh thanh điều hướng */
     margin: 0; /* Loại bỏ margin để thanh điều hướng nằm sát mép trên */
-    background-color: #36c257; /* Màu nền xanh lá cây nhạt */
-    color: #7cc97c; /* Màu chữ nếu cần thiết */
+    background-color: #95ff9c;
+
 }

@@ -80,7 +80,7 @@
         <?php include('pages/main/product/categoryList.php')?>
       </div>
       <div class="col-lg-10 product-container">
-        <h2 class="text-center animate__animated animate__fadeInDown">Tất cả loại cây</h2>
+        <h2 class="text-center animate__animated animate__fadeInDown">Tất cả cây</h2>
         <div>
           <form action="" method="POST">
             <ul class="nav">

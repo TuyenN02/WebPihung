@@ -21,7 +21,7 @@ $sql_Customer = "SELECT * FROM thanhvien";
 if ($tukhoa != '') {
     $sql_Customer .= " WHERE HoVaTen LIKE '%$tukhoa%'";
 }
-$sql_Customer .= " ORDER BY ID_ThanhVien DESC LIMIT $begin, 8";
+$sql_Customer .= " ORDER BY ID_ThanhVien DESC LIMIT $begin, 1000";
 $query_Customer = mysqli_query($mysqli, $sql_Customer);
 ?>
 

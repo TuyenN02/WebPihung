@@ -29,7 +29,7 @@
         /* Styling for the entire page */
         body { 
 
-    background-color: #75dd80; 
+    background-color: #9ce5ab; 
     margin: 0; 
     padding: 0; 
     color: #333; /* Default text color */
