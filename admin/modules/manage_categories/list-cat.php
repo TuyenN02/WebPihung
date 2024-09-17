@@ -71,17 +71,26 @@ if (isset($_SESSION['errors']['database'])) {
                                         <td><?php echo htmlspecialchars($row_category_product['ID_DanhMuc']); ?></td>
                                         <td><?php echo htmlspecialchars($row_category_product['TenDanhMuc']); ?></td>
                                         <td><?php echo htmlspecialchars($row_category_product['Mota']); ?></td>
-                                        <td class="d-flex">
-                                            <a href="?cat=edit-cat&id=<?php echo htmlspecialchars($row_category_product['ID_DanhMuc']); ?>" class="btn btn-success btn-sm text-white mr-2" type="button" data-toggle="tooltip" data-placement="top" title="Sửa"><i class="fa fa-edit"></i></a>
-                                            <a href="javascript:void(0);" onclick="confirmDelete(<?php echo htmlspecialchars($row_category_product['ID_DanhMuc']); ?>);" class="btn btn-danger btn-sm text-white" type="button" data-toggle="tooltip" data-placement="top" title="Xóa"><i class="fa fa-trash"></i></a>
-                                        </td>
+                                        <td class="action-buttons">
+                                        <a href="?cat=edit-cat&id=<?php echo htmlspecialchars($row_category_product['ID_DanhMuc']); ?>" 
+                                        class="btn btn-success btn-sm text-white" 
+                                        type="button" data-toggle="tooltip" data-placement="top" title="Sửa">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" 
+                                        onclick="confirmDelete(<?php echo htmlspecialchars($row_category_product['ID_DanhMuc']); ?>);" 
+                                        class="btn btn-danger btn-sm text-white" 
+                                        type="button" data-toggle="tooltip" data-placement="top" title="Xóa">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </td>
                                     </tr>
                                 <?php } ?>     
                             </tbody>
                         </table>
                         
                     <?php if ($isEmpty): ?>
-                        <p class="text-center">Không tìm thấy danh mục nào!</p>
+                        <p class="text-center">Danh sách danh mục trống!</p>
              
                     <?php endif; ?>
                 </div>
@@ -133,8 +142,8 @@ if (isset($_SESSION['errors']['database'])) {
 .alert {
     position: fixed;
     top: 50px;
-    right: 950px;
-    padding: 10px;
+    right: 130px;
+    padding: 15px;
     border-radius: 5px;
     z-index: 9999;
     opacity: 1;
@@ -143,14 +152,60 @@ if (isset($_SESSION['errors']['database'])) {
 
 .alert-success {
     background-color: #d4edda;
-    color: #ff0000;
-    border: 3px solid #ff0000;
+    color: #269963;
+    border: 3px solid #269963;
 }
 
 .alert-danger {
     background-color: #f8d7da;
-    color: #ff0000;
-    border: 3px solid #ff0000;
-
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
+/* Căn chỉnh đều các ô trong bảng */
+.table th, .table td {
+    border: 1px solid #dee2e6; /* Kẻ bảng */
+    text-align: center; /* Căn giữa nội dung */
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    padding: 10px; /* Tạo khoảng cách cho nội dung */
+}
+
+/* Căn chỉnh đều các ô trong bảng */
+.table th, .table td {
+    border: 1px solid #dee2e6; /* Kẻ bảng */
+    text-align: center; /* Căn giữa nội dung */
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    padding: 10px; /* Tạo khoảng cách cho nội dung */
+}
+/* Căn chỉnh đều các ô trong bảng */
+.table th, .table td {
+    border: 1px solid #dee2e6; /* Kẻ bảng */
+    text-align: center; /* Căn giữa nội dung */
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    padding: 10px; /* Tạo khoảng cách cho nội dung */
+}
+
+/* Căn chỉnh chiều cao và kích thước của cột chứa các nút */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Đảm bảo chiều cao cột chứa nút đồng đều */
+    gap: 10px; /* Khoảng cách giữa các nút */
+}
+
+.action-buttons .btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px; /* Kích thước đồng đều cho nút */
+    height: 30px; /* Kích thước đồng đều cho nút */
+    padding: 5px;
+}
+
+/* Đảm bảo icon trong nút căn giữa và không bị lệch */
+.action-buttons .btn i {
+    margin: 0; /* Loại bỏ khoảng cách thừa */
+}
+
+
 </style>

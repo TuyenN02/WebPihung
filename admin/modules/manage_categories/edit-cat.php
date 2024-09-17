@@ -43,6 +43,7 @@ if (isset($_GET['id'])) {
                     <label for="MoTa">Mô tả:</label>
                     <textarea class="form-control" name="MoTa" id="MoTa" rows="5"><?php echo $MoTa; ?></textarea>
                     <div id="MoTaError" class="error-message"><?php echo $MoTaError; ?></div>
+                    <small class="form-text" style="color: #c67777;">* Không bắt buộc</small> <!-- Dòng chữ nhỏ màu đỏ -->
                 </div>
 
                 <input type="hidden" name="id" value="<?php echo $ID_DanhMuc; ?>">
@@ -60,27 +61,43 @@ unset($_SESSION['data']);
 ?>
 
 <script>
+// Hàm kiểm tra giá trị nhập vào trường Tên danh mục
+function validateTenDanhMuc() {
+    const tenDanhMuc = document.getElementById('TenDanhMuc').value.trim();
+    if (tenDanhMuc.length < 3 || tenDanhMuc.length > 30) {
+        document.getElementById('TenDanhMucError').textContent = "Tên danh mục phải từ 3 đến 30 ký tự.";
+        return false;
+    } else {
+        document.getElementById('TenDanhMucError').textContent = "";
+        return true;
+    }
+}
+
+// Hàm kiểm tra giá trị nhập vào trường Mô tả
+function validateMoTa() {
+    const moTa = document.getElementById('MoTa').value.trim();
+    if (moTa.length > 255) {
+        document.getElementById('MoTaError').textContent = "Mô tả không được vượt quá 255 ký tự.";
+        return false;
+    } else {
+        document.getElementById('MoTaError').textContent = "";
+        return true;
+    }
+}
+
+// Gắn sự kiện 'input' để bắt lỗi ngay khi người dùng nhập
+document.getElementById('TenDanhMuc').addEventListener('input', validateTenDanhMuc);
+document.getElementById('MoTa').addEventListener('input', validateMoTa);
+
 document.getElementById('editCategoryForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Ngăn gửi form mặc định
 
-    // Lấy giá trị từ form
-    const tenDanhMuc = document.getElementById('TenDanhMuc').value.trim();
-    const moTa = document.getElementById('MoTa').value.trim();
-    
-    let hasError = false;
+    // Kiểm tra lỗi từng trường trước khi gửi form
+    const isTenDanhMucValid = validateTenDanhMuc();
+    const isMoTaValid = validateMoTa();
 
-    // Kiểm tra lỗi
-    if (tenDanhMuc.length < 3 || tenDanhMuc.length > 30) {
-        document.getElementById('TenDanhMucError').textContent = "Tên danh mục phải từ 3 đến 30 ký tự.";
-        hasError = true;
-    } else {
-        document.getElementById('TenDanhMucError').textContent = "";
-    }
-
-
-
-    // Kiểm tra nếu có lỗi thì không gửi form
-    if (hasError) {
+    // Nếu có lỗi thì không gửi form
+    if (!isTenDanhMucValid || !isMoTaValid) {
         return;
     }
 

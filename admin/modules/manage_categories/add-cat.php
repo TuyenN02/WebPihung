@@ -1,5 +1,4 @@
 <?php
-
 // Xóa dữ liệu cũ từ session khi người dùng truy cập trang này
 unset($_SESSION['data']);
 unset($_SESSION['success_message']);
@@ -34,10 +33,10 @@ unset($_SESSION['error_message']);
                     <input required class="form-control" type="text" name="TenDanhMuc" id="TenDanhMuc" value="<?php echo htmlspecialchars($data['TenDanhMuc']); ?>" >
                     <div id="TenDanhMucError" class="error-message"><?php echo isset($error_message['TenDanhMuc']) ? $error_message['TenDanhMuc'] : ''; ?></div>
                 </div>
-
                 <div class="form-group">
                     <label for="MoTa">Mô tả:</label>
                     <textarea class="form-control" name="MoTa" id="MoTa" rows="5"><?php echo htmlspecialchars($data['MoTa']); ?></textarea>
+                    <small class="form-text" style="color: #c67777;">* Không bắt buộc</small> <!-- Dòng chữ nhỏ màu đỏ -->
                 </div>
 
                 <button type="submit" class="btn btn-primary">Thêm</button>
@@ -46,25 +45,31 @@ unset($_SESSION['error_message']);
         </div>
     </div>
 </div>
+
 <script>
+// Hàm kiểm tra giá trị nhập vào trường Tên danh mục
+function validateTenDanhMuc() {
+    const tenDanhMuc = document.getElementById('TenDanhMuc').value.trim();
+    if (tenDanhMuc.length < 3 || tenDanhMuc.length > 50) {
+        document.getElementById('TenDanhMucError').textContent = "Tên danh mục phải từ 3 đến 50 ký tự.";
+        return false;
+    } else {
+        document.getElementById('TenDanhMucError').textContent = "";
+        return true;
+    }
+}
+
+// Gắn sự kiện 'input' để bắt lỗi ngay khi người dùng nhập
+document.getElementById('TenDanhMuc').addEventListener('input', validateTenDanhMuc);
+
 document.getElementById('addCategoryForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Ngăn gửi form mặc định
 
-    // Lấy giá trị từ form
-    const tenDanhMuc = document.getElementById('TenDanhMuc').value.trim();
-    
-    let hasError = false;
+    // Kiểm tra lỗi từng trường trước khi gửi form
+    const isTenDanhMucValid = validateTenDanhMuc();
 
-    // Kiểm tra lỗi
-    if (tenDanhMuc.length < 3 || tenDanhMuc.length > 50) {
-        document.getElementById('TenDanhMucError').textContent = "Tên danh mục phải từ 3 đến 50 ký tự.";
-        hasError = true;
-    } else {
-        document.getElementById('TenDanhMucError').textContent = "";
-    }
-
-    // Kiểm tra nếu có lỗi thì không gửi form
-    if (hasError) {
+    // Nếu có lỗi thì không gửi form
+    if (!isTenDanhMucValid) {
         return;
     }
 
@@ -89,14 +94,10 @@ document.getElementById('addCategoryForm').addEventListener('submit', function(e
 
             // Chuyển hướng nếu cần
             window.location.href = "index.php?cat=list-cat";
-        } else {
-            // Hiển thị thông báo lỗi cho từng trường cụ thể
-            if (result.message.includes('Tên danh mục đã tồn tại!')) {
-                document.getElementById('TenDanhMucError').textContent = result.message;
-            } else {
+        }  else {
                 alert(result.message); // Hiển thị thông báo lỗi khác nếu có
             }
-        }
+        
     })
     .catch(error => {
         console.error('Có lỗi xảy ra:', error);
@@ -116,6 +117,7 @@ document.getElementById('cancelButton').addEventListener('click', function() {
     window.location.href = "index.php?cat=list-cat";
 });
 </script>
+
 <style>
 #wp-content {
     margin-left: 250px;
@@ -124,8 +126,8 @@ document.getElementById('cancelButton').addEventListener('click', function() {
     margin-top: 80px;
 }
 
-    .error-message {
-        color: red;
-        font-size: 0.875em;
-    }
+.error-message {
+    color: red;
+    font-size: 0.875em;
+}
 </style>
