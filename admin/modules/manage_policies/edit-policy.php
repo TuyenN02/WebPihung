@@ -60,58 +60,63 @@ unset($_SESSION['data']);
 ?>
 
 <script>
-document.getElementById('editPolicyForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Ngăn gửi form mặc định
+document.getElementById('TieuDe').addEventListener('input', function() {
+    const tieuDe = this.value.trim();
+    const errorElement = document.getElementById('TieuDeError');
 
-    // Lấy giá trị từ form
-    const tieuDe = document.getElementById('TieuDe').value.trim();
-    const noiDung = document.getElementById('NoiDung').value.trim();
-    
-    let hasError = false;
-
-    // Kiểm tra lỗi
     if (tieuDe.length < 3 || tieuDe.length > 50) {
-        document.getElementById('TieuDeError').textContent = "Tiêu đề phải từ 3 đến 50 ký tự!";
-        hasError = true;
+        errorElement.textContent = "Tiêu đề phải từ 3 đến 50 ký tự!";
     } else {
-        document.getElementById('TieuDeError').textContent = "";
+        errorElement.textContent = "";
     }
+});
+
+document.getElementById('NoiDung').addEventListener('input', function() {
+    const noiDung = this.value.trim();
+    const errorElement = document.getElementById('NoiDungError');
+
     if (noiDung.length < 10) {
-        document.getElementById('NoiDungError').textContent = "Nội dung phải từ 10 ký tự!";
-        hasError = true;
+        errorElement.textContent = "Nội dung phải từ 10 ký tự!";
     } else {
-        document.getElementById('NoiDungError').textContent = "";
+        errorElement.textContent = "";
     }
+});
 
-    // Kiểm tra nếu có lỗi thì không gửi form
-    if (hasError) {
-        return;
+document.getElementById('editPolicyForm').addEventListener('submit', function(event) {
+    const tieuDeError = document.getElementById('TieuDeError').textContent;
+    const noiDungError = document.getElementById('NoiDungError').textContent;
+
+    if (tieuDeError || noiDungError) {
+        event.preventDefault(); // Ngăn gửi form nếu có lỗi
+    } else {
+        // Nếu không có lỗi, tạo FormData và gửi yêu cầu
+        event.preventDefault(); // Ngăn gửi form mặc định
+
+        const form = document.getElementById('editPolicyForm');
+        const formData = new FormData(form);
+
+        fetch('modules/manage_policies/sua.php', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log('Fetch Result:', result); // Kiểm tra phản hồi từ máy chủ
+
+            if (result.status === 'success') {
+                window.location.href = "index.php?policy=list-policy"; // Chuyển hướng ngay lập tức
+            } else {
+                alert(result.message); // Hiển thị thông báo lỗi khác nếu có
+            }
+        })
+        .catch(error => {
+            console.error('Có lỗi xảy ra:', error);
+            alert('Đã xảy ra lỗi khi gửi dữ liệu.');
+        });
     }
-
-    // Nếu không có lỗi, tạo FormData và gửi yêu cầu
-    const form = document.getElementById('editPolicyForm');
-    const formData = new FormData(form);
-
-    fetch('modules/manage_policies/sua.php', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(result => {
-        console.log('Fetch Result:', result); // Kiểm tra phản hồi từ máy chủ
-
-        if (result.status === 'success') {
-            window.location.href = "index.php?policy=list-policy"; // Chuyển hướng ngay lập tức
-        } else {
-            alert(result.message); // Hiển thị thông báo lỗi khác nếu có
-        }
-    })
-    .catch(error => {
-        console.error('Có lỗi xảy ra:', error);
-        alert('Đã xảy ra lỗi khi gửi dữ liệu.');
-    });
 });
 </script>
+
 
 <style>
     #wp-content {

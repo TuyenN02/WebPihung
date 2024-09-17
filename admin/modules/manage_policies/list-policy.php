@@ -75,7 +75,7 @@ $query_Policy = mysqli_query($mysqli, $sql_Policy);
                         $i = $begin;
                         while ($row_Policy = mysqli_fetch_array($query_Policy)) {
                             $i++;
-                            $short_content = strlen($row_Policy['NoiDung']) > 100 ? substr($row_Policy['NoiDung'], 0, 100) . '...' : $row_Policy['NoiDung'];
+                            $short_content = strlen($row_Policy['NoiDung']) > 100 ? substr($row_Policy['NoiDung'], 0, 50) . '...' : $row_Policy['NoiDung'];
                         ?>
                         <tr>
                             <th scope="row"><?php echo $i ?></th>
@@ -86,15 +86,24 @@ $query_Policy = mysqli_query($mysqli, $sql_Policy);
                                 <a href="index.php?policy=detail-policy&id=<?php echo $row_Policy['ID_ChinhSach'] ?>" class="btn btn-link btn-sm">Xem thêm</a>
                                 <?php endif; ?>
                             </td>
-                            <td class="d-flex justify-content-center">
-                                <a href="?policy=edit-policy&id=<?php echo $row_Policy['ID_ChinhSach'] ?>" class="btn btn-success btn-sm rounded text-white mr-2" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
-                                <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row_Policy['ID_ChinhSach'] ?>);" class="btn btn-danger btn-sm rounded text-white" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
-                            </td>
+                            <td class="action-buttons d-flex justify-content-center">
+    <a href="?policy=edit-policy&id=<?php echo $row_Policy['ID_ChinhSach'] ?>" 
+       class="btn btn-success btn-sm rounded text-white" 
+       type="button" data-toggle="tooltip" data-placement="top" title="Edit">
+        <i class="fa fa-edit"></i>
+    </a>
+    <a href="javascript:void(0);" 
+       onclick="confirmDelete(<?php echo $row_Policy['ID_ChinhSach'] ?>);" 
+       class="btn btn-danger btn-sm rounded text-white" 
+       type="button" data-toggle="tooltip" data-placement="top" title="Delete">
+        <i class="fa fa-trash"></i>
+    </a>
+</td>
                         </tr>
                         <?php } ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="4" class="text-center">Không tìm thấy chính sách nào</td>
+                            <td colspan="4" class="text-center">Danh sách chính sách trống!</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -161,7 +170,7 @@ $query_Policy = mysqli_query($mysqli, $sql_Policy);
 .alert {
     position: fixed;
     top: 50px;
-    right: 950px;
+    right: 130px;
     padding: 15px;
     border-radius: 5px;
     z-index: 9999;
@@ -171,8 +180,8 @@ $query_Policy = mysqli_query($mysqli, $sql_Policy);
 
 .alert-success {
     background-color: #d4edda;
-    color: #ff0000;
-    border: 3px solid #ff0000;
+    color: #269963;
+    border: 3px solid #269963;
 }
 
 .alert-danger {
@@ -180,4 +189,53 @@ $query_Policy = mysqli_query($mysqli, $sql_Policy);
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
+
+/* Căn chỉnh đều các ô trong bảng */
+.table th, .table td {
+    border: 1px solid #dee2e6; /* Kẻ bảng */
+    text-align: center; /* Căn giữa nội dung */
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    padding: 10px; /* Tạo khoảng cách cho nội dung */
+}
+
+/* Căn chỉnh đều các ô trong bảng */
+.table th, .table td {
+    border: 1px solid #dee2e6; /* Kẻ bảng */
+    text-align: center; /* Căn giữa nội dung */
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    padding: 10px; /* Tạo khoảng cách cho nội dung */
+}
+/* Căn chỉnh đều các ô trong bảng */
+.table th, .table td {
+    border: 1px solid #dee2e6; /* Kẻ bảng */
+    text-align: center; /* Căn giữa nội dung */
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    padding: 10px; /* Tạo khoảng cách cho nội dung */
+}
+
+/* Căn chỉnh chiều cao và kích thước của cột chứa các nút */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Đảm bảo chiều cao cột chứa nút đồng đều */
+    gap: 10px; /* Khoảng cách giữa các nút */
+}
+
+.action-buttons .btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px; /* Kích thước đồng đều cho nút */
+    height: 30px; /* Kích thước đồng đều cho nút */
+    padding: 5px;
+}
+
+/* Đảm bảo icon trong nút căn giữa và không bị lệch */
+.action-buttons .btn i {
+    margin: 0; /* Loại bỏ khoảng cách thừa */
+}
+
+
+
 </style>

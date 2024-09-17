@@ -44,7 +44,7 @@ if ($status === 'success') {
 <div id="content" class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="m-0" style="text-align: center; flex-grow: 1; font-size: 28px;">Danh sách đơn hàng</h5>
+        <h5 class="m-0" style="text-align: left; flex-grow: 1; font-size: 28px;">Danh sách đơn hàng</h5>
             <div class="form-search d-flex align-items-center" style = 'width: 405px;'>
                 <form action="" method="POST" class="d-flex">
                     <input type="text" class="form-control form-search" placeholder="Nhập từ khóa..." name="tukhoa" value="<?php echo htmlspecialchars($tukhoa); ?>">
@@ -133,7 +133,7 @@ if ($status === 'success') {
             <?php
                 }
             } else {
-                echo '<tr><td colspan="7">Danh sách đơn hàng trống</td></tr>';
+                echo '<tr><td colspan="7">Danh sách đơn hàng trống!</td></tr>';
             }
             ?>
             </tbody>
@@ -236,7 +236,7 @@ table {
     .alert {
     position: fixed;
     top: 50px;
-    right: 900px;
+    right: 130px;
     padding: 15px;
     border-radius: 5px;
     z-index: 9999;
@@ -250,5 +250,29 @@ table {
     border: 3px solid #269963;
 }
 
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+table {
+    font-size: 14px;
+    width: 100%;
+    border-collapse: collapse; /* Đảm bảo không có khoảng cách giữa các đường viền của các ô */
+}
+
+table, th, td {
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Viền màu đen mờ */
+}
+
+th, td {
+    padding: 8px; /* Thêm khoảng đệm cho các ô */
+    text-align: center; /* Căn giữa nội dung */
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+}
+
+thead {
+    background-color: #f2f2f2; /* Màu nền cho tiêu đề bảng */
+}
 
 </style>
