@@ -18,12 +18,18 @@ $begin = ($page == '' || $page == 1) ? 0 : ($page * 8) - 8;
 // Khởi tạo biến từ khóa tìm kiếm
 $tukhoa = '';
 
-// Truy vấn nhà cung cấp với collation để tìm kiếm bao gồm cả dấu
+// Truy vấn nhà cung cấp với việc loại bỏ dấu
 $sql_NCC = "SELECT * FROM nhacungcap ORDER BY ID_NCC DESC LIMIT $begin, 8";
 if (isset($_POST['tukhoa'])) {
     $tukhoa = mysqli_real_escape_string($mysqli, trim($_POST['tukhoa']));
-    // Sử dụng COLLATE để tìm kiếm bao gồm cả dấu
-    $sql_NCC = "SELECT * FROM nhacungcap WHERE TenNCC COLLATE utf8mb4_bin LIKE '%$tukhoa%' ORDER BY ID_NCC DESC LIMIT $begin, 8";
+
+    // Loại bỏ dấu từ cả từ khóa và tên nhà cung cấp trước khi so sánh
+    $sql_NCC = "
+        SELECT * 
+        FROM nhacungcap 
+        WHERE CONVERT(TenNCC USING utf8mb4) LIKE '%" . $tukhoa . "%' COLLATE utf8mb4_unicode_ci 
+        ORDER BY ID_NCC DESC 
+        LIMIT $begin, 8";
 }
 $query_NCC = mysqli_query($mysqli, $sql_NCC);
 
