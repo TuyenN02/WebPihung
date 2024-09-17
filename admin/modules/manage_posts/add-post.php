@@ -25,9 +25,12 @@ unset($_SESSION['data']); // Xóa dữ liệu sau khi đã lấy
                 </div>
                 <div class="form-group">
                     <label>Hình ảnh:</label>
-                    <input class="form-control" type="file" name="Img" id="Img" accept=".jpg,.png" onchange="validateImage()">
+                    <div class="image-container">
+                        <img id="preview" src="<?php echo isset($data['Img']) ? '../../../assets/image/supplier/' . htmlspecialchars($data['Img']) : ''; ?>" style="max-width: 200px; margin-top: 10px;">
+                        <input class="form-control" type="file" name="Img" id="Img" accept=".jpg,.png" onchange="validateImage()" style="display: none;">
+                        <label for="Img" class="btn btn-custom">Chọn hình ảnh</label> <!-- Nút chọn file tùy chỉnh -->
+                    </div>
                     <div id="ImgError" class="text-danger"><?php echo $ImgError; ?></div>
-                    <img id="preview" src="<?php echo isset($data['Img']) ? '../../../assets/image/supplier/' . htmlspecialchars($data['Img']) : ''; ?>" style="max-width: 200px; margin-top: 10px;">
                 </div>
                 <div class="form-group">
                     <label for="Noidung">Nội dung:</label>
@@ -42,6 +45,34 @@ unset($_SESSION['data']); // Xóa dữ liệu sau khi đã lấy
 </div>
 
 <script>
+// Real-time validation for each input field
+
+document.getElementById('Tenbaiviet').addEventListener('input', function() {
+    const tenbaiviet = this.value.trim();
+    if (tenbaiviet === '') {
+        document.getElementById('TenbaivietError').textContent = 'Tên bài viết không được để trống!';
+    } else if (tenbaiviet.length < 3 || tenbaiviet.length > 255) {
+        document.getElementById('TenbaivietError').textContent = 'Tên bài viết phải từ 3 đến 255 ký tự!';
+    } else {
+        document.getElementById('TenbaivietError').textContent = '';
+    }
+});
+
+document.getElementById('Noidung').addEventListener('input', function() {
+    const noidung = this.value.trim();
+    if (noidung === '') {
+        document.getElementById('NoidungError').textContent = 'Nội dung không được để trống!';
+    } else if (noidung.length <= 10) {
+        document.getElementById('NoidungError').textContent = 'Nội dung phải từ 10 ký tự!';
+    } else {
+        document.getElementById('NoidungError').textContent = '';
+    }
+});
+
+document.getElementById('Img').addEventListener('change', function() {
+    validateImage();
+});
+
 function validateImage() {
     const fileInput = document.getElementById('Img');
     const filePath = fileInput.value;
@@ -51,7 +82,6 @@ function validateImage() {
         document.getElementById('ImgError').textContent = 'Định dạng tệp không hợp lệ! Vui lòng chỉ tải lên tệp có đuôi .jpg hoặc .png.';
         fileInput.value = ''; // Clear the input
         document.getElementById('preview').src = '';
-        return false;
     } else {
         document.getElementById('ImgError').textContent = ''; // Clear error message
         if (fileInput.files && fileInput.files[0]) {
@@ -62,48 +92,6 @@ function validateImage() {
             reader.readAsDataURL(fileInput.files[0]);
         }
     }
-}
-
-function validateForm() {
-    let isValid = true;
-    
-    // Clear previous error messages
-    document.getElementById('TenbaivietError').textContent = '';
-    document.getElementById('ImgError').textContent = '';
-    document.getElementById('NoidungError').textContent = '';
-
-    // Check for empty fields and length constraints
-    const tenbaiviet = document.getElementById('Tenbaiviet').value.trim();
-    const noidung = document.getElementById('Noidung').value.trim();
-
-    if (tenbaiviet === '') {
-        document.getElementById('TenbaivietError').textContent = 'Tên bài viết không được để trống.';
-        isValid = false;
-    } else if (tenbaiviet.length < 3 || tenbaiviet.length > 255) {
-        document.getElementById('TenbaivietError').textContent = 'Tên bài viết phải từ 3 đến 255 ký tự.';
-        isValid = false;
-    }
-
-    if (noidung === '') {
-        document.getElementById('NoidungError').textContent = 'Nội dung không được để trống.';
-        isValid = false;
-    }else if (noidung.length <= 10) {
-        document.getElementById('NoidungError').textContent = 'Nội dung quá ngắn.';
-        isValid = false;
-    }
-
-
-    // Check for image file validity
-    const fileInput = document.getElementById('Img');
-    const filePath = fileInput.value;
-    const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-
-    if (filePath && !allowedExtensions.exec(filePath)) {
-        document.getElementById('ImgError').textContent = 'Định dạng tệp không hợp lệ! Vui lòng chỉ tải lên tệp có đuôi .jpg hoặc .png.';
-        isValid = false;
-    }
-
-    return isValid;
 }
 
 function submitForm() {
@@ -118,11 +106,8 @@ function submitForm() {
         .then(response => response.text())
         .then(data => {
             if (data.includes('success')) {
-                // Thành công: Chuyển hướng về trang danh sách bài viết
                 window.location.href = 'index.php?posts=list-posts';
             } else {
-                // Hiển thị thông báo lỗi
-                console.log(data);
                 alert('Có lỗi xảy ra, vui lòng kiểm tra lại.');
             }
         })
@@ -132,8 +117,34 @@ function submitForm() {
         });
     }
 }
-</script>
 
+function validateForm() {
+    // Manual form validation called on submit
+    return !document.querySelector('.text-danger').textContent;
+}
+</script>
+<script>
+    function validateImage() {
+        const fileInput = document.getElementById('Img');
+        const filePath = fileInput.value;
+        const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+
+        if (filePath && !allowedExtensions.exec(filePath)) {
+            document.getElementById('ImgError').textContent = 'Định dạng tệp không hợp lệ! Vui lòng chỉ tải lên tệp có đuôi .jpg hoặc .png.';
+            fileInput.value = ''; // Xóa input nếu file không hợp lệ
+            document.getElementById('preview').src = '';
+        } else {
+            document.getElementById('ImgError').textContent = ''; // Xóa lỗi nếu hợp lệ
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+    }
+</script>
 <style>
 #wp-content {
     margin-left: 250px;
@@ -141,4 +152,36 @@ function submitForm() {
     padding: 10px;
     margin-top: 80px;
 }
+.text-danger {
+    color: red;
+    font-size: 0.875em;
+}
+  /* Container chứa ảnh và nút */
+  .image-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Căn giữa theo chiều ngang */
+    }
+
+    /* Ảnh hiển thị */
+    #preview {
+        max-width: 200px;
+        margin-bottom: 10px; /* Khoảng cách dưới ảnh */
+    }
+
+    /* Nút chọn file tùy chỉnh */
+    .btn-custom {
+        padding: 3px 6px;
+        background-color: #8dddb4; /* Màu xanh lá cây nhạt */
+        color: #666666;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .btn-custom:hover {
+        background-color: #76C776; /* Màu khi hover */
+    }
 </style>

@@ -58,14 +58,16 @@ $query_getDM = mysqli_query($mysqli, $sql_getDM);
 
                 <div class="form-group">
                     <label for="MoTa">Mô tả:</label>
-                    <textarea required class="form-control" name="MoTa" id="MoTa" rows="5"><?php echo $MoTa; ?></textarea>
+                    <textarea class="form-control" name="MoTa" id="MoTa" rows="5"><?php echo $MoTa; ?></textarea>
+                    <small class="form-text text-red">* Không bắt buộc</small> 
                 </div>
 
                 <div class="form-group">
-                    <label for="GiaBan">Giá bán:</label>
-                    <input class="form-control" type="number" name="GiaBan" id="GiaBan" value="<?php echo $GiaBan; ?>" required>
-                    <div id="GiaBanError" class="error-message"><?php echo $GiaBanError; ?></div>
-                </div>
+            <label for="GiaBan">Giá tiền:</label>
+            <input type="text" class="form-control" id="GiaBan" name="GiaBan" oninput="getFormattedGiaTien(this)" value="<?php echo isset($GiaBan) ? htmlspecialchars($GiaBan) : ''; ?>" required>
+            <div id="GiaBanError" class="error-message"><?php echo isset($GiaBanError) ? $GiaBanError : ''; ?></div>
+        </div>
+
 
                 <div class="form-group">
                     <label for="SoLuong">Số lượng:</label>
@@ -96,27 +98,44 @@ $query_getDM = mysqli_query($mysqli, $sql_getDM);
                 </div>
 
                 <div class="form-group">
-                    <label for="Img">Hình ảnh:</label>
+                    <label for="Img" style="display: block;">Hình ảnh:</label>
+
+                    <!-- Kiểm tra và hiển thị hình ảnh nếu có -->
                     <?php if (!empty($row['Img'])): ?>
                         <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center;" src="../assets/image/product/<?php echo htmlspecialchars($row['Img']); ?>" alt="Hình ảnh sản phẩm">
                     <?php else: ?>
                         <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center; display: none;" />
                     <?php endif; ?>
-                    <input class="form-control" type="file" name="Img" id="Img" accept="image/*" onchange="previewImage()">
+
+                    <!-- Nút chọn tệp tùy chỉnh -->
+                    <button type="button" class="btn btn-custom" style="display: block; margin-top: 10px;" onclick="document.getElementById('Img').click();">Chọn hình ảnh</button>
+
+                    <!-- Input file ẩn -->
+                    <input class="form-control" type="file" name="Img" id="Img" accept="image/*" style="display: none;" onchange="previewImage()">
+
+                    <!-- Hiển thị lỗi -->
                     <div id="ImgError" class="error-message"></div>
                 </div>
-                  <!-- Phần hình ảnh mô tả -->
-                  <div class="form-group">
-                <label>Hình ảnh mô tả:</label>
-                <div id="additionalImagesContainer" class="mb-3">
-                    <?php while ($img = mysqli_fetch_array($query_getImages)) : ?>
-                        <div class="image-item">
-                            <img style="width: 100px; height: 100px; object-fit: cover;" src="../assets/image/product/<?php echo htmlspecialchars($img['Anh']); ?>" alt="Hình ảnh mô tả">
-                            <button type="button" class="btn btn-danger remove-image" data-image="<?php echo htmlspecialchars($img['Anh']); ?>">Xóa</button>
-                        </div>
-                    <?php endwhile; ?>
-                </div>
-                <input class="form-control" type="file" name="ImgDescriptions[]" accept="image/*" multiple onchange="previewAdditionalImages()">
+                                <!-- Phần hình ảnh mô tả -->
+                            <!-- Phần hình ảnh mô tả -->
+                <div class="form-group">
+                    <label>Hình ảnh mô tả:</label>
+
+                    <!-- Hiển thị các hình ảnh mô tả hiện có -->
+                    <div id="additionalImagesContainer" class="mb-3">
+                        <?php while ($img = mysqli_fetch_array($query_getImages)) : ?>
+                            <div class="image-item" style="display: inline-block; margin-right: 10px; text-align: center;">
+                                <img style="width: 100px; height: 100px; object-fit: cover; display: block; margin-bottom: 5px;" src="../assets/image/product/<?php echo htmlspecialchars($img['Anh']); ?>" alt="Hình ảnh mô tả">
+                                <button type="button" class="btn btn-danger remove-image" data-image="<?php echo htmlspecialchars($img['Anh']); ?>" >Xóa</button>
+                            </div>
+                        <?php endwhile; ?>
+                    </div>
+
+                    <!-- Nút chọn tệp tùy chỉnh -->
+                    <button type="button" class="btn btn-custom" onclick="document.getElementById('ImgDescriptions').click();">Chọn hình ảnh</button>
+                    
+                    <!-- Input file ẩn -->
+                    <input class="form-control" type="file" name="ImgDescriptions[]" id="ImgDescriptions" accept="image/*" multiple style="display: none;" onchange="previewAdditionalImages()">
                 </div>
                 <input type="hidden" name="id" value="<?php echo $ID_SanPham; ?>">
                 <button type="submit" class="btn btn-primary">Cập nhật</button>
@@ -135,41 +154,74 @@ unset($_SESSION['data']);
 ?>
 
 <script>
+ // Hàm để định dạng giá tiền
+// Hàm kiểm tra lỗi giá tiền mà không tự động thêm dấu chấm
+function getFormattedGiaTien() {
+    // Lấy giá trị từ input
+    let value = document.getElementById('GiaBan').value;
+
+    // Kiểm tra nếu giá trị chứa ký tự không hợp lệ
+    if (/[^0-9.,]/.test(value)) {
+        document.getElementById('GiaBanError').textContent = "Giá tiền không hợp lệ!";
+        return null;
+    }
+
+    // Chuyển thành dạng số
+    value = Number(value);
+    
+    // Nếu giá trị không hợp lệ, trả về null
+    if (isNaN(value) || value <= 0) {
+        document.getElementById('GiaBanError').textContent = "Giá tiền không hợp lệ!";
+        return null;
+    }
+
+    // Nếu giá trị hợp lệ, xóa thông báo lỗi và trả về giá trị
+    document.getElementById('GiaBanError').textContent = "";
+    return value;
+}
+
+document.getElementById('GiaBan').addEventListener('input', function() {
+    const value = this.value;
+    
+    // Biểu thức chính quy kiểm tra giá trị chỉ chứa số và dấu chấm ngăn cách
+    const pattern = /^[0-9]+(\.[0-9]{3})*$/;
+    
+    // Kiểm tra giá trị nhập vào
+    if (!pattern.test(value)) {
+        document.getElementById('GiaBanError').textContent = "Giá tiền không hợp lệ!";
+    } else {
+        document.getElementById('GiaBanError').textContent = "";
+    }
+});
+document.getElementById('TenSanPham').addEventListener('input', function() {
+    const value = this.value.trim();
+    if (value.length < 3 || value.length > 50) {
+        document.getElementById('TenSanPhamError').textContent = "Tên sản phẩm phải từ 3 đến 50 ký tự!";
+    } else {
+        document.getElementById('TenSanPhamError').textContent = "";
+    }
+});
+document.getElementById('SoLuong').addEventListener('input', function() {
+    const value = this.value;
+    if (isNaN(value) || value <= 0) {
+        document.getElementById('SoLuongError').textContent = "Số lượng không hợp lệ!";
+    } else {
+        document.getElementById('SoLuongError').textContent = "";
+    }
+});
+
+
 document.getElementById('editProductForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Ngăn gửi form mặc định
 
     // Lấy giá trị từ form
     const tenSanPham = document.getElementById('TenSanPham').value.trim();
-    const giaBan = document.getElementById('GiaBan').value.trim();
+    const giaBan = getFormattedGiaTien(); // Sử dụng hàm để lấy giá tiền đã định dạng lại
     const soLuong = document.getElementById('SoLuong').value.trim();
     const moTa = document.getElementById('MoTa').value.trim();
     const image = document.getElementById('Img').files[0];
-    
+
     let hasError = false;
-
-    // Kiểm tra tên sản phẩm
-    if (tenSanPham.length < 3 || tenSanPham.length > 50) {
-        document.getElementById('TenSanPhamError').textContent = "Tên sản phẩm phải từ 3 đến 50 ký tự.";
-        hasError = true;
-    } else {
-        document.getElementById('TenSanPhamError').textContent = "";
-    }
-
-    // Kiểm tra giá bán
-    if (giaBan <= 0) {
-        document.getElementById('GiaBanError').textContent = "Giá bán phải lớn hơn 0.";
-        hasError = true;
-    } else {
-        document.getElementById('GiaBanError').textContent = "";
-    }
-
-    // Kiểm tra số lượng
-    if (soLuong <= 0) {
-        document.getElementById('SoLuongError').textContent = "Số lượng phải lớn hơn 0.";
-        hasError = true;
-    } else {
-        document.getElementById('SoLuongError').textContent = "";
-    }
 
     // Kiểm tra nếu có lỗi thì không gửi form
     if (hasError) {
@@ -191,12 +243,9 @@ document.getElementById('editProductForm').addEventListener('submit', function(e
         if (result.status === 'success') {
             window.location.href = "index.php?product=list-product"; // Chuyển hướng ngay lập tức
         } else {
-            if (result.message.includes('Tên sản phẩm đã tồn tại!')) {
-                document.getElementById('TenSanPhamError').textContent = result.message;
-            } else {
                 alert(result.message); // Hiển thị thông báo lỗi khác nếu có
             }
-        }
+        
     })
     .catch(error => {
         console.error('Có lỗi xảy ra:', error);
@@ -206,96 +255,33 @@ document.getElementById('editProductForm').addEventListener('submit', function(e
 var validFiles = []; // Mảng chứa các tệp hợp lệ đã thêm
 
 function previewAdditionalImages() {
-    var fileInput = document.querySelector('input[name="ImgDescriptions[]"]');
-    var files = fileInput.files;
-    var container = document.getElementById('additionalImagesContainer');
-
-    var validExtensions = ['image/png', 'image/jpeg', 'image/jpg']; // Định dạng hợp lệ
-
-    // Duyệt qua tất cả các tệp được chọn
-    for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        var reader = new FileReader();
-
-        if (!validExtensions.includes(file.type)) {
-            Swal.fire({
-                title: 'Lỗi định dạng!',
-                text: 'Vui lòng chọn tệp có định dạng PNG hoặc JPG.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            fileInput.value = ''; // Xóa tệp không hợp lệ
-            return;
-        }
-
-        // Kiểm tra nếu tệp đã tồn tại trong validFiles
-        if (!validFiles.some(f => f.name === file.name && f.size === file.size && f.type === file.type)) {
-            // Thêm tệp hợp lệ vào mảng validFiles mà không xóa các tệp đã có
-            validFiles.push(file);
-
-            reader.onloadend = (function (fileIndex) {
-                return function (e) {
-                    var img = document.createElement('img');
-                    img.style.width = '100px';
-                    img.style.height = '100px';
-                    img.style.objectFit = 'cover';
-                    img.style.objectPosition = 'center center';
-                    img.src = e.target.result;
-
-                    var button = document.createElement('button');
-                    button.type = 'button';
-                    button.className = 'btn btn-danger btn-sm remove-image';
-                    button.textContent = 'Xóa';
-                    button.dataset.index = validFiles.length - 1; // Gán chỉ số vào thuộc tính dataset
-
-                    // Thêm sự kiện xác nhận khi nhấn nút "Xóa"
-                    button.addEventListener('click', function () {
-                        Swal.fire({
-                            title: 'Xác nhận xóa?',
-                            text: "Bạn có chắc chắn muốn xóa ảnh này?",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonText: 'Xác nhận',
-                            cancelButtonText: 'Hủy'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                var index = parseInt(button.dataset.index, 10);
-                                validFiles.splice(index, 1); // Xóa tệp khỏi mảng validFiles
-                                img.parentElement.remove(); // Xóa ảnh khỏi giao diện
-                                updateFileInput(); // Cập nhật lại file input
-
-                                // Thông báo thành công
-                                Swal.fire({
-                                    title: 'Xóa thành công!',
-                                    text: 'Ảnh đã được xóa khỏi danh sách.',
-                                    icon: 'success',
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                });
-                            }
-                        });
-                    });
-
-                    var div = document.createElement('div');
-                    div.className = 'image-item';
-                    div.style.display = 'flex';
-                    div.style.flexDirection = 'column';
-                    div.style.alignItems = 'center';
-                    div.style.marginBottom = '10px';
-                    div.appendChild(img);
-                    div.appendChild(button);
-                    container.appendChild(div);
-                };
-            })(validFiles.length - 1);
-
-            reader.readAsDataURL(file);
-        }
-    }
-
-    // Cập nhật lại giá trị của file input
-    updateFileInput();
+    const container = document.getElementById('additionalImagesContainer');
+    container.innerHTML = ''; // Xóa các hình ảnh cũ
+    const files = document.querySelector('input[name="ImgDescriptions[]"]').files;
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const img = document.createElement('img');
+            img.style.width = '100px';
+            img.style.height = '100px';
+            img.style.objectFit = 'cover';
+            img.src = e.target.result;
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-danger remove-image';
+            btn.textContent = 'Xóa';
+            btn.onclick = function () {
+                container.removeChild(img.parentElement);
+            };
+            const div = document.createElement('div');
+            div.className = 'image-item';
+            div.appendChild(img);
+            div.appendChild(btn);
+            container.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
 }
-
 // Hàm cập nhật fileInput sau khi xóa ảnh
 function updateFileInput() {
     var dataTransfer = new DataTransfer(); // Sử dụng DataTransfer để cập nhật giá trị của file input
@@ -399,8 +385,32 @@ $(document).ready(function () {
 </script>
 
 <style>
+       #wp-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 10px;
+    margin-top: 70px;
+}
 .error-message {
     color: red;
     font-size: 0.875em;
 }
+.text-red {
+    color: #c67777;
+}
+    /* Nút chọn file tùy chỉnh */
+    .btn-custom {
+        padding: 3px 6px;
+        background-color: #8dddb4; /* Màu xanh lá cây nhạt */
+        color: #666666;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .btn-custom:hover {
+        background-color: #76C776; /* Màu khi hover */
+    }
 </style>

@@ -9,7 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ID_NhaCungCap = intval($_POST['ID_NhaCungCap']);
         $TenSanPham = trim(mysqli_real_escape_string($mysqli, $_POST['TenSanPham']));
         $MoTa = trim(mysqli_real_escape_string($mysqli, $_POST['MoTa']));
-        $GiaBan = floatval($_POST['GiaBan']);
+        $GiaBanRaw = trim(mysqli_real_escape_string($mysqli, $_POST['GiaBan']));
+        $GiaBan = str_replace('.', '', $GiaBanRaw); // Loại bỏ dấu chấm phân cách hàng nghìn
+        $GiaBan = floatval($GiaBan); // Chuyển đổi thành số thực
         $SoLuong = floatval($_POST['SoLuong']);
         $Img = $_FILES['Img']['name'];
         $Img_tmp = $_FILES['Img']['tmp_name'];

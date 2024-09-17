@@ -118,7 +118,7 @@ if (isset($_SESSION['success_message'])): ?>
                         <!-- Các hàng sẽ không hiển thị, nhưng tiêu đề bảng vẫn được giữ lại -->
                     </tbody>
                 </table>
-                <p class="text-center">Không tìm thấy nhà cung cấp nào.</p>
+                <p class="text-center">Danh sách nhà cung cấp trống!</p>
             <?php endif; ?>
         </div>
     </div>
@@ -192,10 +192,11 @@ if (isset($_SESSION['success_message'])): ?>
     background-color: #e9ecef; /* Màu nền khi hover qua hàng */
 }
 
-.table th, .table td {
-    text-align: left; /* Căn trái nội dung của các ô dữ liệu */
-}
-
+  /* Căn giữa nội dung trong các ô bảng */
+  .table td, .table th {
+        text-align: center; /* Căn giữa theo chiều ngang */
+        vertical-align: middle; /* Căn giữa theo chiều dọc */
+    }
 .table .btn {
     padding: 5px 10px; /* Điều chỉnh kích thước nút */
     font-size: 12px; /* Kích thước chữ trong nút */
@@ -203,7 +204,7 @@ if (isset($_SESSION['success_message'])): ?>
 .alert {
     position: fixed;
     top: 50px;
-    right: 940px;
+    right: 130px;
     padding: 15px;
     border-radius: 5px;
     z-index: 9999;
@@ -219,7 +220,7 @@ if (isset($_SESSION['success_message'])): ?>
 
 .alert-danger {
     background-color: #f8d7da;
-    color: #269963;
-    border: 1px solid #269963;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
 </style>

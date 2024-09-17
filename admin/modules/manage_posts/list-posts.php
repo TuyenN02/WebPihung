@@ -72,15 +72,19 @@ if (isset($_SESSION['error'])) {
                                 ?>
                             </td>
                             <td class="d-flex">
-                                <a href="?posts=edit-posts&id_baiviet=<?php echo $row['ID_baiviet']; ?>" class="btn btn-success btn-sm text-white mr-2" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
-                                <a href="javascript:void(0);" class="btn btn-danger btn-sm text-white" type="button" data-toggle="tooltip" data-placement="top" title="Delete" onclick="confirmDelete(<?php echo $row['ID_baiviet']; ?>)"><i class="fa fa-trash"></i></a>
-                            </td>
+    <a href="?posts=edit-posts&id_baiviet=<?php echo $row['ID_baiviet']; ?>" class="btn btn-success btn-sm text-white mr-2" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
+        <i class="fa fa-edit"></i>
+    </a>
+    <a href="javascript:void(0);" class="btn btn-danger btn-sm text-white" type="button" data-toggle="tooltip" data-placement="top" title="Delete" onclick="confirmDelete(<?php echo $row['ID_baiviet']; ?>)">
+        <i class="fa fa-trash"></i>
+    </a>
+</td>
                         </tr>
                     <?php } ?>
                 </tbody>
             </table>
             <?php if ($total_records == 0): ?>
-                <p class="text-center">Không tìm thấy bài viết nào.</p>
+                <p class="text-center">Danh sách bài viết trống!</p>
             <?php endif; ?>
         </div>
     </div>
@@ -117,7 +121,7 @@ if (isset($_SESSION['error'])) {
 .alert {
     position: fixed;
     top: 50px;
-    right: 970px;
+    right: 130px;
     padding: 15px;
     border-radius: 5px;
     z-index: 9999;
@@ -127,8 +131,8 @@ if (isset($_SESSION['error'])) {
 
 .alert-success {
     background-color: #d4edda;
-    color: #ff0000;
-    border: 3px solid #ff0000;
+    color: #269963;
+    border: 3px solid #269963;
 }
 
 .alert-danger {
@@ -136,4 +140,28 @@ if (isset($_SESSION['error'])) {
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
+
+/* Kẻ bảng */
+.table {
+    border-collapse: collapse; /* Gộp các đường kẻ vào với nhau */
+    width: 100%; /* Đảm bảo bảng rộng 100% */
+}
+
+.table th, .table td {
+    border: 1px solid #dee2e6; /* Đường viền bảng */
+    text-align: center; /* Căn giữa nội dung */
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    padding: 10px; /* Tạo khoảng cách cho nội dung */
+}
+
+.table th {
+    background-color: #f8f9fa; /* Màu nền cho tiêu đề bảng */
+    font-weight: bold; /* Đậm phần tiêu đề */
+}
+
+.table td {
+    background-color: #ffffff; /* Màu nền cho nội dung bảng */
+}
+
+
 </style>

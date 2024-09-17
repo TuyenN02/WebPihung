@@ -5,7 +5,12 @@ include("../../config/connection.php");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Lấy và làm sạch dữ liệu từ POST
     $TenSanPham = trim(mysqli_real_escape_string($mysqli, $_POST['TenSanPham']));
-    $GiaBan = floatval(trim(mysqli_real_escape_string($mysqli, $_POST['GiaBan'])));
+    
+    // Xử lý giá tiền
+    $GiaBanRaw = trim(mysqli_real_escape_string($mysqli, $_POST['GiaBan']));
+    $GiaBan = str_replace('.', '', $GiaBanRaw); // Loại bỏ dấu chấm phân cách hàng nghìn
+    $GiaBan = floatval($GiaBan); // Chuyển đổi thành số thực
+
     $SoLuong = floatval(trim(mysqli_real_escape_string($mysqli, $_POST['SoLuong'])));
     $MoTa = trim(mysqli_real_escape_string($mysqli, $_POST['MoTa']));
     $ID_DanhMuc = intval(trim(mysqli_real_escape_string($mysqli, $_POST['danhmuc'])));

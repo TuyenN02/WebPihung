@@ -9,7 +9,7 @@ $query_NCC = mysqli_query($mysqli, $sql_NCC);
 // Ví dụ khởi tạo biến $data với giá trị mặc định
 $data = [
     'TenSanPham' => '',
-    'GiaBan' => '',
+ 
     'SoLuong' => '',
     'MoTa' => '',
     'danhmuc' => '',
@@ -42,9 +42,9 @@ unset($_SESSION['data']);
                 </div>
              
                 <div class="form-group">
-                    <label for="GiaBan">Giá:</label>
-                    <input class="form-control" type="text" name="GiaBan" id="GiaBan" value="<?php echo htmlspecialchars($data['GiaBan']); ?>" required>
-                    <div id="GiaBanError" class="error-message"><?php echo isset($error_message['GiaBan']) ? $error_message['GiaBan'] : ''; ?></div>
+                <label for="GiaBan">Giá tiền:</label>
+                <input type="text" class="form-control" id="GiaBan" name="GiaBan" oninput="getFormattedGiaTien(this)">
+                <div id="GiaBanError" class="error-message"><?php echo isset($error_message['GiaBan']) ? $error_message['GiaBan'] : ''; ?></div>
                 </div>
 
                 <div class="form-group">
@@ -57,24 +57,44 @@ unset($_SESSION['data']);
                     <label for="MoTa">Mô tả:</label>
                     <textarea class="form-control" name="MoTa" id="MoTa" rows="5"><?php echo htmlspecialchars($data['MoTa']); ?></textarea>
                     <div id="MoTaError" class="error-message"><?php echo isset($error_message['MoTa']) ? $error_message['MoTa'] : ''; ?></div>
+                    <small class="form-text" style="color: #c67777;">* Không bắt buộc</small> <!-- Dòng chữ nhỏ với màu đỏ -->
                 </div>
 
                 <div class="form-group">
-                    <label for="Img">Hình ảnh chính:</label>
-                    <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center; display: none;" />
-                    <input class="form-control" type="file" name="Img" id="Img" accept="image/*" onchange="previewImage()">
-                    <div id="ImgError" class="error-message"></div>
-                </div>
+                        <label for="Img" style="display: block;">Hình ảnh chính:</label>
+
+                        <!-- Hiển thị hình ảnh xem trước -->
+                        <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center; display: none;" />
+
+                        <!-- Nút chọn tệp tùy chỉnh, căn dưới label -->
+                        <button type="button" class="btn btn-custom" style="margin-top: 10px;" onclick="document.getElementById('Img').click();">Chọn hình ảnh</button>
+
+                        <!-- Input file ẩn -->
+                        <input required class="form-control" type="file" name="Img" id="Img" accept="image/*" style="display: none;" onchange="previewImage()">
+
+                        <!-- Hiển thị lỗi -->
+                        <div id="ImgError" class="error-message"></div>
+                    </div>
+
 
                 <div class="form-group">
                     <label for="ImgDescriptions">Hình ảnh mô tả:</label>
-                    <div id="descriptionImagesPreview"></div>
-                    <input class="form-control" type="file" name="ImgDescriptions[]" id="ImgDescriptions" accept="image/*" multiple onchange="previewDescriptionImages()">
+                    
+                    <!-- Hiển thị hình ảnh xem trước -->
+                    <div id="descriptionImagesPreview" style="display: flex; gap: 10px;"></div>
+                    
+                    <!-- Nút chọn tệp tùy chỉnh -->
+                    <button type="button" class="btn btn-custom" onclick="document.getElementById('ImgDescriptions').click();">Chọn hình ảnh</button>
+                    
+                    <!-- Input file ẩn -->
+                    <input  class="form-control" type="file" name="ImgDescriptions[]" id="ImgDescriptions" accept="image/*" multiple style="display: none;" onchange="previewDescriptionImages()">
+                    
+                    <!-- Hiển thị lỗi -->
                     <div id="ImgDescriptionsError" class="error-message"></div>
                 </div>
                 <div class="form-group">
                     <label for="danhmuc">Danh mục:</label>
-                    <select class="form-control" name="danhmuc" id="danhmuc">
+                    <select required class="form-control" name="danhmuc" id="danhmuc">
                         <option value="">Chọn danh mục</option>
                         <?php while ($row_DanhMuc = mysqli_fetch_array($query_DanhMuc)) { ?>
                             <option value="<?php echo $row_DanhMuc['ID_DanhMuc']?>" <?php echo (isset($data['danhmuc']) && $data['danhmuc'] == $row_DanhMuc['ID_DanhMuc']) ? 'selected' : ''; ?>>
@@ -108,12 +128,84 @@ unset($_SESSION['data']);
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    document.getElementById('TenSanPham').addEventListener('input', function() {
+    const value = this.value.trim();
+    if (value.length < 3 || value.length > 50) {
+        document.getElementById('TenSanPhamError').textContent = "Tên sản phẩm phải từ 3 đến 50 ký tự!";
+    } else {
+        document.getElementById('TenSanPhamError').textContent = "";
+    }
+});
+
+document.getElementById('GiaBan').addEventListener('input', function() {
+    const value = this.value;
+    
+    // Biểu thức chính quy kiểm tra giá trị chỉ chứa số và dấu chấm ngăn cách
+    const pattern = /^[0-9]+(\.[0-9]{3})*$/;
+    
+    // Kiểm tra giá trị nhập vào
+    if (!pattern.test(value)) {
+        document.getElementById('GiaBanError').textContent = "Giá tiền không hợp lệ!";
+    } else {
+        document.getElementById('GiaBanError').textContent = "";
+    }
+});
+document.getElementById('SoLuong').addEventListener('input', function() {
+    const value = this.value;
+    if (isNaN(value) || value <= 0) {
+        document.getElementById('SoLuongError').textContent = "Số lượng không hợp lệ!";
+    } else {
+        document.getElementById('SoLuongError').textContent = "";
+    }
+});
+
+document.getElementById('danhmuc').addEventListener('change', function() {
+    const value = this.value;
+    if (!value) {
+        document.getElementById('danhmucError').textContent = "Vui lòng chọn danh mục!";
+    } else {
+        document.getElementById('danhmucError').textContent = "";
+    }
+});
+
+document.getElementById('nhacungcap').addEventListener('change', function() {
+    const value = this.value;
+    if (!value) {
+        document.getElementById('nhacungcapError').textContent = "Vui lòng chọn nhà cung cấp!";
+    } else {
+        document.getElementById('nhacungcapError').textContent = "";
+    }
+});
+function getFormattedGiaTien() {
+    // Lấy giá trị từ input
+    let value = document.getElementById('GiaBan').value;
+
+    // Kiểm tra nếu giá trị chứa ký tự không hợp lệ
+    if (/[^0-9.,]/.test(value)) {
+        document.getElementById('GiaBanError').textContent = "Giá tiền không hợp lệ!";
+        return null;
+    }
+
+    // Chuyển thành dạng số
+    value = Number(value);
+    
+    // Nếu giá trị không hợp lệ, trả về null
+    if (isNaN(value) || value <= 0) {
+        document.getElementById('GiaBanError').textContent = "Giá tiền không hợp lệ!";
+        return null;
+    }
+
+    // Nếu giá trị hợp lệ, xóa thông báo lỗi và trả về giá trị
+    document.getElementById('GiaBanError').textContent = "";
+    return value;
+}
+
 document.getElementById('productForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Ngăn gửi form mặc định
 
     // Lấy giá trị từ form
     const tenSanPham = document.getElementById('TenSanPham').value.trim();
-    const giaBan = document.getElementById('GiaBan').value.trim();
+    const giaBan = getFormattedGiaTien(); // Sử dụng hàm để lấy giá tiền đã định dạng lại
     const soLuong = document.getElementById('SoLuong').value.trim();
     const moTa = document.getElementById('MoTa').value.trim();
     const danhMuc = document.getElementById('danhmuc').value;
@@ -131,11 +223,8 @@ document.getElementById('productForm').addEventListener('submit', function(event
         document.getElementById('TenSanPhamError').textContent = "";
     }
 
-    if (!giaBan || isNaN(giaBan) || giaBan <= 0) {
-        document.getElementById('GiaBanError').textContent = "Giá phải là một số dương!";
+    if (giaBan === null) {
         hasError = true;
-    } else {
-        document.getElementById('GiaBanError').textContent = "";
     }
 
     if (!soLuong || isNaN(soLuong) || soLuong <= 0) {
@@ -179,19 +268,18 @@ document.getElementById('productForm').addEventListener('submit', function(event
         if (result.status === 'success') {
             window.location.href = result.redirect; // Chuyển hướng nếu thành công
         } else {
-            // Hiển thị thông báo lỗi cho từng trường cụ thể
-            if (result.message.includes('Tên sản phẩm đã tồn tại')) {
-                document.getElementById('TenSanPhamError').textContent = result.message;
-            } else {
                 alert(result.message); // Hiển thị thông báo lỗi chung
             }
-        }
+        
     })
     .catch(error => {
         console.error('Có lỗi xảy ra:', error);
         alert('Đã xảy ra lỗi khi gửi dữ liệu.');
     });
 });
+
+
+
 function previewImage() {
     var fileInput = document.getElementById('Img');
     var file = fileInput.files[0];
@@ -408,4 +496,19 @@ document.getElementById('Img').addEventListener('change', previewImage);
     color: red;
     font-size: 0.875em;
 }
+    /* Nút chọn file tùy chỉnh */
+    .btn-custom {
+        padding: 3px 6px;
+        background-color: #8dddb4; /* Màu xanh lá cây nhạt */
+        color: #666666;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .btn-custom:hover {
+        background-color: #76C776; /* Màu khi hover */
+    }
 </style>

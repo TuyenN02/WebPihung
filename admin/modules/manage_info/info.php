@@ -75,98 +75,74 @@ $current_info = mysqli_fetch_assoc($result);
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('infoForm');
-
-    form.addEventListener('submit', function(event) {
-        // Xóa thông báo lỗi trước đó
-        document.getElementById('phoneError').innerHTML = '';
-        document.getElementById('emailError').innerHTML = '';
-        document.getElementById('addressError').innerHTML = '';
-        document.getElementById('workHoursError').innerHTML = '';
-        document.getElementById('breakHoursError').innerHTML = '';
-
-        let isValid = true;
-
-        // Kiểm tra số điện thoại
-        const phone = document.getElementById('phone').value.trim();
+    // Bắt lỗi cho từng trường ngay khi nhập liệu
+    document.getElementById('phone').addEventListener('input', function() {
+        const phone = this.value.trim();
         const phoneRegex = /^0\d{9}$/;
         if (!phoneRegex.test(phone)) {
-            document.getElementById('phoneError').innerHTML = 'Số điện thoại phải có 10 chữ số, bắt đầu bằng 0!';
-            isValid = false;
-        }
-
-        // Kiểm tra email
-        const email = document.getElementById('email').value.trim();
-        const emailParts = email.split('@');
-        if (emailParts.length !== 2) {
-            document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
-            isValid = false;
+            document.getElementById('phoneError').textContent = 'Số điện thoại phải có 10 chữ số, bắt đầu bằng 0!';
         } else {
-            const localPart = emailParts[0];
-            const domainPart = emailParts[1];
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            const localPartRegex = /^[a-zA-Z0-9]+$/; // Chỉ cho phép ký tự chữ và số
-
-            // Kiểm tra local part
-            if (localPart.length < 4) {
-                document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
-                isValid = false;
-            } else if (!localPartRegex.test(localPart)) {
-                document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
-                isValid = false;
-            } else if (!emailRegex.test(email)) {
-                document.getElementById('emailError').innerHTML = 'Email chưa đúng định dạng!';
-                isValid = false;
-            } else if (!domainRegex.test(domainPart)) {
-                document.getElementById('emailError').innerHTML = 'Miền email chưa đúng định dạng!';
-                isValid = false;
-            }
-        }
-
-        // Kiểm tra địa chỉ
-        const address = document.getElementById('address').value.trim();
-        if (address.length < 10) {
-            document.getElementById('addressError').innerHTML = 'Địa chỉ phải có ít nhất 10 ký tự!';
-            isValid = false;
-        }
-
-        // Kiểm tra giờ làm việc và giờ nghỉ
-        const workHours = document.getElementById('work_hours').value.trim();
-        const breakHours = document.getElementById('break_hours').value.trim();
-
-        if (workHours === '') {
-            document.getElementById('workHoursError').innerHTML = 'Giờ làm việc không được để trống!';
-            isValid = false;
-        }
-
-        if (breakHours === '') {
-            document.getElementById('breakHoursError').innerHTML = 'Giờ nghỉ không được để trống!';
-            isValid = false;
-        }
-
-        // Kiểm tra giờ làm việc phải sớm hơn giờ nghỉ theo định dạng 24 giờ
-        if (workHours !== '' && breakHours !== '') {
-            const workTime = workHours.split(':');
-            const breakTime = breakHours.split(':');
-
-            // Chuyển đổi sang số phút kể từ 00:00
-            const workMinutes = parseInt(workTime[0]) * 60 + parseInt(workTime[1]);
-            const breakMinutes = parseInt(breakTime[0]) * 60 + parseInt(breakTime[1]);
-
-            if (workMinutes >= breakMinutes) {
-                document.getElementById('workHoursError').innerHTML = 'Giờ làm phải sớm hơn giờ nghỉ!';
-                isValid = false;
-            }
-        }
-
-        // Nếu có lỗi, ngăn không cho form submit
-        if (!isValid) {
-            event.preventDefault();
+            document.getElementById('phoneError').textContent = '';
         }
     });
 
-    // Tự động ẩn thông báo sau vài giây
+    document.getElementById('email').addEventListener('input', function() {
+        const email = this.value.trim();
+        const emailParts = email.split('@');
+        if (emailParts.length !== 2 || emailParts[0].length < 4 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            document.getElementById('emailError').textContent = 'Email chưa đúng định dạng!';
+        } else {
+            document.getElementById('emailError').textContent = '';
+        }
+    });
+
+    document.getElementById('address').addEventListener('input', function() {
+        const address = this.value.trim();
+        if (address.length < 10) {
+            document.getElementById('addressError').textContent = 'Địa chỉ phải có ít nhất 10 ký tự!';
+        } else {
+            document.getElementById('addressError').textContent = '';
+        }
+    });
+
+    document.getElementById('work_hours').addEventListener('input', function() {
+        const workHours = this.value.trim();
+        if (workHours === '') {
+            document.getElementById('workHoursError').textContent = 'Giờ làm việc không được để trống!';
+        } else {
+            document.getElementById('workHoursError').textContent = '';
+        }
+    });
+
+    document.getElementById('break_hours').addEventListener('input', function() {
+        const breakHours = this.value.trim();
+        if (breakHours === '') {
+            document.getElementById('breakHoursError').textContent = 'Giờ nghỉ không được để trống!';
+        } else {
+            document.getElementById('breakHoursError').textContent = '';
+        }
+    });
+    
+    // Kiểm tra khi submit form
+    document.getElementById('infoForm').addEventListener('submit', function(event) {
+        // Kiểm tra nếu có lỗi
+        const errors = [
+            document.getElementById('phoneError').textContent,
+            document.getElementById('emailError').textContent,
+            document.getElementById('addressError').textContent,
+            document.getElementById('workHoursError').textContent,
+            document.getElementById('breakHoursError').textContent
+        ];
+
+        if (errors.some(error => error !== '')) {
+            event.preventDefault(); // Ngăn form gửi nếu có lỗi
+        }
+    });
+});
+
+</script>
+<script>
+// Tự động ẩn thông báo sau vài giây
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
@@ -176,16 +152,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 500);
         }, 2000);
     });
-});
+
 </script>
-
-
-
 <style>
 .alert {
     position: fixed;
     top: 50px;
-    right: 970px;
+    right: 130px;
     padding: 15px;
     border-radius: 5px;
     z-index: 9999;
@@ -195,8 +168,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .alert-success {
     background-color: #d4edda;
-    color: #ff0000;
-    border: 3px solid #ff0000;
+    color: #269963;
+    border: 3px solid #269963;
 }
 
 .alert-danger {

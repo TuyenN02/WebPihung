@@ -41,12 +41,15 @@ if (isset($_GET['id_baiviet'])) {
                 
                 <div class="form-group">
                     <label for="formFile">Hình ảnh:</label>
-                    <?php if (!empty($row['Img'])): ?>
-                        <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center;" src="../assets/image/supplier/<?php echo htmlspecialchars($row['Img']); ?>" alt="Hình ảnh bài viết">
-                    <?php else: ?>
-                        <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center;" src="#" alt="Hình ảnh bài viết" style="display: none;">
-                    <?php endif; ?>
-                    <input class="form-control" type="file" name="image" id="image" accept="image/*" onchange="previewImage()">
+                    <div class="image-container">
+                        <?php if (!empty($row['Img'])): ?>
+                            <img id="imagePreview" src="../assets/image/supplier/<?php echo htmlspecialchars($row['Img']); ?>" alt="Hình ảnh bài viết">
+                        <?php else: ?>
+                            <img id="imagePreview" src="#" alt="Hình ảnh bài viết" style="display: none;">
+                        <?php endif; ?>
+                        <input class="form-control" type="file" name="image" id="image" accept="image/*" onchange="previewImage()" style="display: none;">
+                        <label for="image" class="btn btn-custom">Chọn hình ảnh</label> <!-- Nút tùy chỉnh -->
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -69,79 +72,97 @@ unset($_SESSION['data']);
 ?>
 
 <script>
-document.getElementById('editPostForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Ngăn gửi form mặc định
+// Real-time validation for name input
+document.getElementById('name').addEventListener('input', function() {
+    const name = this.value.trim();
+    if (name.length < 3 || name.length > 255) {
+        document.getElementById('nameError').textContent = "Tên bài viết phải từ 3 đến 255 ký tự!";
+    } else {
+        document.getElementById('nameError').textContent = "";
+    }
+});
 
-    // Lấy giá trị từ form
+// Real-time validation for content input (Noidung)
+document.getElementById('Noidung').addEventListener('input', function() {
+    const noidung = this.value.trim();
+    if (noidung.length <= 10) {
+        document.getElementById('noidungError').textContent = "Nội dung phải từ 10 ký tự!";
+    } else {
+        document.getElementById('noidungError').textContent = "";
+    }
+});
+
+// Image preview
+document.getElementById('image').addEventListener('change', function() {
+    previewImage();
+});
+
+// Form submit validation
+document.getElementById('editPostForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
+    
     const name = document.getElementById('name').value.trim();
     const noidung = document.getElementById('Noidung').value.trim();
-    const image = document.getElementById('image').files[0];
     
     let hasError = false;
 
-    // Kiểm tra lỗi
-    // Kiểm tra tên bài viết
+    // Validate name
     if (name.length < 3 || name.length > 255) {
-        document.getElementById('nameError').textContent = "Tên bài viết phải từ 3 đến 255 ký tự.";
+        document.getElementById('nameError').textContent = "Tên bài viết phải từ 3 đến 255 ký tự!";
         hasError = true;
     } else {
         document.getElementById('nameError').textContent = "";
     }
 
-    // Kiểm tra nội dung
+    // Validate content
     if (noidung.length <= 10) {
-        document.getElementById('noidungError').textContent = "Nội dung quá ngắn.";
+        document.getElementById('noidungError').textContent = "Nội dung phải từ 10 ký tự!";
         hasError = true;
     } else {
         document.getElementById('noidungError').textContent = "";
     }
 
-    // Kiểm tra nếu có lỗi thì không gửi form
-    if (hasError) {
-        return;
+    // If there are no errors, proceed with form submission
+    if (!hasError) {
+        const form = document.getElementById('editPostForm');
+        const formData = new FormData(form);
+
+        fetch('modules/manage_posts/sua.php', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'success') {
+                window.location.href = "index.php?posts=list-posts";
+            } else {
+                alert(result.message);
+            }
+        })
+        .catch(error => {
+            console.error('Có lỗi xảy ra:', error);
+            alert('Đã xảy ra lỗi khi gửi dữ liệu.');
+        });
     }
-
-    // Nếu không có lỗi, tạo FormData và gửi yêu cầu
-    const form = document.getElementById('editPostForm');
-    const formData = new FormData(form);
-
-    fetch('modules/manage_posts/sua.php', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.status === 'success') {
-            window.location.href = "index.php?posts=list-posts"; // Chuyển hướng ngay lập tức
-        } else {
-            alert(result.message); // Hiển thị thông báo lỗi nếu có
-        }
-    })
-    .catch(error => {
-        console.error('Có lỗi xảy ra:', error);
-        alert('Đã xảy ra lỗi khi gửi dữ liệu.');
-    });
 });
 
-function previewImage() {
-    var fileInput = document.querySelector('input[name="image"]');
-    var file = fileInput.files[0];
-    var preview = document.getElementById('imagePreview');
-    var reader = new FileReader();
 
-    reader.onloadend = function () {
-        preview.src = reader.result;
-        preview.style.display = 'block'; // Hiển thị ảnh khi có ảnh mới
-    };
+    function previewImage() {
+        const input = document.getElementById('image');
+        const preview = document.getElementById('imagePreview');
+        const file = input.files[0];
 
-    if (file) {
-        reader.readAsDataURL(file);
-    } else {
-        preview.src = "#";
-        preview.style.display = 'none';
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block'; // Hiện ảnh khi đã chọn file
+            }
+            reader.readAsDataURL(file);
+        }
     }
-}
 </script>
+
 
 <style>
 .error-message {
@@ -155,5 +176,53 @@ function previewImage() {
     padding: 10px;
     margin-top: 60px;
 }
+.btn-custom {
+        display: inline-block;
+        margin-top: 10px; /* Để nút xuất hiện ngay dưới ảnh */
+        padding: 10px 20px;
+        background-color: #5aa880; /* Màu xanh lá cây nhạt */
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .btn-custom:hover {
+        background-color: #76C776; /* Màu khi hover */
+    }
+ 
+    /* Container chứa ảnh và nút */
+    .image-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Căn giữa theo chiều ngang */
+    }
+
+    /* Ảnh hiển thị */
+    #imagePreview {
+        width: 240px;
+        height: 240px;
+        object-fit: cover;
+        object-position: center center;
+        margin-bottom: 10px; /* Để nút cách ảnh một khoảng */
+    }
+
+    /* Nút chọn file tùy chỉnh */
+    .btn-custom {
+        padding: 3px 6px;
+        background-color: #8dddb4; /* Màu xanh lá cây nhạt */
+        color: #666666;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .btn-custom:hover {
+        background-color: #76C776; /* Màu khi hover */
+    }
 
 </style>

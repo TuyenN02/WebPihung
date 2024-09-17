@@ -47,6 +47,7 @@ if (isset($_GET['id_NCC'])) {
                 <div class="form-group">
                     <label for="MoTa">Mô tả:</label>
                     <textarea class="form-control" name="MoTa" id="MoTa" rows="5"><?php echo $MoTa; ?></textarea>
+                    <small class="form-text" style="color: #c67777;">* Không bắt buộc</small> <!-- Dòng chữ nhỏ màu đỏ -->
                 </div>
 
                 <div class="form-group">
@@ -68,15 +69,18 @@ if (isset($_GET['id_NCC'])) {
                 </div>
 
                 <div class="form-group">
-                    <label for="Img">Hình ảnh:</label>
-                    <?php if (!empty($row['Img'])): ?>
-                        <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center;" src="../assets/image/supplier/<?php echo htmlspecialchars($row['Img']); ?>" alt="Hình ảnh nhà cung cấp">
-                    <?php else: ?>
-                        <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center; display: none;" />
-                    <?php endif; ?>
-                    <input class="form-control" type="file" name="Img" id="Img" accept="image/*" onchange="previewImage()">
-                    <div id="ImgError" class="error-message"></div>
-                </div>
+    <label>Hình ảnh:</label>
+    <div class="image-container">
+        <?php if (!empty($row['Img'])): ?>
+            <img id="imagePreview" src="../assets/image/supplier/<?php echo htmlspecialchars($row['Img']); ?>" style="width: 240px; height: 240px; object-fit: cover; object-position: center center;">
+        <?php else: ?>
+            <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center; display: none;" />
+        <?php endif; ?>
+        <input class="form-control" type="file" name="Img" id="Img" accept="image/*" onchange="previewImage()" style="display: none;">
+        <label for="Img" class="btn btn-custom">Chọn hình ảnh</label> <!-- Nút chọn file tùy chỉnh -->
+    </div>
+    <div id="ImgError" class="error-message"><?php echo isset($ImgError) ? $ImgError : ''; ?></div>
+</div>
 
                 <input type="hidden" name="id_NCC" value="<?php echo $ID_NCC; ?>">
                 <button type="submit" class="btn btn-primary">Cập nhật</button>
@@ -93,6 +97,50 @@ unset($_SESSION['data']);
 ?>
 
 <script>
+    // Bắt lỗi tên nhà cung cấp
+document.getElementById('TenNCC').addEventListener('input', function () {
+    const tenNCC = this.value.trim();
+    if (tenNCC.length < 3 || tenNCC.length > 50) {
+        document.getElementById('TenNCCError').textContent = "Tên nhà cung cấp phải từ 3 đến 50 ký tự.";
+    } else {
+        document.getElementById('TenNCCError').textContent = "";
+    }
+});
+
+// Bắt lỗi email
+document.getElementById('Email').addEventListener('input', function () {
+    const email = this.value.trim();
+    if (email.length < 4 || email.length > 255) {
+        document.getElementById('EmailError').textContent = "Email không đúng định dạng!";
+    } else {
+        const [localPart, domain] = email.split('@');
+        if (!localPart || localPart.length < 4 || domain.length < 3 || !/^[a-zA-Z0-9.-]+$/.test(domain) || domain.split('.').length < 2) {
+            document.getElementById('EmailError').textContent = "Email không đúng định dạng!";
+        } else {
+            document.getElementById('EmailError').textContent = "";
+        }
+    }
+});
+
+// Bắt lỗi số điện thoại
+document.getElementById('SoDienThoai').addEventListener('input', function () {
+    const soDienThoai = this.value.trim();
+    if (soDienThoai.length !== 10 || !/^\d{10}$/.test(soDienThoai) || !soDienThoai.startsWith('0')) {
+        document.getElementById('SoDienThoaiError').textContent = "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0!";
+    } else {
+        document.getElementById('SoDienThoaiError').textContent = "";
+    }
+});
+
+// Bắt lỗi địa chỉ
+document.getElementById('DiaChi').addEventListener('input', function () {
+    const diaChi = this.value.trim();
+    if (diaChi === '') {
+        document.getElementById('DiaChiError').textContent = "Địa chỉ không được để trống!";
+    } else {
+        document.getElementById('DiaChiError').textContent = "";
+    }
+});
 document.getElementById('editSupplierForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Ngăn gửi form mặc định
 
@@ -162,15 +210,10 @@ document.getElementById('editSupplierForm').addEventListener('submit', function(
 
         if (result.status === 'success') {
             window.location.href = "index.php?ncc=list-ncc"; // Chuyển hướng ngay lập tức
-        } else {
-            if (result.message.includes('Email')) {
-                document.getElementById('EmailError').textContent = result.message;
-            } else if (result.message.includes('Số điện thoại')) {
-                document.getElementById('SoDienThoaiError').textContent = result.message;
-            } else {
+        }  else {
                 alert(result.message); // Hiển thị thông báo lỗi khác nếu có
             }
-        }
+        
     })
     .catch(error => {
         console.error('Có lỗi xảy ra:', error);
@@ -209,4 +252,19 @@ function previewImage() {
     color: red;
     font-size: 0.875em;
 }
+  /* Nút chọn file tùy chỉnh */
+  .btn-custom {
+        padding: 3px 6px;
+        background-color: #8dddb4; /* Màu xanh lá cây nhạt */
+        color: #666666;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .btn-custom:hover {
+        background-color: #76C776; /* Màu khi hover */
+    }
 </style>

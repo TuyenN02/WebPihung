@@ -102,12 +102,16 @@ unset($_SESSION['success']);
                         padding: 8px; /* Adjust padding to make columns closer */
                         border: 2px solid #dee2e6; /* Add border for clarity */
                     }
-                   
+                     /* Căn giữa nội dung trong các ô bảng */
+    .table td, .table th {
+        text-align: center; /* Căn giữa theo chiều ngang */
+        vertical-align: middle; /* Căn giữa theo chiều dọc */
+    }
 
 .alert {
     position: fixed;
     top: 50px;
-    right: 950px;
+    right: 130px;
     padding: 15px;
     border-radius: 5px;
     z-index: 9999;
@@ -195,7 +199,7 @@ unset($_SESSION['success']);
                             <td><?php echo htmlspecialchars($row['TenNCC']); ?></td>
                             <td><?php echo $row['SoLuong']; ?></td>
                             <td><img style="width: 180px; height: 180px; object-fit: cover; object-position: center center;" src="../assets/image/product/<?php echo htmlspecialchars($row['Img']); ?>"/></td>
-                            <td><?php echo number_format($row['GiaBan'], 0, ',', '.'); ?></td>
+                            <td><?php echo number_format($row['GiaBan'], 0, ',', '.'); ?>VND</td>
                             <td>
                             <a href="javascript:void(0);" class="btn-detail" onclick="showProductDetail(<?php echo $row['ID_SanPham']; ?>)">Xem thêm</a>
                                     </td>
@@ -210,7 +214,7 @@ unset($_SESSION['success']);
                  </tbody>
                         </table>
                         <?php if (mysqli_num_rows($query_product) == 0): ?>
-                        <p class="text-center">Không tìm thấy sản phẩm nào.</p>
+                        <p class="text-center">Danh sách sản phẩm trống!</p>
                     
                     <?php endif; ?>
                 </div>

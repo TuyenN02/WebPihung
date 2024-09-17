@@ -43,6 +43,7 @@ unset($_SESSION['error_message']);
                 <div class="form-group">
                     <label for="MoTa">Mô tả:</label>
                     <textarea class="form-control" name="MoTa" id="MoTa" rows="5"><?php echo htmlspecialchars($data['MoTa']); ?></textarea>
+                    <small class="form-text" style="color: #c67777;">* Không bắt buộc</small> <!-- Dòng chữ nhỏ màu đỏ -->
                 </div>
 
                 <div class="form-group">
@@ -64,11 +65,14 @@ unset($_SESSION['error_message']);
                 </div>
 
                 <div class="form-group">
-                    <label for="Img">Hình ảnh:</label>
+                <label>Hình ảnh:</label>
+                <div class="image-container">
                     <img id="imagePreview" style="width: 240px; height: 240px; object-fit: cover; object-position: center center; display: none;" />
-                    <input required class="form-control" type="file" name="Img" id="Img" accept="image/*" onchange="previewImage()">
-                    <div id="ImgError" class="error-message"></div>
+                    <input required class="form-control" type="file" name="Img" id="Img" accept="image/*" onchange="previewImage()" style="display: none;">
+                    <label required for="Img" class="btn btn-custom">Chọn hình ảnh</label> <!-- Nút chọn file tùy chỉnh -->
                 </div>
+                <div id="ImgError" class="error-message"></div>
+            </div>
 
                 <button type="submit" class="btn btn-primary">Thêm</button>
                 <button type="button" id="cancelButton" class="btn btn-secondary">Hủy</button>
@@ -78,66 +82,105 @@ unset($_SESSION['error_message']);
 </div>
 
 <script>
+document.getElementById('TenNCC').addEventListener('input', function() {
+    const tenNCC = this.value.trim();
+    if (tenNCC.length < 3 || tenNCC.length > 50) {
+        document.getElementById('TenNCCError').textContent = "Tên nhà cung cấp phải từ 3 đến 50 ký tự!";
+    } else {
+        document.getElementById('TenNCCError').textContent = "";
+    }
+});
+
+document.getElementById('Email').addEventListener('input', function() {
+    const email = this.value.trim();
+    const emailPattern = /^[a-zA-Z0-9._]{4,}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Mẫu kiểm tra email hợp lệ
+    const localPartPattern = /^[a-zA-Z0-9._]{4,}$/; // Mẫu kiểm tra local part ít nhất 4 ký tự, không chứa ký tự đặc biệt
+    
+    // Tách phần local part và domain từ email
+    const [localPart, domain] = email.split('@');
+    
+    if (!localPart || !domain) {
+        document.getElementById('EmailError').textContent = "Email chưa đúng định dạng!";
+    } else if (!localPartPattern.test(localPart)) {
+        document.getElementById('EmailError').textContent = "Email chưa đúng định dạng!";
+    } else if (!emailPattern.test(email)) {
+        document.getElementById('EmailError').textContent = "Email chưa đúng định dạng!";
+    } else {
+        document.getElementById('EmailError').textContent = "";
+    }
+});
+document.getElementById('SoDienThoai').addEventListener('input', function() {
+    const soDienThoai = this.value.trim();
+    if (soDienThoai.length !== 10 || !/^\d{10}$/.test(soDienThoai) || !soDienThoai.startsWith('0')) {
+        document.getElementById('SoDienThoaiError').textContent = "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0!";
+    } else {
+        document.getElementById('SoDienThoaiError').textContent = "";
+    }
+});
+
+document.getElementById('DiaChi').addEventListener('input', function() {
+    const diaChi = this.value.trim();
+    
+    if (diaChi.length < 5) {
+        document.getElementById('DiaChiError').textContent = "Địa chỉ phải có ít nhất 5 ký tự!";
+    } else {
+        document.getElementById('DiaChiError').textContent = "";
+    }
+});
+
+document.getElementById('Img').addEventListener('change', function() {
+    const image = this.files[0];
+    if (!image) {
+        document.getElementById('ImgError').textContent = "Bạn cần chọn một hình ảnh!";
+    } else {
+        document.getElementById('ImgError').textContent = "";
+        previewImage(); // Hiển thị ảnh xem trước nếu có ảnh
+    }
+});
+
 document.getElementById('addSupplierForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Ngăn gửi form mặc định
 
-    // Lấy giá trị từ form
+    // Kiểm tra lần cuối trước khi gửi form
     const tenNCC = document.getElementById('TenNCC').value.trim();
     const email = document.getElementById('Email').value.trim();
     const soDienThoai = document.getElementById('SoDienThoai').value.trim();
     const diaChi = document.getElementById('DiaChi').value.trim();
     const image = document.getElementById('Img').files[0];
-    const moTa = document.getElementById('MoTa').value.trim();
-    
+
     let hasError = false;
 
-    // Kiểm tra lỗi
     if (tenNCC.length < 3 || tenNCC.length > 50) {
         document.getElementById('TenNCCError').textContent = "Tên nhà cung cấp phải từ 3 đến 50 ký tự!";
         hasError = true;
-    } else {
-        document.getElementById('TenNCCError').textContent = "";
     }
 
-   // Kiểm tra email
-if (email.length < 4 || email.length > 255) {
-    document.getElementById('EmailError').textContent = "Email không đúng định dạng!";
-    hasError = true;
-} else {
-    const [localPart, domain] = email.split('@');
-    
-    // Kiểm tra localPart không chứa dấu và ký tự đặc biệt ngoại trừ dấu chấm và dấu gạch ngang
-    const specialCharRegex = /[^\w.-]/; // Chỉ cho phép chữ cái, số, dấu chấm và dấu gạch ngang
-    
-    if (!localPart || localPart.length < 4 || specialCharRegex.test(localPart) || domain.length < 3 || 
-        !/^[a-zA-Z0-9.-]+$/.test(domain) || domain.split('.').length < 2) {
-        document.getElementById('EmailError').textContent = "Email không đúng định dạng!";
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        document.getElementById('EmailError').textContent = "Email không hợp lệ!";
         hasError = true;
-    } else {
-        document.getElementById('EmailError').textContent = "";
     }
-}
-    // Kiểm tra số điện thoại
+
     if (soDienThoai.length !== 10 || !/^\d{10}$/.test(soDienThoai) || !soDienThoai.startsWith('0')) {
         document.getElementById('SoDienThoaiError').textContent = "Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0!";
         hasError = true;
-    } else {
-        document.getElementById('SoDienThoaiError').textContent = "";
     }
 
     if (diaChi === '') {
         document.getElementById('DiaChiError').textContent = "Địa chỉ không được để trống!";
         hasError = true;
-    } else {
-        document.getElementById('DiaChiError').textContent = "";
     }
 
-    // Kiểm tra nếu có lỗi thì không gửi form
+    if (!image) {
+        document.getElementById('ImgError').textContent = "Bạn cần chọn một hình ảnh!";
+        hasError = true;
+    }
+
     if (hasError) {
         return;
     }
 
-    // Nếu không có lỗi, tạo FormData và gửi yêu cầu
+    // Nếu không có lỗi, gửi form qua Fetch API
     const form = document.getElementById('addSupplierForm');
     const formData = new FormData(form);
 
@@ -147,27 +190,12 @@ if (email.length < 4 || email.length > 255) {
     })
     .then(response => response.json())
     .then(result => {
-        console.log('Fetch Result:', result); // Kiểm tra phản hồi từ máy chủ
-
         if (result.status === 'success') {
-            // Reset form sau khi thêm thành công
             form.reset();
-            document.getElementById('imagePreview').style.display = 'none'; // Ẩn hình ảnh xem trước
-
-            // Xóa tất cả các thông báo lỗi
-            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
-
-            // Chuyển hướng nếu cần
+            document.getElementById('imagePreview').style.display = 'none';
             window.location.href = "index.php?ncc=list-ncc";
         } else {
-            // Hiển thị thông báo lỗi cho từng trường cụ thể
-            if (result.message.includes('Email')) {
-                document.getElementById('EmailError').textContent = result.message;
-            } else if (result.message.includes('Số điện thoại')) {
-                document.getElementById('SoDienThoaiError').textContent = result.message;
-            } else {
-                alert(result.message); // Hiển thị thông báo lỗi khác nếu có
-            }
+            alert(result.message);
         }
     })
     .catch(error => {
@@ -175,6 +203,7 @@ if (email.length < 4 || email.length > 255) {
         alert('Đã xảy ra lỗi khi gửi dữ liệu.');
     });
 });
+
 
 document.getElementById('cancelButton').addEventListener('click', function() {
     // Reset form
@@ -222,6 +251,21 @@ function previewImage() {
     color: red;
     font-size: 0.875em;
 }
+    /* Nút chọn file tùy chỉnh */
+    .btn-custom {
+        padding: 3px 6px;
+        background-color: #8dddb4; /* Màu xanh lá cây nhạt */
+        color: #666666;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .btn-custom:hover {
+        background-color: #76C776; /* Màu khi hover */
+    }
 </style>
 </body>
 </html>

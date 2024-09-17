@@ -3,7 +3,7 @@
 body {
     font-family: "Roboto", sans-serif;
     font-size: 16px;
-    background-color: #ffffff;
+    background-color: #97ff99;
 }
 
 .no-br-left {
@@ -71,14 +71,17 @@ body {
 }
 /* Điều chỉnh khoảng cách giữa phần tìm kiếm và các nav-item khác */
 .navbar-nav .nav-item {
-    margin-right: 20px; /* Khoảng cách bên phải của từng nav-item */
+    margin-right: 1px; /* Khoảng cách giữa các mục menu */
 }
 
-/* Điều chỉnh khoảng cách giữa phần tìm kiếm và nav-item cuối cùng */
-.navbar-nav .nav-item:last-child {
-    margin-right: 0; /* Không có khoảng cách bên phải với nav-item cuối cùng */
+.navbar-nav .nav-link {
+    font-size: 0.9rem;
+    transition: color 0.1s, background-color 0.1s;
 }
 
+.navbar-nav .nav-link:last-child {
+    margin-right: 0; /* Xóa khoảng cách cho mục cuối cùng */
+}
 .logo {
     height: 120px;
     border-radius: 30%;
