@@ -2,40 +2,38 @@
 // Handle search
 $tukhoa = '';
 $trangThai = '';
+
 if (isset($_POST['tukhoa'])) {
+    // Loại bỏ khoảng trắng dư thừa và các ký tự đặc biệt
     $tukhoa = mysqli_real_escape_string($mysqli, trim($_POST['tukhoa']));
-    $tukhoa = preg_replace('/\s+/', ' ', $tukhoa); // Remove excess spaces between words
+    $tukhoa = preg_replace('/\s+/', ' ', $tukhoa); // Loại bỏ khoảng trắng dư thừa giữa các từ
 }
 
 if (isset($_POST['trangthai'])) {
+    // Loại bỏ khoảng trắng dư thừa và các ký tự đặc biệt
     $trangThai = mysqli_real_escape_string($mysqli, trim($_POST['trangthai']));
 }
 
-// Construct the SQL query based on search and status filter
-$sql = "
-    SELECT donhang.*, 
-           GROUP_CONCAT(sanpham.TenSanPham SEPARATOR ', ') AS TenSanPham, 
-           GROUP_CONCAT(chitietdonhang.SoLuong SEPARATOR ', ') AS SoLuong
-    FROM donhang
-    LEFT JOIN chitietdonhang ON donhang.ID_DonHang = chitietdonhang.ID_DonHang
-    LEFT JOIN sanpham ON chitietdonhang.ID_SanPham = sanpham.ID_SanPham
-    WHERE 1 = 1
-";
+// Xây dựng câu truy vấn SQL dựa trên tìm kiếm và trạng thái
+$sql = "SELECT * FROM donhang WHERE 1=1"; // Dùng 1=1 để dễ nối các điều kiện sau
 
 if ($tukhoa !== '') {
-    // Search by product name, order ID, and recipient's name
-    $sql .= " AND (sanpham.TenSanPham LIKE '%" . $tukhoa . "%' 
-                 OR donhang.ID_DonHang LIKE '%" . $tukhoa . "%' 
-                 OR donhang.NguoiNhan LIKE '%" . $tukhoa . "%')";
+    // Tìm kiếm theo mã đơn hàng
+    $sql .= " AND (donhang.ID_DonHang LIKE '%" . $tukhoa . "%' 
+         OR donhang.DiaChi LIKE '%" . $tukhoa . "%' 
+         OR donhang.NguoiNhan LIKE '%" . $tukhoa . "%')";
+
 }
 
 if ($trangThai !== '') {
-    $sql .= " AND donhang.XuLy = " . $trangThai;
+    // Lọc theo trạng thái đơn hàng
+    $sql .= " AND donhang.XuLy = '" . $trangThai . "'"; // Chú ý thêm dấu nháy đơn nếu là chuỗi
 }
 
+// Nhóm kết quả theo ID đơn hàng và sắp xếp theo ID giảm dần
 $sql .= " GROUP BY donhang.ID_DonHang";
 $sql .= " ORDER BY donhang.ID_DonHang DESC";
-
+// Thực hiện truy vấn
 $query_order = mysqli_query($mysqli, $sql);
 
 // Check status messages
@@ -78,8 +76,6 @@ if ($status === 'success') {
                 <tr>
                     <th scope="col">STT</th>
                     <th scope="col">Mã Đơn Hàng</th>
-                    <th scope="col">Tên Sản Phẩm</th> <!-- Thêm cột Tên sản phẩm -->
-                    <th scope="col">Số Lượng</th> <!-- Thêm cột Số lượng -->
                     <th scope="col">Người Nhận</th>
                     <th scope="col">Địa chỉ</th>
                     <th scope="col">Tổng Tiền</th>
@@ -98,8 +94,7 @@ if ($status === 'success') {
                 <tr>
         <td><?php echo $num; ?></td>
         <td><?php echo htmlspecialchars($row_Order['ID_DonHang']); ?></td>
-        <td><?php echo htmlspecialchars($row_Order['TenSanPham']); ?></td> <!-- Hiển thị tên sản phẩm gộp -->
-        <td><?php echo htmlspecialchars($row_Order['SoLuong']); ?></td> <!-- Hiển thị số lượng gộp -->
+
         <td><?php echo $row_Order['NguoiNhan']; ?></td>
         <td><?php echo htmlspecialchars($row_Order['DiaChi']); ?></td>
         <td><?php echo number_format((int)$row_Order['GiaTien'], 0, ',', '.'); ?> VND</td>
