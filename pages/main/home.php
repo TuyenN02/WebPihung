@@ -293,11 +293,22 @@ opacity: 0; /* Fade out effect */
                             <a href="index.php?navigate=productInfo&id_product=<?php echo $row_product['ID_SanPham']; ?>" class="product-title">
                                 <h5 class="card-title"><?php echo $row_product['TenSanPham']; ?></h5>
                             </a>
+                            <p style="height: 22px">
+                                Số lượng: 
+                                <?php 
+                                if ($row_product['SoLuong'] > 0) {
+                                    echo htmlspecialchars($row_product['SoLuong']);
+                                } else {
+                                    echo '<span style="color: red;">Đã hết hàng</span>';
+                                }
+                                ?>
+                            </p>
+
                             
                             <h6 class="text-danger"> 
                             </h6>
                             <a href="index.php?navigate=productInfo&id_product=<?php echo $row_product['ID_SanPham']; ?>" class="product-price">
-                                <h6><?php echo number_format($row_product['GiaBan'] ) ?> VND</h6>
+                                <p style = "height: 22px"> Giá bán: <?php echo number_format($row_product['GiaBan'] ) ?> VND</p>
                             </a>
                         </div>
                     </div>

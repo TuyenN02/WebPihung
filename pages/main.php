@@ -32,7 +32,10 @@
       include("main/order/customer_info.php");
     } else if($temp == "confirm_order") {
       include("main/order/confirm_order.php");
-    } else if($temp == "orderHistory") {
+    } else if($temp == "confirm_order_duynk") {
+      include("main/order/confirm_order_duynk.php");
+    }
+      else if($temp == "orderHistory") {
       include("main/order/orderHistory.php");
     } else if($temp == "thanhtoannganhang") {
       include("main/order/thanhtoannganhang.php");
@@ -40,7 +43,10 @@
       include("main/order/order_detail.php");
     } else if($temp == "finish") {
       include("main/order/finish.php");
-    } else {
+    }else if($temp == "customer_infoduynk"){
+      include("main/order/customer_infoduynk.php");
+    }
+     else {
       include("main/home.php");
     }
   ?>

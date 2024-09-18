@@ -26,7 +26,7 @@ $DiaChi = trim($row['DiaChi']);
 $SoDienThoai = trim($row['SoDienThoai']);
 ?>
 <div class="container mt-60 bg-white">
-    <form id="orderForm" action="index.php?navigate=confirm_order" method="POST" onsubmit="return validateForm()">
+    <form id="orderForm" action="index.php?navigate=confirm_order_duynk" method="POST" onsubmit="return validateForm()">
         <p class="pt-3 text-center" style="font-size: 24px; font-weight: bold;">NHẬP THÔNG TIN NHẬN HÀNG</p>
         <div class="mt-2">
             <label>Người nhận hàng: </label>
