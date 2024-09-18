@@ -25,7 +25,11 @@
 			$id_order = mysqli_insert_id($mysqli);
 			$_SESSION['ID_DonHang'] = $id_order;
 			
-			$sql_cart = "SELECT * FROM chitietgiohang WHERE chitietgiohang.ID_GioHang = $ID_GioHang";
+			$sql_cart = "SELECT * FROM chitietgiohang 
+             WHERE chitietgiohang.ID_GioHang = $ID_GioHang 
+             ORDER BY chitietgiohang.time DESC 
+             LIMIT 1";
+
 			$query_cart = mysqli_query($mysqli, $sql_cart);
 		
 			while ($row = mysqli_fetch_assoc($query_cart)) {
@@ -42,16 +46,19 @@
 				WHERE ID_SanPham = $id_sanpham";
 				$insert_detail_result1 = mysqli_query($mysqli, $sql_update_product);
 			}
-			$sql_cart = "DELETE  FROM chitietgiohang WHERE chitietgiohang.ID_GioHang = $ID_GioHang";
-			$query_cart = mysqli_query($mysqli, $sql_cart);
-			
+
+
+            $sql_cart = "DELETE FROM chitietgiohang 
+             WHERE ID_GioHang = (SELECT ID_GioHang FROM giohang WHERE ID_GioHang = $ID_GioHang ORDER BY chitietgiohang.time DESC LIMIT 1)";
+            $query_cart = mysqli_query($mysqli, $sql_cart);
+
+
+
 			// Không xóa sản phẩm trong giỏ hàng
 			// $id_delete_cart = $_SESSION['ID_GioHang'];
 			// $sql_delete_all_products = "DELETE FROM chitietgiohang WHERE ID_GioHang = $id_delete_cart";
 			// $delete_result = mysqli_query($mysqli, $sql_delete_all_products);
 			// unset($_SESSION['allMoney']);
-			$sql_delete_cart_details1 = "DELETE FROM chitietgiohang WHERE chitietgiohang.ID_GioHang = $ID_GioHang";
-				$insert_detail_result = mysqli_query($mysqli, $sql_delete_cart_details1);
 			$success = true;
 		} else {
 			$_SESSION['error'] = "Đã xảy ra lỗi khi thêm đơn hàng vào cơ sở dữ liệu.";
@@ -120,7 +127,7 @@
 			if ($insert_invoice_result) {
 				$id_order = mysqli_insert_id($mysqli);
 				$_SESSION['ID_DonHang'] = $id_order;
-				$sql_cart = "SELECT * FROM chitietgiohang WHERE chitietgiohang.ID_GioHang = $ID_GioHang";
+				$sql_cart = "SELECT * FROM chitietgiohang WHERE chitietgiohang.ID_GioHang = $ID_GioHang ORDER BY chitietgiohang.time DESC LIMIT 1";
 				$query_cart = mysqli_query($mysqli, $sql_cart);
 		
 				while ($row = mysqli_fetch_assoc($query_cart)) {
@@ -133,9 +140,13 @@
 					$sql_insert_order_detail = "INSERT INTO chitietdonhang (ID_DonHang, ID_SanPham, SoLuong, CodeOrder, GiaMua) VALUES ('$id_order', '$id_sanpham', '$soluong', '$CodeOrder', '$giaMua')";
 					$insert_detail_result = mysqli_query($mysqli, $sql_insert_order_detail);
 				}
-				$sql_cart = "DELETE FROM chitietgiohang WHERE chitietgiohang.ID_GioHang = $ID_GioHang";
-				$query_cart = mysqli_query($mysqli, $sql_cart);
-			
+                $sql_cart = "DELETE FROM chitietgiohang 
+                WHERE ID_GioHang = (SELECT ID_GioHang FROM giohang WHERE ID_GioHang = $ID_GioHang ORDER BY chitietgiohang.time DESC LIMIT 1)";
+               $query_cart = mysqli_query($mysqli, $sql_cart);
+   
+   
+  
+   
 				// Không xóa sản phẩm trong giỏ hàng
 				// $id_delete_cart = $_SESSION['ID_GioHang'];
 				// $sql_delete_all_products = "DELETE FROM chitietgiohang WHERE ID_GioHang = $id_delete_cart";

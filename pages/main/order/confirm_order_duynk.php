@@ -37,6 +37,7 @@ $sql_cart_detail = "SELECT chitietgiohang.ID_SanPham, chitietgiohang.SoLuong,
                     INNER JOIN sanpham ON chitietgiohang.ID_SanPham = sanpham.ID_SanPham
                     WHERE giohang.ID_GioHang = ?
                     ORDER BY chitietgiohang.ID_SanPham DESC
+                    ORDER BY chitietgiohang.time DESC
                     LIMIT 1";
 
 // Chuẩn bị câu lệnh
@@ -128,7 +129,7 @@ $tongtien_vnd = isset($_SESSION['allMoney']) ? $_SESSION['allMoney'] : 0;
         </div>
         <div class="col-lg-4 mt-5">
             <div>
-                <form method="POST" action="pages/main/order/xulythanhtoan.php">
+                <form method="POST" action="pages/main/order/xulythanhtoanNgoannk.php">
                     <p class="mt-2 text-center">HÌNH THỨC THANH TOÁN</p>
                     <input class="d-block btn btn-success mt-3 w-100" type="submit" name="cod" value="Thanh toán khi nhận hàng">
                     <input class="d-block btn btn-primary mt-3 w-100" type="submit" name="vnpay" value="Thanh toán qua VNPAY">
