@@ -63,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['DiaChi'] = $_POST['DiaChi'] ?? '';
     $_SESSION['SoDienThoai'] = $_POST['SoDienThoai'] ?? '';
     $_SESSION['GhiChu'] = $_POST['GhiChu'] ?? '';
+    
 }
 
 $tongtien_vnd = isset($_SESSION['allMoney']) ? $_SESSION['allMoney'] : 0;
@@ -118,6 +119,7 @@ $tongtien_vnd = isset($_SESSION['allMoney']) ? $_SESSION['allMoney'] : 0;
                 <?php 
                     $Money = (int)$cart_details['SoLuong'] * (int)$cart_details['GiaBan'];
                     $allMoney += $Money;
+                    $_SESSION['allMoney'] = $allMoney;
                 } 
                 ?>
                 <tr>

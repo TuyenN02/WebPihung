@@ -45,9 +45,9 @@ $query_cart = mysqli_query($mysqli, $sql_cart);
                         <td><?= $row['TenSanPham'] ?></td>
                         <td><img class="product-img" style="width: 100px" src="./assets/image/product/<?= $row['Img'] ?>"></td>
                         <td>
-                            <input type="number" name="soluong[<?= $product_id ?>]" value="<?= $current_quantity ?>" min="1" class="text-center quantity-input" data-price="<?= $row['GiaBan'] ?>" style="width: 60px;" onchange="checkQuantity(this, <?= $stock_quantity ?>)" oninput="showConfirmationDialog(this)">
+                            <input type="number" name="soluong[<?= $product_id ?>]" value="<?= $current_quantity ?>" min="1" class="text-center quantity-input" data-price="<?= $row['GiaBan'] ?>" data-id="<?= $product_id ?>" style="width: 60px;" onchange="checkQuantity(this, <?= $stock_quantity ?>)" oninput="updateProductTotal(<?= $product_id ?>)">
                         </td>
-                        <td><?= number_format($row['GiaBan']) ?> VND</td>
+                        <td id="product-total-<?= $product_id ?>"><?= number_format($product_total) ?> VND</td>
                         <td>
                             <a class="mr-2 ml-2" href="pages/main/cart/delete.php?id_delete=<?= $product_id ?>">Xóa</a>
                         </td>
@@ -111,18 +111,17 @@ function checkQuantity(input, maxQuantity) {
     updateTotals(); // Update totals after checking quantity
 }
 
-function showConfirmationDialog(input) {
-    const maxQuantity = parseInt(input.max, 10);
-    const currentQuantity = parseInt(input.value, 10);
-    if (currentQuantity > maxQuantity) {
-        setTimeout(() => {
-            if (confirm('Số lượng bạn nhập vượt quá số lượng tối đa. Bạn có muốn tiếp tục không?')) {
-                input.value = maxQuantity; // Reset to the maximum allowed quantity if user confirms
-            }
-        }, 0);
-    }
+function updateProductTotal(productId) {
+    const input = document.querySelector(`input[data-id='${productId}']`);
+    const price = parseFloat(input.dataset.price);
+    const quantity = parseInt(input.value, 10);
 
-    updateTotals(); // Update totals after showing the dialog
+    // Update the product's total price
+    const productTotal = price * quantity;
+    document.getElementById(`product-total-${productId}`).innerText = formatNumber(productTotal) + ' VND';
+
+    // Update the overall totals
+    updateTotals();
 }
 
 function updateTotals() {

@@ -26,7 +26,6 @@
 			$_SESSION['ID_DonHang'] = $id_order;
 			
 			$sql_cart = "SELECT * FROM chitietgiohang 
-             WHERE chitietgiohang.ID_GioHang = $ID_GioHang 
              ORDER BY chitietgiohang.time DESC 
              LIMIT 1";
 
