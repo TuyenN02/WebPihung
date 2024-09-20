@@ -22,15 +22,17 @@
         cursor: pointer;
       }
       .product-container {
-        background-color: #d7edd7; /* Màu nền xanh lá sáng */
-        padding: 20px;
-        border-radius: 10px;
-      }
+            background-color: #d7edd7; /* Màu nền xanh lá sáng */
+            padding: 20px;
+            border-radius: 80px;
+            margin-top: 20px; /* Thêm khoảng cách ở trên */
+        }
       .product-card {
         background-color: #C8E6C9; /* Màu nền xanh lá sáng cho thẻ sản phẩm */
         border: 1px solid #A5D6A7; /* Viền màu xanh lá nhạt cho thẻ sản phẩm */
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
+      
       .product-card:hover {
         transform: translateY(-10px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -39,7 +41,7 @@
       .pagination-container {
         background-color: #C8E6C9; /* Màu nền xanh lá sáng cho phân trang */
         padding: 10px;
-        border-radius: 10px;
+        border-radius: 80px;
       }
     </style>
 <?php

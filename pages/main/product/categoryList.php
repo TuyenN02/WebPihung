@@ -7,11 +7,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>Danh mục cây</title>
     <style>
-        .category-list {
-            background-color: #33CC66; /* Màu nền tối */
-            padding: 10px; /* Đã tăng khoảng cách padding */
-            border-radius: 10px;
-        }
+   .category-list {
+    background-color: #33CC66; /* Màu nền tối */
+    padding: 1px; /* Đã tăng khoảng cách padding */
+    border-radius: 80px;
+   
+    margin: 0 auto; /* Căn giữa trong container */
+    
+}
+
         .category-list p {
             font-size: 0.8rem; /* Tăng kích thước chữ tiêu đề */
             font-weight: bold;
@@ -29,8 +33,8 @@
         }
         .category-list a:hover {
             background-color: #339999; /* Màu nền khi hover */
-            border-radius: 10px;
-            font-size: 0.9rem; /* Tăng kích thước chữ khi hover */
+            border-radius: 80px;
+            font-size: 0.8rem; /* Tăng kích thước chữ khi hover */
             font-weight: bolder; /* Làm chữ đậm hơn khi hover */
             text-decoration: none; /* Loại bỏ gạch chân khi hover */
         }

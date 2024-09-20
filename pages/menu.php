@@ -16,8 +16,8 @@
             height: 70px; 
         }
         .logos {
-            height: 20px;
-            margin-left: 5vh;
+            height: 5px;
+            margin-left: 0vh;
         }
         .kc {
             height: 20px; /* Chiều cao của hình ảnh chèn */
@@ -30,6 +30,7 @@
             position: relative;
             text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
             animation: glow 1s infinite alternate;
+            font-size: 1.5rem; /* Giảm kích thước phông chữ nếu cần */
         }
         @keyframes glow {
             from {
@@ -40,7 +41,7 @@
             }
         }
         .nav-link {
-            font-size: 0.9rem;
+            font-size: 0.7rem;
             transition: color 0.1s, background-color 0.1s;
         }
         .nav-link:hover {
