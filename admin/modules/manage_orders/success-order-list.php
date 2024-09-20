@@ -34,7 +34,6 @@ if ($trangThai !== '') {
 $sql .= " GROUP BY donhang.ID_DonHang";
 $sql .= " ORDER BY donhang.ID_DonHang DESC";
 // Thực hiện truy vấn
-echo ($sql);
 $query_order = mysqli_query($mysqli, $sql);
 
 // Check status messages
