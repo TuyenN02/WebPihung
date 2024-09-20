@@ -143,7 +143,10 @@
                 WHERE ID_GioHang = (SELECT ID_GioHang FROM giohang WHERE ID_GioHang = $ID_GioHang ORDER BY chitietgiohang.time DESC LIMIT 1)";
                $query_cart = mysqli_query($mysqli, $sql_cart);
    
-   
+			   $sql_update_product = "UPDATE sanpham 
+			   SET SoLuong = SoLuong - $soluong 
+			   WHERE ID_SanPham = $id_sanpham";
+			   $insert_detail_result1 = mysqli_query($mysqli, $sql_update_product);
   
    
 				// Không xóa sản phẩm trong giỏ hàng

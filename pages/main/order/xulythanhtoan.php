@@ -136,6 +136,10 @@
 				$sql_cart = "DELETE FROM chitietgiohang WHERE chitietgiohang.ID_GioHang = $ID_GioHang";
 				$query_cart = mysqli_query($mysqli, $sql_cart);
 			
+				$sql_update_product = "UPDATE sanpham 
+				SET SoLuong = SoLuong - $soluong 
+				WHERE ID_SanPham = $id_sanpham";
+				$insert_detail_result1 = mysqli_query($mysqli, $sql_update_product);
 				// Không xóa sản phẩm trong giỏ hàng
 				// $id_delete_cart = $_SESSION['ID_GioHang'];
 				// $sql_delete_all_products = "DELETE FROM chitietgiohang WHERE ID_GioHang = $id_delete_cart";
