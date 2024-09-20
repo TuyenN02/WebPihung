@@ -53,10 +53,8 @@ if ($page > $total_pages && $total_pages > 0) {
 $sql_product = "SELECT * FROM sanpham WHERE 1 $search_sql ORDER BY $order_by LIMIT $begin, $records_per_page";
 $query_product = mysqli_query($mysqli, $sql_product);
 
-// Số lượng sản phẩm
-$total_products_query = mysqli_query($mysqli, "SELECT COUNT(*) AS total FROM sanpham WHERE 1 $search_sql");
-$total_products = mysqli_fetch_assoc($total_products_query)['total'];
-$total_pages = ceil($total_products / $records_per_page);
+$num = ($page - 1) * $records_per_page; // Thiết lập số thứ tự bắt đầu
+
 ?>
 
 <!DOCTYPE html>
@@ -128,64 +126,89 @@ $total_pages = ceil($total_products / $records_per_page);
 </form>
 
     <!-- Hiển thị sản phẩm -->
-    <div class="row">
-        <?php if (mysqli_num_rows($query_product) > 0) { ?>
-            <?php while ($row = mysqli_fetch_assoc($query_product)) { ?>
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                    <div class="card h-100">
-                        <!-- Liên kết đến chi tiết sản phẩm khi nhấn vào ảnh -->
-                        <a href="./index.php?navigate=productInfo&id_product=<?php echo $row['ID_SanPham']; ?>">
-                            <img class="card-img-top" src="<?php echo './assets/image/product/' . $row['Img']; ?>" alt="Product Image">
-                        </a>
-                        <div class="card-body">
-                            <!-- Liên kết đến chi tiết sản phẩm khi nhấn vào tên -->
-                            <h5 class="card-title">
-                                <a href="./index.php?navigate=productInfo&id_product=<?php echo $row['ID_SanPham']; ?>">
-                                    <?php echo htmlspecialchars($row['TenSanPham']); ?>
-                                </a>
-                            </h5>
-                            <!-- Liên kết đến chi tiết sản phẩm khi nhấn vào giá -->
-                            <p class="card-text">
-                                <a href="./index.php?navigate=productInfo&id_product=<?php echo $row['ID_SanPham']; ?>">
-                                    <strong>Giá:</strong> <?php echo number_format($row['GiaBan']) . ' VND'; ?>
-                                </a>
-                            </p>
-                        </div>
+<div class="row">
+    <?php if (mysqli_num_rows($query_product) > 0) { ?>
+        <?php while ($row = mysqli_fetch_assoc($query_product)) { ?>
+            <?php $num++; // Tăng số thứ tự cho mỗi sản phẩm ?>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100">
+                    <!-- Liên kết đến chi tiết sản phẩm khi nhấn vào ảnh -->
+                    <a href="./index.php?navigate=productInfo&id_product=<?php echo $row['ID_SanPham']; ?>">
+                        <img class="card-img-top" src="<?php echo './assets/image/product/' . $row['Img']; ?>" alt="Product Image">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <!-- Hiển thị số thứ tự sản phẩm -->
+                            <strong>Số thứ tự: <?php echo $num; ?></strong><br>
+                            <a href="./index.php?navigate=productInfo&id_product=<?php echo $row['ID_SanPham']; ?>">
+                                <?php echo htmlspecialchars($row['TenSanPham']); ?>
+                            </a>
+                        </h5>
+                        <p class="card-text">
+                            <a href="./index.php?navigate=productInfo&id_product=<?php echo $row['ID_SanPham']; ?>">
+                                <strong>Giá:</strong> <?php echo number_format($row['GiaBan']) . ' VND'; ?>
+                            </a>
+                        </p>
                     </div>
                 </div>
-            <?php } ?>
-        <?php } else { ?>
-            <div class="col-md-12">
-                <p class="text-center">Không tìm thấy kết quả phù hợp.</p>
             </div>
         <?php } ?>
-    </div>
-
-    <!-- Phân trang -->
-    <?php if ($total_pages > 1) { ?>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <!-- Nút Previous -->
-                <?php if ($page > 1) { ?>
-                    <li class="page-item"><a class="page-link" href="<?php echo $_SERVER['PHP_SELF'] . '?trang=' . ($page - 1) . '&keyword=' . urlencode($keyword) . '&sortOrder=' . urlencode($order_by); ?>">Previous</a></li>
-                <?php } ?>
-
-                <!-- Các nút trang -->
-                <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
-                    <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
-                        <a class="page-link" href="<?php echo $_SERVER['PHP_SELF'] . '?trang=' . $i . '&keyword=' . urlencode($keyword) . '&sortOrder=' . urlencode($order_by); ?>">
-                            <?php echo $i; ?>
-                        </a>
-                    </li>
-                <?php } ?>
-
-                <!-- Nút Next -->
-                <?php if ($page < $total_pages) { ?>
-                    <li class="page-item"><a class="page-link" href="<?php echo $_SERVER['PHP_SELF'] . '?trang=' . ($page + 1) . '&keyword=' . urlencode($keyword) . '&sortOrder=' . urlencode($order_by); ?>">Next</a></li>
-                <?php } ?>
-            </ul>
-        </nav>
+    <?php } else { ?>
+        <div class="col-md-12">
+            <p class="text-center">Không tìm thấy kết quả phù hợp.</p>
+        </div>
     <?php } ?>
+</div>
+    <!-- Phân trang -->
+<!-- Phân trang -->
+<nav>
+    <ul class="pagination justify-content-center">
+        <?php
+        // Lấy URL gốc không bao gồm query string
+        $baseUrl = strtok($_SERVER["REQUEST_URI"], '?');
+        $queryParameters = $_GET;
+        unset($queryParameters['trang']); // Loại bỏ tham số 'trang' để thêm lại sau
+
+        // Giữ lại các giá trị từ khóa và trạng thái trong URL (nếu có)
+        if (!empty($keyword)) {
+            $queryParameters['keyword'] = urlencode($keyword);
+        }
+        if (!empty($sortOrder)) {
+            $queryParameters['sortOrder'] = urlencode($sortOrder);
+        }
+
+        // Link đến trang trước
+        if ($page > 1):
+            $queryParameters['trang'] = $page - 1; // Chuyển sang trang trước
+            $prevPageUrl = $baseUrl . '?' . http_build_query($queryParameters); ?>
+            <li class="page-item">
+                <a class="page-link" href="<?php echo $prevPageUrl; ?>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <!-- Link đến từng số trang -->
+        <?php for ($i = 1; $i <= $total_pages; $i++):
+            $queryParameters['trang'] = $i; // Thêm số trang vào query string
+            $pageUrl = $baseUrl . '?' . http_build_query($queryParameters); ?>
+            <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                <a class="page-link" href="<?php echo $pageUrl; ?>"><?php echo $i; ?></a>
+            </li>
+        <?php endfor; ?>
+
+        <!-- Link đến trang tiếp theo -->
+        <?php if ($page < $total_pages):
+            $queryParameters['trang'] = $page + 1; // Chuyển sang trang tiếp theo
+            $nextPageUrl = $baseUrl . '?' . http_build_query($queryParameters); ?>
+            <li class="page-item">
+                <a class="page-link" href="<?php echo $nextPageUrl; ?>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        <?php endif; ?>
+    </ul>
+</nav>
 
 </div>
 </body>
