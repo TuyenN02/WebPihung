@@ -45,7 +45,7 @@ $query_cart = mysqli_query($mysqli, $sql_cart);
                         <td><?= $row['TenSanPham'] ?></td>
                         <td><img class="product-img" style="width: 100px" src="./assets/image/product/<?= $row['Img'] ?>"></td>
                         <td>
-                            <input type="number" name="soluong[<?= $product_id ?>]" value="<?= $current_quantity ?>" min="1" class="text-center quantity-input" data-price="<?= $row['GiaBan'] ?>" data-id="<?= $product_id ?>" style="width: 60px;" onchange="checkQuantity(this, <?= $stock_quantity ?>)" oninput="updateProductTotal(<?= $product_id ?>)">
+                            <input type="number" name="soluong[<?= $product_id ?>]" value="<?= $current_quantity ?>" min="1" class="text-center quantity-input" data-price="<?= $row['GiaBan'] ?>" data-id="<?= $product_id ?>" style="width: 60px;" onchange="checkQuantity(this, <?= $stock_quantity ?>, <?= $product_id ?>)" oninput="updateProductTotal(<?= $product_id ?>)">
                         </td>
                         <td id="product-total-<?= $product_id ?>"><?= number_format($product_total) ?> VND</td>
                         <td>
@@ -101,7 +101,7 @@ $query_cart = mysqli_query($mysqli, $sql_cart);
 </style>
 
 <script>
-function checkQuantity(input, maxQuantity) {
+function checkQuantity(input, maxQuantity, id) {
     const currentQuantity = parseInt(input.value, 10);
     if (currentQuantity > maxQuantity) {
         alert('Số lượng bạn nhập vượt quá số lượng tối đa.');
@@ -109,6 +109,8 @@ function checkQuantity(input, maxQuantity) {
     }
 
     updateTotals(); // Update totals after checking quantity
+    updateProductTotal(id);
+    
 }
 
 function updateProductTotal(productId) {
